@@ -120,7 +120,7 @@ export function QuizFlow() {
     <div className="min-h-screen bg-background flex flex-col">
       {phase !== 'paywall' && (
         <div className="fixed top-0 left-0 right-0 z-50">
-          <div className="h-1 bg-secondary">
+          <div className="h-1.5 bg-secondary">
             <motion.div
               className="h-full bg-primary"
               initial={{ width: 0 }}
