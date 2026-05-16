@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { dismissShareHeader, isShareHeaderDismissed } from '@/lib/reportOwnership';
+import { track } from '@/lib/analytics';
 
 interface Props { reportId: string; }
 
@@ -14,7 +15,11 @@ export function ShareHeader({ reportId }: Props) {
       <div className="relative max-w-[960px] mx-auto px-6 py-3 flex items-center justify-center text-center">
         <p className="text-sm text-foreground">
           <em className="italic text-muted-foreground">Someone shared their Norte reading with you.</em>{' '}
-          <Link to="/" className="underline text-primary font-medium">
+          <Link
+            to="/"
+            className="underline text-primary font-medium"
+            onClick={() => track('report_upsell_clicked', { report_id: reportId, cta_location: 'header' })}
+          >
             Curious about yours? →
           </Link>
         </p>
@@ -29,3 +34,4 @@ export function ShareHeader({ reportId }: Props) {
     </div>
   );
 }
+
