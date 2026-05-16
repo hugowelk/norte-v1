@@ -94,7 +94,7 @@ export function QuizFlow() {
       setScenarioIdx(scenarioIdx + 1);
       setPhase('tradeoffs');
     } else {
-      const r = computeScores(answers);
+      const r = computeScores(answers, timeAnswer, moneyAnswer);
       setResult(r);
       setPhase('results');
     }
@@ -120,7 +120,7 @@ export function QuizFlow() {
     <div className="min-h-screen bg-background flex flex-col">
       {phase !== 'paywall' && (
         <div className="fixed top-0 left-0 right-0 z-50">
-          <div className="h-1 bg-secondary">
+          <div className="h-1.5 bg-secondary">
             <motion.div
               className="h-full bg-primary"
               initial={{ width: 0 }}
@@ -197,8 +197,9 @@ export function QuizFlow() {
                 onContinue={() => setPhase('coreValues')}
               />
             )}
-            {phase === 'coreValues' && (
+            {phase === 'coreValues' && result && (
               <CoreValuesSelection
+                revealedTop3={[result.revealed.primary, result.revealed.secondary, result.revealed.tertiary]}
                 onComplete={r => { setCore(r); setPhase('alignment'); }}
               />
             )}
@@ -218,7 +219,15 @@ export function QuizFlow() {
               />
             )}
             {phase === 'paywall' && (
-              <Paywall onBack={() => setPhase('compass')} />
+              <Paywall
+                onBack={() => setPhase('compass')}
+                sampleValue={(() => {
+                  if (!core || !result) return undefined;
+                  const top3 = new Set([result.revealed.primary, result.revealed.secondary, result.revealed.tertiary]);
+                  const firstGap = core.slots.map(s => s.key).find(k => !top3.has(k));
+                  return firstGap ?? result.revealed.primary;
+                })()}
+              />
             )}
           </motion.div>
         </AnimatePresence>

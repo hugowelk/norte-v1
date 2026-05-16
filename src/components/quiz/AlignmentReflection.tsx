@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { ValueIcon } from '../ValueIcon';
-import { getValueByKey, type ValueKey } from '@/lib/values';
+import { VALUES, getValueByKey, type ValueKey } from '@/lib/values';
 import { type ScoreResult } from '@/lib/algorithm';
 import type { SelectableValue } from './CoreValuesSelection';
+import { cn } from '@/lib/utils';
 
 export type AlignmentScores = Record<string, number>;
 
@@ -13,25 +15,23 @@ interface Props {
   onComplete: (scores: AlignmentScores) => void;
 }
 
-function slotKey(s: SelectableValue): string {
-  return s.kind === 'core' ? `core:${s.key}` : `custom:${s.custom.key}`;
-}
-
-function slotLabel(s: SelectableValue): string {
-  return s.kind === 'core' ? getValueByKey(s.key).label : s.custom.label;
-}
-
-function suggested(s: SelectableValue, result: ScoreResult): number {
-  if (s.kind === 'custom') return 5;
-  return Math.round(result.normalized[s.key as ValueKey] / 10);
+function suggestedFor(key: ValueKey, result: ScoreResult): number {
+  return Math.round(result.normalized[key] / 10);
 }
 
 export function AlignmentReflection({ slots, result, onComplete }: Props) {
+  const pickedKeys = slots.map(s => s.key);
+  const otherKeys = VALUES.map(v => v.key).filter(k => !pickedKeys.includes(k));
+
   const [scores, setScores] = useState<AlignmentScores>(() => {
     const init: AlignmentScores = {};
-    slots.forEach(s => { init[slotKey(s)] = suggested(s, result); });
+    for (const v of VALUES) init[`core:${v.key}`] = suggestedFor(v.key, result);
     return init;
   });
+  const [otherOpen, setOtherOpen] = useState(false);
+
+  const updateScore = (key: ValueKey, v: number) =>
+    setScores(prev => ({ ...prev, [`core:${key}`]: v }));
 
   return (
     <div className="space-y-8 pb-12">
@@ -46,35 +46,49 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
       </div>
 
       <div className="space-y-4">
-        {slots.map(s => {
-          const key = slotKey(s);
-          const score = scores[key];
-          const sug = suggested(s, result);
-          return (
-            <div key={key} className="space-y-3 p-5 rounded-xl bg-card border border-border">
-              <div className="flex items-center gap-3">
-                {s.kind === 'core'
-                  ? <ValueIcon value={s.key} size={20} />
-                  : <span className="w-5 h-5 rounded-full bg-accent/20 border border-accent/30 shrink-0" />}
-                <p className="font-display font-medium text-foreground">{slotLabel(s)}</p>
-                <span className="ml-auto font-display text-lg font-semibold text-accent tabular-nums">{score}/10</span>
-              </div>
-              <Slider
-                value={[score]}
-                onValueChange={([v]) => setScores(prev => ({ ...prev, [key]: v }))}
-                min={0}
-                max={10}
-                step={1}
-              />
-              <div className="flex justify-between items-center text-xs text-muted-foreground">
-                <span className="font-medium">Barely here</span>
-                <span className="italic">Norte suggests: {sug}</span>
-                <span className="font-medium">Lived every day</span>
-              </div>
-            </div>
-          );
-        })}
+        <p className="text-xs font-display uppercase tracking-widest text-muted-foreground px-1">
+          The 5 you picked
+        </p>
+        {pickedKeys.map(k => (
+          <SliderRow
+            key={k}
+            valueKey={k}
+            score={scores[`core:${k}`]}
+            suggested={suggestedFor(k, result)}
+            onChange={v => updateScore(k, v)}
+          />
+        ))}
       </div>
+
+      {otherKeys.length > 0 && (
+        <div className="space-y-3">
+          <button
+            onClick={() => setOtherOpen(o => !o)}
+            className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-card/60 hover:bg-card transition-colors text-left"
+          >
+            <span className="text-sm font-body text-foreground/80 italic">
+              You didn't pick these — but they came up in your trade-offs. Tap to see where they sit.
+            </span>
+            <ChevronDown size={16} className={cn('text-muted-foreground transition-transform shrink-0', otherOpen && 'rotate-180')} />
+          </button>
+          {otherOpen && (
+            <div className="space-y-4 pt-1">
+              <p className="text-xs font-display uppercase tracking-widest text-muted-foreground px-1">
+                The 3 you didn't pick
+              </p>
+              {otherKeys.map(k => (
+                <SliderRow
+                  key={k}
+                  valueKey={k}
+                  score={scores[`core:${k}`]}
+                  suggested={suggestedFor(k, result)}
+                  onChange={v => updateScore(k, v)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <button
         onClick={() => onComplete(scores)}
@@ -82,6 +96,32 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
       >
         See your compass →
       </button>
+    </div>
+  );
+}
+
+function SliderRow({
+  valueKey, score, suggested, onChange,
+}: { valueKey: ValueKey; score: number; suggested: number; onChange: (v: number) => void }) {
+  return (
+    <div className="space-y-3 p-5 rounded-xl bg-card border border-border">
+      <div className="flex items-center gap-3">
+        <ValueIcon value={valueKey} size={20} />
+        <p className="font-display font-medium text-foreground">{getValueByKey(valueKey).label}</p>
+        <span className="ml-auto font-display text-lg font-semibold text-accent tabular-nums">{score}/10</span>
+      </div>
+      <Slider
+        value={[score]}
+        onValueChange={([v]) => onChange(v)}
+        min={0}
+        max={10}
+        step={1}
+      />
+      <div className="flex justify-between items-center text-xs text-muted-foreground">
+        <span className="font-medium">Barely here</span>
+        <span className="italic">Norte suggests: {suggested}</span>
+        <span className="font-medium">Lived every day</span>
+      </div>
     </div>
   );
 }

@@ -97,40 +97,44 @@ export function getValueByKey(key: ValueKey): Value {
 
 export interface BehaviourOption {
   label: string;
-  // Which values this option is a behavioural signal *for* — used to build the
-  // narrative on the Results page (not the scoring algorithm).
-  signals: ValueKey[];
+  // Weighted contribution to value scores (per Norte algorithm v2)
+  weights: Array<[ValueKey, number]>;
+}
+
+// Helper: derive narrative signals from weights (any value that gets any weight)
+export function signalsOf(option: BehaviourOption): ValueKey[] {
+  return option.weights.map(([k]) => k);
 }
 
 export const TIME_OPTIONS: BehaviourOption[] = [
-  { label: 'Work & career',                       signals: ['achievement', 'meaning'] },
-  { label: 'Family or partner',                   signals: ['connection'] },
-  { label: 'Friends & social life',               signals: ['connection', 'enjoyment'] },
-  { label: 'Health, sleep & exercise',            signals: ['aliveness'] },
-  { label: 'Learning & self-development',         signals: ['meaning', 'achievement'] },
-  { label: 'Hobbies, play & fun',                 signals: ['enjoyment', 'autonomy'] },
-  { label: 'Community, volunteering, helping',    signals: ['contribution'] },
-  { label: 'Solo time & personal space',          signals: ['autonomy'] },
-  { label: 'Reflection or spiritual practice',    signals: ['meaning'] },
-  { label: 'Rest & recovery',                     signals: ['aliveness', 'stability'] },
+  { label: 'Work & career',                       weights: [['achievement', 1.0]] },
+  { label: 'Family or partner',                   weights: [['connection', 1.0]] },
+  { label: 'Friends & social life',               weights: [['connection', 0.5], ['enjoyment', 0.5]] },
+  { label: 'Health, sleep & exercise',            weights: [['aliveness', 1.0]] },
+  { label: 'Learning & self-development',         weights: [['meaning', 0.5], ['achievement', 0.5]] },
+  { label: 'Hobbies, play & fun',                 weights: [['enjoyment', 1.0]] },
+  { label: 'Community, volunteering, helping',    weights: [['contribution', 1.0]] },
+  { label: 'Solo time & personal space',          weights: [['autonomy', 1.0]] },
+  { label: 'Reflection or spiritual practice',    weights: [['meaning', 1.0]] },
+  { label: 'Rest & recovery',                     weights: [['aliveness', 1.0]] },
 ];
 
 export const MONEY_OPTIONS: BehaviourOption[] = [
-  { label: 'Travel & experiences',                signals: ['enjoyment', 'autonomy'] },
-  { label: 'Lifestyle, comfort, going out',       signals: ['enjoyment'] },
-  { label: 'Education & courses',                 signals: ['meaning', 'achievement'] },
-  { label: 'Family support',                      signals: ['connection'] },
-  { label: 'Investments & savings',               signals: ['stability'] },
-  { label: 'Health, fitness, therapy',            signals: ['aliveness'] },
-  { label: 'Donations & causes',                  signals: ['contribution'] },
-  { label: 'Hobbies & creative projects',         signals: ['enjoyment', 'autonomy'] },
-  { label: 'Home & living space',                 signals: ['stability', 'connection'] },
-  { label: 'Tools that grow my work',             signals: ['achievement', 'meaning'] },
+  { label: 'Travel & experiences',                weights: [['enjoyment', 0.5], ['autonomy', 0.5]] },
+  { label: 'Lifestyle, comfort, going out',       weights: [['enjoyment', 1.0]] },
+  { label: 'Education & courses',                 weights: [['meaning', 0.5], ['achievement', 0.5]] },
+  { label: 'Family support',                      weights: [['connection', 1.0]] },
+  { label: 'Investments & savings',               weights: [['stability', 1.0]] },
+  { label: 'Health, fitness, therapy',            weights: [['aliveness', 1.0]] },
+  { label: 'Donations & causes',                  weights: [['contribution', 1.0]] },
+  { label: 'Hobbies & creative projects',         weights: [['enjoyment', 0.5], ['meaning', 0.5]] },
+  { label: 'Home & living space',                 weights: [['stability', 0.5], ['connection', 0.5]] },
+  { label: 'Tools that grow my work',             weights: [['achievement', 1.0]] },
 ];
 
 export interface BehaviourAnswer {
   selectedIndices: number[];
-  custom: string[]; // free-text the user added
+  custom: string[]; // free-text the user added (deprecated — no longer scored)
 }
 
 /**
@@ -144,12 +148,12 @@ export function buildBehaviourNarrative(
 ): string {
   const timeHits = (time?.selectedIndices ?? [])
     .map(i => TIME_OPTIONS[i])
-    .filter(o => o && o.signals.includes(valueKey))
+    .filter(o => o && signalsOf(o).includes(valueKey))
     .map(o => o.label.toLowerCase());
 
   const moneyHits = (money?.selectedIndices ?? [])
     .map(i => MONEY_OPTIONS[i])
-    .filter(o => o && o.signals.includes(valueKey))
+    .filter(o => o && signalsOf(o).includes(valueKey))
     .map(o => o.label.toLowerCase());
 
   const parts: string[] = [];

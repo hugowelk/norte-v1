@@ -1,11 +1,52 @@
 import { motion } from 'framer-motion';
-import { Sparkles, Compass, Target, MessageCircle } from 'lucide-react';
+import { Sparkles, Compass, Target, MessageCircle, Lock } from 'lucide-react';
+import { type ValueKey, getValueByKey } from '@/lib/values';
+import { ValueIcon } from '../ValueIcon';
 
 interface Props {
   onBack: () => void;
+  sampleValue?: ValueKey;
 }
 
-export function Paywall({ onBack }: Props) {
+const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
+  aliveness: {
+    title: 'A small shift this week · toward Aliveness',
+    body: 'Move your daily decision about exercise from the morning to the night before. Decide tonight what tomorrow looks like — not in the morning, when your tired brain will negotiate it away.',
+  },
+  achievement: {
+    title: 'A small shift this week · toward Achievement',
+    body: 'Pick the one project that, if it moved, would make the rest of the week feel different. Block 90 minutes for it tomorrow morning — before email, before anything else.',
+  },
+  connection: {
+    title: 'A small shift this week · toward Connection',
+    body: 'Text one person you keep meaning to call. Not to schedule something — just to say the thing you would have said if they were in the room.',
+  },
+  enjoyment: {
+    title: 'A small shift this week · toward Enjoyment',
+    body: 'Put one thing on the calendar this week that has no purpose other than being good. Treat it as non-negotiable as a meeting.',
+  },
+  meaning: {
+    title: 'A small shift this week · toward Meaning',
+    body: 'At the end of each day this week, write one sentence: what did I do today that I would do again if I had the choice? Patterns surface in five days.',
+  },
+  contribution: {
+    title: 'A small shift this week · toward Contribution',
+    body: 'Find one small way to help someone where you cannot be paid back. Fifteen minutes. The size of the act is irrelevant — the unilateralness is the point.',
+  },
+  stability: {
+    title: 'A small shift this week · toward Stability',
+    body: 'Pick the one financial or logistical thing you keep avoiding because it feels heavier than it is. Spend 20 minutes on it tomorrow. The relief is usually disproportionate.',
+  },
+  autonomy: {
+    title: 'A small shift this week · toward Autonomy',
+    body: 'Find one recurring obligation you said yes to out of habit. This week, renegotiate it or drop it — even a small one. The muscle is in the choosing.',
+  },
+};
+
+export function Paywall({ onBack, sampleValue }: Props) {
+  const key = sampleValue ?? 'aliveness';
+  const sample = SAMPLE_ACTIONS[key];
+
   return (
     <div className="space-y-10 pb-16">
       <div className="space-y-4 text-center">
@@ -43,6 +84,26 @@ export function Paywall({ onBack }: Props) {
           </Bullet>
         </ul>
       </div>
+
+      {/* Sample action card */}
+      <div className="rounded-2xl border border-border bg-card overflow-hidden">
+        <div className="px-5 pt-5 pb-3 flex items-center gap-2">
+          <ValueIcon value={key} size={16} />
+          <p className="text-[11px] font-display uppercase tracking-widest text-accent">
+            {sample.title}
+          </p>
+        </div>
+        <p className="px-5 pb-4 text-sm md:text-base text-foreground/90 leading-relaxed font-body">
+          {sample.body}
+        </p>
+        <div className="px-5 py-3 border-t border-border/60 bg-muted/30 flex items-center gap-2 text-xs text-muted-foreground font-display">
+          <Lock size={12} />
+          <span>Continue reading after unlock →</span>
+        </div>
+      </div>
+      <p className="text-center text-xs text-muted-foreground -mt-6">
+        One sample, drawn from your top gap — {getValueByKey(key).label}.
+      </p>
 
       <button
         onClick={() => {/* placeholder */}}

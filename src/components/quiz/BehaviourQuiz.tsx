@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, X, type LucideIcon } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 import { type BehaviourOption, type BehaviourAnswer } from '@/lib/values';
 
 interface Props {
@@ -18,8 +18,6 @@ export function BehaviourQuiz({
   title, subtitle, question, options, optionIcons, maxSelections, stepLabel, existing, onContinue,
 }: Props) {
   const [selected, setSelected] = useState<number[]>(existing?.selectedIndices ?? []);
-  const [custom, setCustom] = useState<string[]>(existing?.custom ?? []);
-  const [draft, setDraft] = useState('');
 
   const toggle = (idx: number) => {
     setSelected(prev => {
@@ -29,14 +27,7 @@ export function BehaviourQuiz({
     });
   };
 
-  const addCustom = () => {
-    const t = draft.trim();
-    if (!t) return;
-    setCustom(prev => [...prev, t]);
-    setDraft('');
-  };
-
-  const canContinue = selected.length > 0 || custom.length > 0;
+  const canContinue = selected.length > 0;
 
   return (
     <div className="space-y-8">
@@ -72,46 +63,8 @@ export function BehaviourQuiz({
         })}
       </div>
 
-      <div className="space-y-2 pt-2">
-        <p className="text-xs font-display uppercase tracking-widest text-muted-foreground">Add your own</p>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={draft}
-            onChange={e => setDraft(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addCustom())}
-            placeholder={`Something else that's been taking your ${title.toLowerCase()}…`}
-            className="flex-1 px-4 py-3 rounded-lg border-2 border-border bg-card text-base font-body text-foreground placeholder:text-muted-foreground focus:border-primary/60 focus:outline-none"
-          />
-          <button
-            onClick={addCustom}
-            type="button"
-            className="px-4 rounded-lg border-2 border-border bg-card hover:border-primary/40 text-foreground transition-colors"
-            aria-label="Add"
-          >
-            <Plus size={18} />
-          </button>
-        </div>
-        {custom.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-1">
-            {custom.map((c, i) => (
-              <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-sm">
-                {c}
-                <button
-                  onClick={() => setCustom(prev => prev.filter((_, idx) => idx !== i))}
-                  className="text-muted-foreground hover:text-foreground"
-                  aria-label={`Remove ${c}`}
-                >
-                  <X size={14} />
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-
       <button
-        onClick={() => canContinue && onContinue({ selectedIndices: selected, custom })}
+        onClick={() => canContinue && onContinue({ selectedIndices: selected, custom: [] })}
         disabled={!canContinue}
         className={`w-full py-4 rounded-lg font-display font-medium text-base transition-all duration-200 ${
           canContinue
@@ -121,6 +74,8 @@ export function BehaviourQuiz({
       >
         Continue
       </button>
+      {/* title prop kept for compatibility */}
+      <span className="hidden">{title}</span>
     </div>
   );
 }

@@ -16,6 +16,7 @@ interface Props {
 export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Props) {
   const top3 = [result.revealed.primary, result.revealed.secondary, result.revealed.tertiary];
   const rest = result.ranking.slice(3);
+  const [restOpen, setRestOpen] = useState(false);
 
   return (
     <div className="space-y-10 pb-12">
@@ -34,29 +35,43 @@ export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Pr
           Your revealed top 3
         </p>
         {top3.map((key, i) => (
-          <ValueAccordion
+          <TopValueCard
             key={key}
             valueKey={key}
             rank={i + 1}
             narrative={buildBehaviourNarrative(key, timeAnswer, moneyAnswer)}
-            featured
-            defaultOpen={i === 0}
           />
         ))}
       </div>
 
-      <div className="space-y-3">
-        <p className="text-xs font-display uppercase tracking-widest text-muted-foreground px-1">
-          The other five (in order)
-        </p>
-        {rest.map((key, i) => (
-          <ValueAccordion
-            key={key}
-            valueKey={key}
-            rank={i + 4}
-            narrative={buildBehaviourNarrative(key, timeAnswer, moneyAnswer)}
-          />
-        ))}
+      <div>
+        <button
+          onClick={() => setRestOpen(o => !o)}
+          className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-card/60 hover:bg-card transition-colors text-left"
+        >
+          <span className="text-xs font-display uppercase tracking-widest text-muted-foreground">
+            Other values that came up
+          </span>
+          <ChevronDown size={16} className={cn('text-muted-foreground transition-transform', restOpen && 'rotate-180')} />
+        </button>
+        {!restOpen && (
+          <p className="px-4 pt-2 text-sm text-foreground/70 font-body">
+            {rest.map((k, i) => (
+              <span key={k}>
+                <span className="text-muted-foreground tabular-nums mr-1.5">{i + 4}</span>
+                {getValueByKey(k).label}
+                {i < rest.length - 1 && <span className="text-muted-foreground/50 mx-2">·</span>}
+              </span>
+            ))}
+          </p>
+        )}
+        {restOpen && (
+          <div className="space-y-2 pt-3">
+            {rest.map((key, i) => (
+              <RestRow key={key} valueKey={key} rank={i + 4} />
+            ))}
+          </div>
+        )}
       </div>
 
       <button
@@ -69,59 +84,44 @@ export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Pr
   );
 }
 
-function ValueAccordion({
-  valueKey, rank, narrative, featured, defaultOpen = false,
+function TopValueCard({
+  valueKey, rank, narrative,
 }: {
   valueKey: ValueKey;
   rank: number;
   narrative: string;
-  featured?: boolean;
-  defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
   const value = getValueByKey(valueKey);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={cn(
-        'rounded-xl border bg-card overflow-hidden',
-        featured ? 'border-primary/30 shadow-sm' : 'border-border',
-      )}
+      className="rounded-xl border border-primary/30 bg-card shadow-sm overflow-hidden"
     >
-      <button
-        onClick={() => setOpen(o => !o)}
-        className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-muted/30 transition-colors"
-      >
-        <span className="shrink-0 w-8 h-8 rounded-full bg-secondary text-foreground/70 flex items-center justify-center font-display text-sm font-medium">
+      <div className="flex items-center gap-4 px-5 py-4">
+        <span className="shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-display text-sm font-medium">
           {rank}
         </span>
         <ValueIcon value={valueKey} size={22} />
-        <div className="flex-1">
-          <p className={cn(
-            'font-display font-medium text-foreground',
-            featured ? 'text-lg' : 'text-base',
-          )}>
-            {value.label}
-          </p>
-        </div>
-        <ChevronDown
-          size={18}
-          className={cn('text-muted-foreground transition-transform shrink-0', open && 'rotate-180')}
-        />
-      </button>
-      {open && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          transition={{ duration: 0.25 }}
-          className="px-5 pb-5 text-sm text-foreground/80 leading-relaxed border-t border-border/60"
-        >
-          <p className="pt-3">{narrative}</p>
-        </motion.div>
-      )}
+        <p className="font-display font-medium text-foreground text-lg">{value.label}</p>
+      </div>
+      <p className="px-5 pb-5 text-sm text-foreground/80 leading-relaxed border-t border-border/60 pt-3">
+        {narrative}
+      </p>
     </motion.div>
+  );
+}
+
+function RestRow({ valueKey, rank }: { valueKey: ValueKey; rank: number }) {
+  const value = getValueByKey(valueKey);
+  return (
+    <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-border bg-card">
+      <span className="w-6 h-6 rounded-full bg-secondary text-foreground/70 flex items-center justify-center font-display text-xs">
+        {rank}
+      </span>
+      <ValueIcon value={valueKey} size={18} />
+      <span className="font-display text-foreground">{value.label}</span>
+    </div>
   );
 }
