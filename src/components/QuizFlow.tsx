@@ -154,9 +154,9 @@ export function QuizFlow() {
             {phase === 'time' && (
               <BehaviourQuiz
                 title="Time"
-                stepLabel="Time Reality · Part 1 of 3"
-                subtitle="How you spend your time reveals what you truly prioritise."
-                question="Where does most of your time go in a typical week?"
+                stepLabel="Time · Part 1 of 3"
+                subtitle="Where your time goes is one of the strongest signals of what you've been prioritising."
+                question="In a typical week, where does most of your time actually go?"
                 options={TIME_OPTIONS}
                 optionIcons={TIME_ICONS}
                 maxSelections={3}
@@ -167,9 +167,9 @@ export function QuizFlow() {
             {phase === 'money' && (
               <BehaviourQuiz
                 title="Money"
-                stepLabel="Money Behaviour · Part 1 of 3"
-                subtitle="Where your money goes shows what you value in practice."
-                question="Where did most of your discretionary spending go in the past year?"
+                stepLabel="Money · Part 2 of 3"
+                subtitle="Where your money has been going often says something different than what you'd planned for it."
+                question="Looking back at the past year — where did most of your non-essential spending actually go?"
                 options={MONEY_OPTIONS}
                 optionIcons={MONEY_ICONS}
                 maxSelections={3}
