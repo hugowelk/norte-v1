@@ -49,7 +49,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_report_view: { Args: { p_id: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
