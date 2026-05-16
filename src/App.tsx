@@ -12,6 +12,7 @@ import { Q3Blocker } from "./components/post-paywall/Q3Blocker";
 import { Q4WontGiveUp } from "./components/post-paywall/Q4WontGiveUp";
 import { LoadingPlaceholder } from "./components/post-paywall/LoadingPlaceholder";
 import ReportPage from "./pages/ReportPage";
+import { SessionRecovery } from "./components/SessionRecovery";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <SessionRecovery />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/post-paywall/q1" element={<RequirePayment><Q1Name /></RequirePayment>} />

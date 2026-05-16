@@ -6,6 +6,8 @@ import { readPostPaywall, clearPostPaywall } from '@/lib/postPaywallStore';
 import { markOwnedReport } from '@/lib/reportOwnership';
 import { TIME_OPTIONS, MONEY_OPTIONS } from '@/lib/values';
 import { Button } from '@/components/ui/button';
+import { setPendingSession, clearPendingSession } from '@/lib/pendingSession';
+import { track } from '@/lib/analytics';
 
 const STATUS_LINES = [
   'Reading your trade-offs…',
@@ -79,6 +81,8 @@ export function LoadingPlaceholder() {
       setStatus('final-error');
       return;
     }
+    setPendingSession(body.paymentSessionId);
+    const startedAt = Date.now();
     try {
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 90_000);
@@ -88,7 +92,9 @@ export function LoadingPlaceholder() {
       if (error) throw error;
       if (data?.success && data?.report_id) {
         markOwnedReport(data.report_id);
+        clearPendingSession();
         clearPostPaywall();
+        track('report_generated', { report_id: data.report_id, generation_time_ms: Date.now() - startedAt });
         navigate(`/r/${data.report_id}`, { replace: true });
         return;
       }

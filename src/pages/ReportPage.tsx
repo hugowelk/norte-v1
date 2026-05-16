@@ -8,6 +8,8 @@ import { PrivacyNotice } from '@/components/report/PrivacyNotice';
 import { ReportMarkdown } from '@/components/report/ReportMarkdown';
 import { ReportActions } from '@/components/report/ReportActions';
 import { ReportNotFound } from '@/components/report/ReportNotFound';
+import { useDocumentMeta } from '@/lib/useDocumentMeta';
+import { track } from '@/lib/analytics';
 
 interface Report {
   id: string;
@@ -33,15 +35,25 @@ export default function ReportPage() {
       if (cancelled) return;
       if (error || !data) {
         setStatus('not-found');
+        track('report_404', { attempted_id: reportId });
         return;
       }
       setReport(data as Report);
       setStatus('ok');
-      // fire-and-forget view increment
+      track('report_viewed', { report_id: reportId, is_creator: isOwnedReport(reportId) });
       supabase.rpc('increment_report_view', { p_id: reportId }).then(() => {});
     })();
     return () => { cancelled = true; };
   }, [reportId]);
+
+  // SEO / OG — noindex individual reports; vague preview text so we don't leak content.
+  useDocumentMeta(reportId ? [
+    { name: 'robots', content: 'noindex' },
+    { property: 'og:title', content: 'A Norte reading' },
+    { property: 'og:description', content: "Someone's values, behaviour, and the gap between them." },
+    { property: 'og:image', content: 'https://norte.app/og-default.png' },
+    { property: 'og:url', content: `https://norte.app/r/${reportId}` },
+  ] : []);
 
   if (status === 'loading') {
     return (
@@ -58,21 +70,39 @@ export default function ReportPage() {
   if (status === 'not-found' || !report) return <ReportNotFound />;
 
   const isOwner = isOwnedReport(report.id);
+  const formattedDate = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  }).format(new Date(report.created_at));
 
   return (
     <div className="min-h-screen bg-background">
-      {!isOwner && <ShareHeader reportId={report.id} />}
+      {!isOwner && (
+        <div className="no-print">
+          <ShareHeader reportId={report.id} />
+        </div>
+      )}
 
-      <article className="max-w-[640px] mx-auto px-6 md:px-0 pt-20 pb-16">
-        {isOwner && <PrivacyNotice reportId={report.id} />}
+      <article className="report-content max-w-[640px] mx-auto px-6 md:px-0 pt-20 pb-16">
+        <div className="pdf-header">
+          <div className="pdf-header-title">NORTE — Your reading</div>
+          <div className="pdf-header-date">{formattedDate}</div>
+        </div>
+
+        {isOwner && (
+          <div className="no-print">
+            <PrivacyNotice reportId={report.id} />
+          </div>
+        )}
 
         <ReportMarkdown markdown={report.report_markdown} />
 
-        <div className="mt-[72px]">
-          <ReportActions />
+        <hr className="no-print mt-16 mb-12 border-0 border-t border-border" />
+
+        <div className="no-print">
+          <ReportActions reportId={report.id} />
         </div>
 
-        <p className="mt-16 text-center text-sm text-muted-foreground italic">
+        <p className="no-print mt-16 text-center text-sm text-muted-foreground italic">
           Norte · Anyone with this link can read this report.
         </p>
       </article>
