@@ -166,7 +166,7 @@ export function QuizFlow() {
             <SelectItem value="tradeoffIntro">3 · Trade-off Intro</SelectItem>
             {SCENARIOS.map((s, i) => (
               <SelectItem key={s.id} value={`tradeoff-${i}`}>
-                3.{i + 1} · {s.title}
+                3.{i + 1} · {s.id}
               </SelectItem>
             ))}
             <SelectItem value="results">4 · Results</SelectItem>
