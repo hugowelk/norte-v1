@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -79,6 +79,12 @@ export function QuizFlow() {
   const [result, setResult] = useState<ScoreResult>();
   const [core, setCore] = useState<CoreValuesResult>();
   const [alignmentScores, setAlignmentScores] = useState<AlignmentScores>({});
+
+  // Reset scroll whenever the visible step changes — without this each new
+  // screen inherits the previous scroll position and feels glitchy.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0 });
+  }, [phase, scenarioIdx]);
 
   // Progress: rough estimate across the whole flow
   const totalSteps = 2 /*time+money*/ + 1 /*intro*/ + SCENARIOS.length + 4 /*results,core,align,compass*/;

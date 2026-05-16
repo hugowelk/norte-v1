@@ -13,6 +13,7 @@ import { Q4WontGiveUp } from "./components/post-paywall/Q4WontGiveUp";
 import { LoadingPlaceholder } from "./components/post-paywall/LoadingPlaceholder";
 import ReportPage from "./pages/ReportPage";
 import { SessionRecovery } from "./components/SessionRecovery";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <ScrollToTop />
         <SessionRecovery />
         <Routes>
           <Route path="/" element={<Index />} />
