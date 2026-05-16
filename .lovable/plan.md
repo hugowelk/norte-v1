@@ -1,75 +1,97 @@
-# Prompt 1 — Post-Paywall Question Screens
+# Prompt 2 — AI Generation, Loading Screen, Database Persistence
 
-Build the 4 screens that come after the Stripe paywall, with routing, state, and validation. No AI generation or report page yet (those are prompts 2–3).
+Wire the existing `/post-paywall/loading` placeholder to a real backend that generates the AI report, saves it, and redirects to `/r/{report_id}`. The report page itself (`/r/:id`) is out of scope (next prompt).
 
-## Routes
+## Prerequisites
 
-Add to `src/App.tsx`:
+- **Enable Lovable Cloud** — needed for the `reports` table and the edge function that holds the Anthropic key. (Cloud is Supabase under the hood; no external account.)
+- **Add `ANTHROPIC_API_KEY` secret** after Cloud is on. The key stays server-side in the edge function only.
 
-- `/post-paywall/q1` — Name (optional)
-- `/post-paywall/q2` — Current chapter (required, ≥10 chars)
-- `/post-paywall/q3` — Blocker (required, "Other" needs ≥3 chars)
-- `/post-paywall/q4` — Won't give up (required, ≥5 chars)
-- `/post-paywall/loading` — Placeholder ("Generation will happen here") until prompt 2
+Note: Lovable's default for AI is the Lovable AI Gateway (no key needed, billed per request). The prompt explicitly asks for Anthropic `claude-sonnet-4-5-20250929`, so the plan honors that. Say the word if you'd rather use Lovable AI instead.
 
-All `/post-paywall/*` routes are gated by a `paymentSessionId` flag in `sessionStorage`. Missing → redirect to `/` (where the existing paywall lives in `QuizFlow`).
+## Database
 
-## State
+New table `reports` (migration):
 
-Single sessionStorage-backed store at key `norte_post_paywall`:
+```sql
+create table public.reports (
+  id text primary key,
+  created_at timestamptz default now(),
+  payment_session_id text unique not null,
+  input_data jsonb not null,
+  report_markdown text not null,
+  view_count integer default 0,
+  paid boolean default true
+);
+create index idx_reports_payment_session on public.reports(payment_session_id);
 
-```ts
-interface PostPaywallState {
-  paymentSessionId: string;
-  name: string;
-  current_chapter: string;
-  blocker_answer: 'not_tried' | 'other_priorities_win' | 'dont_know_what_it_looks_like'
-    | 'hard_right_now' | 'not_sure_want_it' | 'other' | null;
-  blocker_custom_text: string;
-  wont_give_up: string;
-  // assessment snapshot needed for Q3 + prompt 2
-  loudest_gap_value: string | null;
-  loudest_gap_label: string;
-  assessment: AssessmentSnapshot;
-}
+alter table public.reports enable row level security;
+
+-- public-by-link read, no anon write/update/delete
+create policy "reports_public_read" on public.reports for select using (true);
 ```
 
-A small `usePostPaywallStore` hook reads/writes JSON to sessionStorage so refresh + back-nav pre-fill works.
+Inserts happen only inside the edge function using the service role, so no insert policy for anon is needed.
 
-## Paywall hand-off
+## Edge function — `generate-report`
 
-In `src/components/quiz/Paywall.tsx`, the "Unlock" CTA currently does nothing real. Change it to:
+`supabase/functions/generate-report/index.ts`, invoked from the client via `supabase.functions.invoke('generate-report', { body })`. Public (no JWT) so the anonymous flow can call it.
 
-1. Compute the assessment snapshot (revealed top 3, aspirational top 5, loudest gap via `findAspirationalGaps`, time/money picks).
-2. Write it + a generated `paymentSessionId` (uuid) to the store.
-3. `navigate('/post-paywall/q1')`.
+Behavior:
+1. Parse body matching the shape from the prompt (`paymentSessionId`, `assessmentResults`, `postPaywallAnswers`).
+2. Idempotency: `select id from reports where payment_session_id = ?`. If present, return `{ success: true, report_id }`.
+3. Build `inputData` by merging `assessmentResults` + `postPaywallAnswers` into a single object (field names as documented in prompt).
+4. Call Anthropic Messages API:
+   - `POST https://api.anthropic.com/v1/messages`
+   - headers: `x-api-key: ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01`, `content-type: application/json`
+   - body: `{ model: 'claude-sonnet-4-5-20250929', max_tokens: 2000, temperature: 0.7, system: NORTE_REPORT_SYSTEM_PROMPT, messages: [{ role: 'user', content: 'Generate the report for this user:\n\n' + JSON.stringify(inputData, null, 2) }] }`
+   - 429 → wait 2s, retry once.
+5. Extract `content[0].text` as `report_markdown`.
+6. Generate a short URL-safe id (12-char nanoid-style, custom helper — no new deps).
+7. Insert into `reports`. On unique-violation race, re-select and return existing id.
+8. Return `{ success: true, report_id }`. On any failure return `{ success: false, error }` and do NOT insert.
 
-For now, no real Stripe — the click acts as "payment complete." Real Stripe wiring happens later.
+System prompt: stored as a constant `NORTE_REPORT_SYSTEM_PROMPT` in `supabase/functions/generate-report/prompt.ts` using the placeholder string from the doc. Swap to the real ~3500-word prompt later by editing that one file.
 
-## Loudest gap for Q3
+CORS: standard `Access-Control-Allow-Origin: *` + handle OPTIONS.
 
-Use `findAspirationalGaps(aspirationalTop5, revealedTop3)[0]`. If none, fall back to `aspirational[0]` and swap Q3 copy to "What's been making it harder to deepen your relationship with **{value}**?".
+## Frontend — Loading screen
 
-The aspirational top 5 is the user's `core.slots` from `CoreValuesSelection`. Pass it from `QuizFlow` into the Paywall (or read from a lifted state) so the snapshot is complete at hand-off.
+Replace `src/components/post-paywall/LoadingPlaceholder.tsx` content (keep the file/route) with the real loading UI:
 
-## Screens
+- Full-screen cream background, centered column.
+- Top: small Norte compass mark. Pulsing opacity 0.4↔1.0 over 2s (Tailwind `animate-pulse` overridden with a custom keyframe in `index.css` or inline `@keyframes` for the exact range; no spin).
+- 32px below: one of three rotating status lines, DM Sans body, centered, 300ms crossfade via framer-motion `AnimatePresence`:
+  1. `Reading your trade-offs…`
+  2. `Connecting the pattern to what you said about your life…`
+  3. `Writing your report. This usually takes about 30 seconds.`
+  - 8s per line; after line 3, keep looping line 3 until response arrives.
+- No progress bar.
 
-Each screen is a new file in `src/components/post-paywall/`:
+Lifecycle:
+- On mount, read `postPaywallStore`. Build the request body (use `findAspirationalGaps` from `algorithm.ts`; map `time_picks`/`money_picks` to `TIME_OPTIONS[i].label` / `MONEY_OPTIONS[i].label` from `values.ts`).
+- Call edge function via Supabase client. 90s client-side timeout via `AbortController`.
+- On success → `clearPostPaywall()` then `navigate('/r/' + report_id, { replace: true })`. (The `/r/:id` route will 404 until next prompt — expected.)
+- On failure → switch to retry UI:
+  > Something interrupted the generation.\
+  > We've saved your answers — try again?\
+  > `[ Retry → ]`
+- Track retry count in component state. After 3 failures, show the support message from the spec. Retry uses the same body.
+- Guard against `StrictMode` double-invoke with a `useRef` flag so we don't fire two calls on mount in dev.
 
-- `PostPaywallLayout.tsx` — cream bg, max-w 640px, eyebrow + back link + content slot. Matches existing scenario rhythm.
-- `Q1Name.tsx` — single input, max 30, autofocus, Skip link, Continue always enabled.
-- `Q2Chapter.tsx` — 3-row textarea, max 280, live counter, 3 italic example lines, Continue ≥10 chars.
-- `Q3Blocker.tsx` — 5 selectable card rows + "Other" with revealed text input (max 200). H1 interpolates `{loudest_gap_value}` in bold olive.
-- `Q4WontGiveUp.tsx` — input/textarea, max 200, counter, 4 italic examples, CTA `Generate my report →` ≥5 chars. Routes to `/post-paywall/loading`.
+## Files
 
-Eyebrows: `BEFORE YOUR REPORT · N OF 4`. Back link top-left from Q2 onward. Reuse existing tokens (no new colors).
+New:
+- `supabase/migrations/<ts>_reports.sql`
+- `supabase/functions/generate-report/index.ts`
+- `supabase/functions/generate-report/prompt.ts`
+- (Cloud auto-generates `src/integrations/supabase/client.ts` etc.)
+
+Edited:
+- `src/components/post-paywall/LoadingPlaceholder.tsx` — full loading + retry logic.
+
+No new npm deps. No changes to `App.tsx` routing.
 
 ## Out of scope
 
-AI call, real loading visual, report page, PDF, real Stripe — all in later prompts.
-
-## Technical notes
-
-- New files: `src/lib/postPaywallStore.ts`, `src/components/post-paywall/{PostPaywallLayout,Q1Name,Q2Chapter,Q3Blocker,Q4WontGiveUp,LoadingPlaceholder,RequirePayment}.tsx`, 5 route entries in `App.tsx`.
-- Edited: `Paywall.tsx` (CTA → navigate + store write), `QuizFlow.tsx` (pass `core.slots` to Paywall for snapshot).
-- No new deps; uses existing `react-router-dom`, shadcn primitives, framer-motion.
+`/r/:id` report page, PDF export, real Stripe webhook validation, `view_count` increment, full system prompt content.
