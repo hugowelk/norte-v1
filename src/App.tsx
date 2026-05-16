@@ -11,6 +11,7 @@ import { Q2Chapter } from "./components/post-paywall/Q2Chapter";
 import { Q3Blocker } from "./components/post-paywall/Q3Blocker";
 import { Q4WontGiveUp } from "./components/post-paywall/Q4WontGiveUp";
 import { LoadingPlaceholder } from "./components/post-paywall/LoadingPlaceholder";
+import ReportPage from "./pages/ReportPage";
 
 const queryClient = new QueryClient();
 
