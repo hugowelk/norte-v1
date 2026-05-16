@@ -25,7 +25,7 @@ export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Pr
           Here's what came up.
         </h2>
         <p className="text-muted-foreground max-w-md mx-auto">
-          Based on the trade-offs you actually made, these are the values driving your life right now.
+          Across the trade-offs you just made, these are the three values that showed up most often.
         </p>
       </div>
 
@@ -38,7 +38,6 @@ export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Pr
             key={key}
             valueKey={key}
             rank={i + 1}
-            score={result.normalized[key]}
             narrative={buildBehaviourNarrative(key, timeAnswer, moneyAnswer)}
             featured
             defaultOpen={i === 0}
@@ -48,14 +47,13 @@ export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Pr
 
       <div className="space-y-3">
         <p className="text-xs font-display uppercase tracking-widest text-muted-foreground px-1">
-          Other values that came up
+          The other five (in order)
         </p>
         {rest.map((key, i) => (
           <ValueAccordion
             key={key}
             valueKey={key}
             rank={i + 4}
-            score={result.normalized[key]}
             narrative={buildBehaviourNarrative(key, timeAnswer, moneyAnswer)}
           />
         ))}
@@ -65,18 +63,17 @@ export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Pr
         onClick={onContinue}
         className="w-full py-4 rounded-lg bg-primary text-primary-foreground font-display font-medium hover:opacity-90 transition-opacity"
       >
-        Choose your core values
+        Next: choose the values you want at the centre →
       </button>
     </div>
   );
 }
 
 function ValueAccordion({
-  valueKey, rank, score, narrative, featured, defaultOpen = false,
+  valueKey, rank, narrative, featured, defaultOpen = false,
 }: {
   valueKey: ValueKey;
   rank: number;
-  score: number;
   narrative: string;
   featured?: boolean;
   defaultOpen?: boolean;
@@ -109,9 +106,7 @@ function ValueAccordion({
           )}>
             {value.label}
           </p>
-          {featured && <p className="text-xs text-muted-foreground mt-0.5">{value.description}</p>}
         </div>
-        <span className="text-sm font-display text-accent font-medium tabular-nums">{score}</span>
         <ChevronDown
           size={18}
           className={cn('text-muted-foreground transition-transform shrink-0', open && 'rotate-180')}
@@ -122,10 +117,9 @@ function ValueAccordion({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           transition={{ duration: 0.25 }}
-          className="px-5 pb-5 space-y-2 text-sm text-foreground/80 leading-relaxed border-t border-border/60"
+          className="px-5 pb-5 text-sm text-foreground/80 leading-relaxed border-t border-border/60"
         >
           <p className="pt-3">{narrative}</p>
-          <p className="text-muted-foreground italic">{value.longDescription}</p>
         </motion.div>
       )}
     </motion.div>
