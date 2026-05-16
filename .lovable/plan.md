@@ -1,96 +1,177 @@
-# Norte — MVP Flow Revisions
+# Norte — MVP Flow Revisions (v2)
 
-Restructures the Life Values Discovery experience around the new "Norte" brand and reorders the flow. The new flow is:
+Restructures the app around the new "Norte" brand, the locked **8-value model**, and the **13 trade-off algorithm** you provided. Replaces the current 14-value emoji system end-to-end.
+
+New flow:
 
 ```text
-Landing → Quiz (Time, Money, 13 Trade-offs, Pride, Regret, Triggers)
-       → Results (top 5 + secondary, expandable)
-       → Core Values Selection (combined sort + rank, 5 slots, custom values)
-       → Alignment Check (scales pre-filled from behaviour)
-       → Value Compass / Alignment Map (radar: current vs aspiring)
-       → Commit to Action (emotional report + CTA)
-       → Paywall (custom AI action plan)
+Landing
+  → Time Reality
+  → Money Behaviour
+  → Trade-off Intro ("There's no right answer")
+  → 13 Trade-off Scenarios (C1–C13)
+  → Results (revealed top 3 + ranked rest, expandable)
+  → Core Values Selection (5 ordered slots + accordion list + custom)
+  → Alignment Check (sliders pre-filled from normalised scores)
+  → Value Compass / Alignment Map (Current vs Aspiring + emotional report)
+  → Paywall (custom AI action plan)
 ```
 
-## 1. Landing page
+The standalone "Commit to Action" page is removed.
 
-- Add "Norte" wordmark at the top of the landing screen (above or near the compass icon).
-- Add a short credentials / methodology block near the bottom: a single paragraph + a small "Based on" line referencing the frameworks behind the tool (e.g. Schwartz values theory, ACT values work, behavioural-economics trade-off framing). Editorial styling, muted-foreground, small text.
+## 1. Values model — switch to the 8-value system
+
+Rewrite `src/lib/values.ts` to the locked 8 values:
+
+| Key | Label |
+|---|---|
+| achievement | Achievement |
+| connection  | Connection |
+| aliveness   | Aliveness |
+| enjoyment   | Enjoyment |
+| meaning     | Meaning |
+| contribution| Contribution |
+| stability   | Stability |
+| autonomy    | Autonomy |
+
+Each gets: label, short description, long description (used on Results accordion), Lucide icon, and a `maxScore` (per algorithm: Achievement 7.0, Connection 5.5, Aliveness 4.5, Enjoyment 3.5, Meaning 7.5, Contribution 3.5, Stability 5.0, Autonomy 3.5).
+
+Drop all 14 legacy values, the emoji field, and the old scoring system.
+
+## 2. Trade-off algorithm
+
+Implement exactly per your spec in a new `src/lib/algorithm.ts`:
+
+- `SCENARIOS`: array of 13 entries, each with `id` (C1–C13), `tier`, `weight`, `prompt`, `optionA`, `optionB`. C12 carries `split: true` with two values per side.
+- `computeScores(answers: ('A'|'B')[13])` → `{ raw, normalized, ranking, revealed: { primary, secondary, tertiary } }`. Normalisation = round(raw / maxScore × 100). Tiebreakers per spec (highest-weight scenario wins; if still tied → co-primary).
+- Validates all 13 answers are present before computing.
+- Pure, deterministic, frontend only. No persistence beyond React state for MVP.
+
+## 3. Landing page (`/`)
+
+- Add **"Norte"** wordmark at top.
+- Keep the compass icon + headline.
+- Add a small credentials block near the bottom (1 short paragraph + "Based on" line referencing Schwartz values theory, ACT values work, behavioural-economics trade-off framing — placeholder copy for later pass).
 - Update `<title>` and meta description to use "Norte".
 
-## 2. Value icons (shared)
+## 4. Time Reality & Money Behaviour
 
-- Replace emoji on each of the 14 values in `src/lib/values.ts` with a Lucide icon mapping (keep emoji as fallback for now, or remove). Add an `icon: LucideIcon` field on `Value`.
-- Create a small `<ValueIcon value={key} />` component used everywhere a value appears (Results, Sorting, Ranking, Alignment, Compass, Actions). Ensures one icon per area is reused consistently across screens.
+These stay as the first two screens (kept simple — they feed the behaviour narrative on the Results page, not the algorithm).
 
-## 3. Quiz — Time Reality & Money Behaviour
+- Multi-select with up to 3 options each.
+- Each option gets a Lucide icon (rendered next to the label).
+- Add an "Add your own" text input below the options so the user can type a custom item. Custom entries are stored alongside the selected indices and surfaced verbatim in the Results behaviour narrative.
 
-- In `QuizSection`, when the current question is `time` or `money`, render an extra "Add your own" input below the options. Custom entries are stored on the answer and contribute neutral / user-tagged weight (no value scoring; recorded for display only).
-- Render each option with its mapped icon.
+## 5. Trade-off intro screen
 
-## 4. Trade-off Decisions — 13 scenarios
+New transition screen before C1, with the exact framing from the spec:
 
-- Replace the current 3 trade-off questions in `QUIZ_QUESTIONS` with 13 forced-choice scenarios. (Awaiting the attached list — I will use the 13 scenarios you provide; if not provided, I will draft 13 covering the main value tensions: career vs family, money vs freedom, growth vs comfort, helping others vs self, health vs achievement, etc., for your review.)
-- For forced-choice questions, auto-advance to the next question on selection — remove the Continue button for this type only. Multi-select questions keep Continue.
+> **There's no right answer.**
+> You'll see 13 everyday situations. In each one, pick the option closest to how you'd actually act — not how you'd like to act.
+> Be honest with yourself. That's what makes the result useful.
 
-## 5. Results page
+Single "Begin" button.
 
-- Show **Top 5** values prominently, then a collapsed **"Other values that showed up"** secondary list (remaining inferred).
-- Each value is an accordion card. Expanded state shows a behaviour-grounded paragraph: *"You've been prioritising X — your time goes into A and B, and your money into C…"* generated from the user's actual answers (we already have `answers` + the option labels in `values.ts`).
-- Add a `buildBehaviourNarrative(valueKey, answers)` helper in `src/lib/values.ts` that walks the answers and stitches together the option labels that contributed to that value.
+## 6. The 13 Trade-off scenarios
 
-## 6. Core Values Selection (merges Sorting + Ranking)
+New `TradeoffScenario` component:
 
-- Single screen replacing both `ValueSorting` and `ValueRanking`.
-- Left/top: **5 ordered placeholder slots** (1–5) the user fills with their core values, drag-to-reorder via `@dnd-kit`.
-- Below: list of all values as accordion cards (label + icon collapsed; expanded shows description). Tap to add to the next empty slot; tap a slot to remove.
-- "Add your own value" button opens an inline form (label + short description); custom values join the list and can be slotted.
-- `QuizFlow` collapses `sorting` and `ranking` phases into a single `coreValues` phase; downstream consumers use `rankedValues = coreValues` (slot order).
+- Header: numeric counter "X of 13" (no progress bar per UX notes).
+- Scenario prompt in editorial type.
+- Two large option cards (A / B). No value labels shown.
+- **Auto-advance on click** — no Continue button.
+- **No back navigation** on this segment (per spec).
+- After C4 → show transition card "The next ones get a little harder."
+- After C8 → show transition card "Almost at the hardest choices."
+- C12 gets a distinct visual treatment (no A/B label, broader card layout) to signal it's the special split scenario.
 
-## 7. Alignment Check
+Scenario content sourced verbatim from `norte-scenarios-EN.md` (C1–C13).
 
-- For each of the top 5 values, show a 0–10 scale (slider).
-- Pre-fill each slider with a suggested position derived from the behaviour scores (normalise `scores[value]` against the max possible for that value → 0–10). Show a small "Suggested from your behaviour" label.
-- User can adjust freely; final values feed the Compass.
+## 7. Results page
 
-## 8. Value Compass / Alignment Map (was FinalInsights radar)
+- Compute `revealed` and `ranking` via the algorithm.
+- Show **Revealed top 3** prominently (primary, secondary, tertiary) — each as an accordion card with icon, name, normalised score, and an expanded behaviour narrative.
+- Below: **"Other values that came up"** — remaining 5 in ranked order, smaller, also expandable.
+- Behaviour narrative for each value is generated from the user's Time + Money answers ("You've been prioritising X — your time goes into A and B, and your money into C…"). Helper: `buildBehaviourNarrative(valueKey, timeAnswers, moneyAnswers)`.
+- Single CTA: "Choose your core values" → Core Values Selection.
 
-- Move this **before** the Commit to Action step.
-- Radar chart with two series, relabelled:
-  - **Current behaviour signals** (from quiz scores).
-  - **Aspiring values** (from ranking + alignment slider positions).
-- Below the chart: a short emotional, plain-language report comparing the two — biggest gaps, biggest alignments, one "this is where your life is pulling away from what matters" callout. Tone: warm, editorial, no jargon. Designed as an a-ha moment.
-- Primary CTA at bottom: **"Explore next steps"** → goes to Commit to Action.
+## 8. Core Values Selection (merges old Sorting + Ranking)
 
-## 9. Commit to Action
+Single screen:
 
-- Moved to after the Compass.
-- Keep current action-capture UI (1–3 actions tied to top values), but lead with a short framing pulled from the Compass insight ("You said freedom matters most, but your week is built around achievement. Here's where to start.").
+- 5 ordered placeholder slots (1–5). Drag to reorder via `@dnd-kit`.
+- Below: full list of the 8 values as accordion cards (icon + label collapsed; expanded shows long description). Click adds to next empty slot; click a filled slot to remove.
+- "Add your own value" button → inline form (label + short description). Custom values join the list and can be slotted.
+- These become the user's **aspirational top 5** (`aspirational`), distinct from `revealed` (algorithm output).
+- Continue button enabled when all 5 slots are filled.
 
-## 10. Paywall — Custom AI Action Plan (new final page)
+## 9. Alignment Check
 
-- New `Paywall` component shown after Commit to Action.
-- Promotes the next product: a guided, AI-driven deep dive that turns the user's value gaps into a personalised behaviour-shift plan. Frame it as *not* goal-setting — it's about reshaping daily behaviours to raise life satisfaction by aligning with their values.
-- Sections: hero headline, 3–4 benefit bullets, what's included, single CTA button ("Start my plan" — non-functional placeholder for now), small "maybe later" link that loops back to the Compass.
-- No payment integration in this pass — visual paywall only.
+- For each of the 5 aspirational values, show a 0–10 slider.
+- Pre-fill each slider with a suggestion derived from `normalized[value] / 10` (so a value scored 70 lands at 7). For custom user-added values, default to mid (5) with a note. Show small "Suggested from your behaviour" label.
+- User can adjust freely. Continue stores `alignmentScores`.
+
+## 10. Value Compass / Alignment Map
+
+Rename old `FinalInsights.tsx` → `ValueCompass.tsx`. Moved before any action/paywall step.
+
+- Radar chart (recharts) with two relabelled series:
+  - **Current behaviour signals** — from `normalized` (algorithm output).
+  - **Aspiring values** — from the alignment sliders × 10.
+- Plot all 8 values on the radar so gaps are visible across the whole system, not just the chosen 5.
+- Below the chart: short, warm, plain-language **gap reveal** report using the spec's Beat-3 logic:
+  - Detect which aspirational values fall outside the revealed top 3.
+  - Call out their ranked position ("Connection came up fifth").
+  - Highlight 1 biggest gap and 1 strongest alignment.
+  - Tone: editorial, emotional, no jargon — designed as an a-ha moment.
+- Primary CTA: **"Explore next steps"** → Paywall.
+
+## 11. Paywall — Custom AI Action Plan
+
+New `Paywall.tsx`, final screen. Replaces the old standalone Commit to Action page.
+
+- Hero headline + subhead positioning the next product: an AI-guided deep dive that turns the user's value gaps into a personalised behaviour-shift plan. Framing: *not* goal-setting — it's about reshaping daily behaviours so life satisfaction rises by aligning with revealed/aspired values.
+- 3–4 benefit bullets, "what's included" block.
+- Primary CTA "Start my plan" (non-functional placeholder).
+- Secondary link "Maybe later" → returns to the Compass.
+
+## 12. Removed
+
+- `ActionPlanning.tsx` and the `actions` phase — gone.
+- `ValueSorting.tsx` and `ValueRanking.tsx` — replaced by the combined Core Values Selection.
+- 14-value system, emoji field, old `calculateValueScores` / `getTopValues`.
+- Back button on the 13-scenario segment.
 
 ## Phase order in `QuizFlow.tsx`
 
 ```text
-quiz → results → coreValues → alignment → compass → actions → paywall
+time → money → tradeoffIntro → tradeoffs(0..12) → results
+  → coreValues → alignment → compass → paywall
 ```
-
-(rename `insights` → `compass`; remove `sorting` and `ranking`; add `paywall`.)
 
 ## Technical notes
 
-- Files to edit: `src/pages/Index.tsx`, `src/lib/values.ts`, `src/components/QuizFlow.tsx`, `src/components/quiz/QuizSection.tsx`, `src/components/quiz/ValueResults.tsx`, `src/components/quiz/AlignmentReflection.tsx`, `src/components/quiz/ActionPlanning.tsx`, `src/components/quiz/FinalInsights.tsx` (rename to `ValueCompass.tsx`), `index.html`.
-- Files to create: `src/components/quiz/CoreValuesSelection.tsx`, `src/components/quiz/Paywall.tsx`, `src/components/ValueIcon.tsx`.
-- Files to delete: `src/components/quiz/ValueSorting.tsx`, `src/components/quiz/ValueRanking.tsx`.
-- New helpers in `src/lib/values.ts`: `buildBehaviourNarrative`, `suggestedAlignmentFromScores`, value→Lucide icon map, type updates for custom values.
-- Accordion: reuse shadcn `Accordion` for Results and Core Values lists.
-- Copy is intentionally left rough — you flagged a separate copy pass later.
+Files to create:
+- `src/lib/algorithm.ts` — scenarios + scoring + tiebreakers + output types.
+- `src/components/quiz/TradeoffIntro.tsx`
+- `src/components/quiz/TradeoffScenario.tsx`
+- `src/components/quiz/TradeoffTransition.tsx`
+- `src/components/quiz/CoreValuesSelection.tsx`
+- `src/components/quiz/Paywall.tsx`
+- `src/components/ValueIcon.tsx`
 
-## Open item
+Files to rewrite:
+- `src/lib/values.ts` — 8-value model, icons, max scores, long descriptions.
+- `src/components/QuizFlow.tsx` — new phase machine.
+- `src/components/quiz/QuizSection.tsx` — only used for Time/Money now; add custom-input support and icons.
+- `src/components/quiz/ValueResults.tsx` — top 3 + ranked rest, accordions, behaviour narrative.
+- `src/components/quiz/AlignmentReflection.tsx` — sliders pre-filled from normalised scores.
+- `src/components/quiz/FinalInsights.tsx` → rename `ValueCompass.tsx`; relabel radar; add gap-reveal report.
+- `src/pages/Index.tsx`, `index.html` — Norte branding + credentials.
 
-- The 13 trade-off scenarios were referenced as "attached" but I don't see the attachment in this thread. Please paste them in chat (or confirm I should draft a first version covering the main value tensions for you to edit).
+Files to delete:
+- `src/components/quiz/ValueSorting.tsx`
+- `src/components/quiz/ValueRanking.tsx`
+- `src/components/quiz/ActionPlanning.tsx`
+
+Algorithm confirmation: yes — your `norte-algorithm.md` gives the full deterministic matrix (weights per tier, value mapping per option, max-score table, normalisation to 0–100, ranking, top-3 revealed values, C12 split rule, tiebreakers). I will implement it verbatim with unit-style sanity checks on 8–10 answer patterns to confirm every value can plausibly land in top 3.
