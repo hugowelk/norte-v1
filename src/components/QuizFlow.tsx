@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Briefcase, Heart, Users as UsersIcon, HeartPulse, BookOpen, Gamepad2, HandHeart as HandHeartIcon,
@@ -15,8 +16,9 @@ import {
 import {
   TIME_OPTIONS, MONEY_OPTIONS, type BehaviourAnswer,
 } from '@/lib/values';
-import { SCENARIOS, computeScores, type Answer, type ScoreResult } from '@/lib/algorithm';
-import { VALUES, type ValueKey } from '@/lib/values';
+import { SCENARIOS, computeScores, findAspirationalGaps, type Answer, type ScoreResult } from '@/lib/algorithm';
+import { VALUES, getValueByKey, type ValueKey } from '@/lib/values';
+import { writePostPaywall, genPaymentSessionId, type AssessmentSnapshot, type LoudestGap } from '@/lib/postPaywallStore';
 
 // Mock data for designer preview when jumping past the quiz
 const MOCK_TIME: BehaviourAnswer = { selectedIndices: [0, 1, 2], custom: [] };
@@ -66,6 +68,7 @@ const pageVariants = {
 };
 
 export function QuizFlow() {
+  const navigate = useNavigate();
   const [phase, setPhase] = useState<Phase>('time');
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [pendingTransition, setPendingTransition] = useState<string | null>(null);
@@ -318,6 +321,45 @@ export function QuizFlow() {
                   const firstGap = core.slots.map(s => s.key).find(k => !top3.has(k));
                   return firstGap ?? result.revealed.primary;
                 })()}
+                onUnlock={() => {
+                  const r = result ?? mockResult();
+                  const c = core ?? mockCore(r);
+                  const aspirational = c.slots.map(s => s.key);
+                  const top3: ValueKey[] = [r.revealed.primary, r.revealed.secondary, r.revealed.tertiary];
+                  const gaps = findAspirationalGaps(aspirational, r);
+                  let loudest: LoudestGap | null = null;
+                  if (gaps.length > 0) {
+                    loudest = { value: gaps[0].value, label: getValueByKey(gaps[0].value).label, isFallback: false };
+                  } else if (aspirational.length > 0) {
+                    loudest = { value: aspirational[0], label: getValueByKey(aspirational[0]).label, isFallback: true };
+                  }
+                  const snapshot: AssessmentSnapshot = {
+                    revealed_top_3: top3,
+                    revealed_full_ranking: r.ranking,
+                    aspirational_top_5: aspirational,
+                    loudest_gap: gaps[0]
+                      ? { value: gaps[0].value, aspirational_rank: aspirational.indexOf(gaps[0].value) + 1, revealed_rank: gaps[0].rank }
+                      : null,
+                    other_gaps: gaps.slice(1).map(g => ({
+                      value: g.value,
+                      aspirational_rank: aspirational.indexOf(g.value) + 1,
+                      revealed_rank: g.rank,
+                    })),
+                    time_picks: (timeAnswer?.selectedIndices ?? []).map(i => TIME_OPTIONS[i]?.label).filter(Boolean) as string[],
+                    money_picks: (moneyAnswer?.selectedIndices ?? []).map(i => MONEY_OPTIONS[i]?.label).filter(Boolean) as string[],
+                  };
+                  writePostPaywall({
+                    paymentSessionId: genPaymentSessionId(),
+                    name: '',
+                    current_chapter: '',
+                    blocker_answer: null,
+                    blocker_custom_text: '',
+                    wont_give_up: '',
+                    loudest_gap: loudest,
+                    assessment: snapshot,
+                  });
+                  navigate('/post-paywall/q1');
+                }}
               />
             )}
           </motion.div>
