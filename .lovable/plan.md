@@ -1,97 +1,94 @@
-# Prompt 2 — AI Generation, Loading Screen, Database Persistence
+# Prompt 3 — Report Page `/r/:reportId`
 
-Wire the existing `/post-paywall/loading` placeholder to a real backend that generates the AI report, saves it, and redirects to `/r/{report_id}`. The report page itself (`/r/:id`) is out of scope (next prompt).
+Build the public report page and supporting share UX. Adds `react-markdown` + `remark-gfm` for parsing.
 
-## Prerequisites
+## Routing
 
-- **Enable Lovable Cloud** — needed for the `reports` table and the edge function that holds the Anthropic key. (Cloud is Supabase under the hood; no external account.)
-- **Add `ANTHROPIC_API_KEY` secret** after Cloud is on. The key stays server-side in the edge function only.
+- Add `<Route path="/r/:reportId" element={<ReportPage />} />` in `src/App.tsx`. Public (no `RequirePayment` gate).
 
-Note: Lovable's default for AI is the Lovable AI Gateway (no key needed, billed per request). The prompt explicitly asks for Anthropic `claude-sonnet-4-5-20250929`, so the plan honors that. Say the word if you'd rather use Lovable AI instead.
+## Data
 
-## Database
+- Fetch with `supabase.from('reports').select('id, created_at, report_markdown, input_data').eq('id', reportId).maybeSingle()`.
+- Loading: lightweight cream-bg pulse (same compass mark from loading screen, no status text).
+- Not found / error: render the 404 state described below.
+- Fire-and-forget view increment via a new SECURITY DEFINER RPC `public.increment_report_view(p_id text)` (RLS blocks anon updates, so we need a function). Call `supabase.rpc('increment_report_view', { p_id: reportId })` — don't await.
 
-New table `reports` (migration):
-
-```sql
-create table public.reports (
-  id text primary key,
-  created_at timestamptz default now(),
-  payment_session_id text unique not null,
-  input_data jsonb not null,
-  report_markdown text not null,
-  view_count integer default 0,
-  paid boolean default true
-);
-create index idx_reports_payment_session on public.reports(payment_session_id);
-
-alter table public.reports enable row level security;
-
--- public-by-link read, no anon write/update/delete
-create policy "reports_public_read" on public.reports for select using (true);
-```
-
-Inserts happen only inside the edge function using the service role, so no insert policy for anon is needed.
-
-## Edge function — `generate-report`
-
-`supabase/functions/generate-report/index.ts`, invoked from the client via `supabase.functions.invoke('generate-report', { body })`. Public (no JWT) so the anonymous flow can call it.
-
-Behavior:
-1. Parse body matching the shape from the prompt (`paymentSessionId`, `assessmentResults`, `postPaywallAnswers`).
-2. Idempotency: `select id from reports where payment_session_id = ?`. If present, return `{ success: true, report_id }`.
-3. Build `inputData` by merging `assessmentResults` + `postPaywallAnswers` into a single object (field names as documented in prompt).
-4. Call Anthropic Messages API:
-   - `POST https://api.anthropic.com/v1/messages`
-   - headers: `x-api-key: ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01`, `content-type: application/json`
-   - body: `{ model: 'claude-sonnet-4-5-20250929', max_tokens: 2000, temperature: 0.7, system: NORTE_REPORT_SYSTEM_PROMPT, messages: [{ role: 'user', content: 'Generate the report for this user:\n\n' + JSON.stringify(inputData, null, 2) }] }`
-   - 429 → wait 2s, retry once.
-5. Extract `content[0].text` as `report_markdown`.
-6. Generate a short URL-safe id (12-char nanoid-style, custom helper — no new deps).
-7. Insert into `reports`. On unique-violation race, re-select and return existing id.
-8. Return `{ success: true, report_id }`. On any failure return `{ success: false, error }` and do NOT insert.
-
-System prompt: stored as a constant `NORTE_REPORT_SYSTEM_PROMPT` in `supabase/functions/generate-report/prompt.ts` using the placeholder string from the doc. Swap to the real ~3500-word prompt later by editing that one file.
-
-CORS: standard `Access-Control-Allow-Origin: *` + handle OPTIONS.
-
-## Frontend — Loading screen
-
-Replace `src/components/post-paywall/LoadingPlaceholder.tsx` content (keep the file/route) with the real loading UI:
-
-- Full-screen cream background, centered column.
-- Top: small Norte compass mark. Pulsing opacity 0.4↔1.0 over 2s (Tailwind `animate-pulse` overridden with a custom keyframe in `index.css` or inline `@keyframes` for the exact range; no spin).
-- 32px below: one of three rotating status lines, DM Sans body, centered, 300ms crossfade via framer-motion `AnimatePresence`:
-  1. `Reading your trade-offs…`
-  2. `Connecting the pattern to what you said about your life…`
-  3. `Writing your report. This usually takes about 30 seconds.`
-  - 8s per line; after line 3, keep looping line 3 until response arrives.
-- No progress bar.
-
-Lifecycle:
-- On mount, read `postPaywallStore`. Build the request body (use `findAspirationalGaps` from `algorithm.ts`; map `time_picks`/`money_picks` to `TIME_OPTIONS[i].label` / `MONEY_OPTIONS[i].label` from `values.ts`).
-- Call edge function via Supabase client. 90s client-side timeout via `AbortController`.
-- On success → `clearPostPaywall()` then `navigate('/r/' + report_id, { replace: true })`. (The `/r/:id` route will 404 until next prompt — expected.)
-- On failure → switch to retry UI:
-  > Something interrupted the generation.\
-  > We've saved your answers — try again?\
-  > `[ Retry → ]`
-- Track retry count in component state. After 3 failures, show the support message from the spec. Retry uses the same body.
-- Guard against `StrictMode` double-invoke with a `useRef` flag so we don't fire two calls on mount in dev.
-
-## Files
+## Components / Files
 
 New:
-- `supabase/migrations/<ts>_reports.sql`
-- `supabase/functions/generate-report/index.ts`
-- `supabase/functions/generate-report/prompt.ts`
-- (Cloud auto-generates `src/integrations/supabase/client.ts` etc.)
+- `src/pages/ReportPage.tsx` — orchestrator: fetch, 404, share header, privacy notice, markdown, actions, footer.
+- `src/components/report/ShareHeader.tsx` — top bar shown to non-creators, dismissible.
+- `src/components/report/PrivacyNotice.tsx` — one-time creator notice with the report URL and `Got it`.
+- `src/components/report/ReportMarkdown.tsx` — memoized `ReactMarkdown` with typography overrides.
+- `src/components/report/ReportActions.tsx` — Download PDF / Copy link / Take Norte yourself.
+- `src/components/report/ReportNotFound.tsx` — 404 state.
+- `src/lib/reportOwnership.ts` — localStorage helpers (`isOwnedReport`, `markOwnedReport`, dismiss flags).
 
 Edited:
-- `src/components/post-paywall/LoadingPlaceholder.tsx` — full loading + retry logic.
+- `src/App.tsx` — add route.
+- `src/components/post-paywall/LoadingPlaceholder.tsx` — on success call `markOwnedReport(report_id)` before navigating, so the creator's first view shows the privacy notice (not the share header).
 
-No new npm deps. No changes to `App.tsx` routing.
+## Layout
+
+- Container: `max-w-[640px] mx-auto px-6 md:px-0 pt-20 pb-16`.
+- Share header (only when not owner): full-width bar above container, ~48px tall, cream slightly darker than bg (use `bg-secondary/40` or similar token already in palette), centered copy `Someone shared their Norte reading with you. Curious about yours? →` (italic prefix, link to `/`), `×` button on right, dismissal stored at `norte_dismissed_share_header_{id}`.
+- Privacy notice (only when owner AND not yet seen): card with dashed olive border above the report. Stores `norte_seen_privacy_notice_{id}` on dismiss.
+- Markdown body (see typography below).
+- 72px gap → actions cluster: vertical on mobile, `md:flex-row` on desktop, gap 16px.
+- 64px gap → footer line: `Norte · Anyone with this link can read this report.` centered, 14px, muted.
+
+## Markdown typography
+
+`ReactMarkdown` with `remarkGfm`, components map:
+- `p`: `text-[18px] leading-[1.65] text-foreground mb-5 font-sans`
+- `h2`: `font-display text-[30px] leading-[1.2] text-primary mt-14 mb-5` (primary = brand dark green)
+- `h3`: `font-display text-[22px] leading-[1.3] text-primary mt-10 mb-3`
+- `strong`: `font-semibold text-accent` (accent = olive)
+- `em`: `italic`
+- `ul`, `ol`: standard spacing; `li` `pt-6` for first-level numbered items (matches "5 shifts" rhythm)
+- `blockquote`: `border-l-2 border-accent pl-4 italic text-muted-foreground`
+- `a`: `underline text-primary`
+
+Memoize via `useMemo` keyed on `report_markdown` so re-renders don't re-parse.
+
+## Actions
+
+- `Download as PDF`: `variant="outline"`, calls `window.print()`.
+- `Copy share link`: `variant="outline"`, writes `window.location.href`, fires sonner `toast('Link copied — anyone with it can read your report.')`.
+- `Take Norte yourself — $8`: primary (`variant="default"`), `navigate('/')`.
+- All buttons `min-h-12` (≥48px tap target).
+
+## 404 state
+
+Centered cream page, no chrome:
+```
+# This report doesn't exist
+The link you followed may be wrong, or the report may have been removed.
+[ Take Norte yourself → ]
+```
+Button links to `/`.
+
+## Database migration
+
+```sql
+create or replace function public.increment_report_view(p_id text)
+returns void
+language sql
+security definer
+set search_path = public
+as $$
+  update public.reports set view_count = view_count + 1 where id = p_id;
+$$;
+
+grant execute on function public.increment_report_view(text) to anon, authenticated;
+```
+
+## Deps
+
+```
+bun add react-markdown remark-gfm
+```
 
 ## Out of scope
 
-`/r/:id` report page, PDF export, real Stripe webhook validation, `view_count` increment, full system prompt content.
+Print-specific styles (Prompt 4), PDF generation, SSR/SSG, email delivery.
