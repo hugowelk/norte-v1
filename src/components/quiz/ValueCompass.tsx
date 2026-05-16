@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { RadarChart, PolarGrid, PolarAngleAxis, Radar, ResponsiveContainer, Legend } from 'recharts';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { VALUES, getValueByKey, type ValueKey } from '@/lib/values';
 import { findAspirationalGaps, type ScoreResult } from '@/lib/algorithm';
 import type { SelectableValue } from './CoreValuesSelection';
@@ -12,141 +12,206 @@ interface Props {
   onContinue: () => void;
 }
 
+type Beat = 1 | 2 | 3;
+
 export function ValueCompass({ result, slots, alignmentScores, onContinue }: Props) {
-  // Build a per-value aspiring score (0-100). For each of the 8 canonical values,
-  // use the alignment slider if the user picked it, else fall back to 0.
+  const [beat, setBeat] = useState<Beat>(1);
+
+  const revealed = [result.revealed.primary, result.revealed.secondary, result.revealed.tertiary];
+  const revealedLabels = revealed.map(k => getValueByKey(k).label);
+
+  const aspirationalCoreKeys = slots
+    .filter((s): s is { kind: 'core'; key: ValueKey } => s.kind === 'core')
+    .map(s => s.key);
+  const aspirationalTop3 = aspirationalCoreKeys.slice(0, 3);
+  const aspirationalLabels = aspirationalTop3.map(k => getValueByKey(k).label);
+
+  const gaps = findAspirationalGaps(aspirationalCoreKeys, result);
+  const total = aspirationalCoreKeys.length;
+  const fullOverlap = gaps.length === 0 && aspirationalCoreKeys.length > 0;
+
+  // Per-value aspiring score (0-100) from sliders
   const aspiring: Record<ValueKey, number> = {
     achievement: 0, connection: 0, aliveness: 0, enjoyment: 0,
     meaning: 0, contribution: 0, stability: 0, autonomy: 0,
   };
   for (const s of slots) {
     if (s.kind === 'core') {
-      const k = `core:${s.key}`;
-      aspiring[s.key] = (alignmentScores[k] ?? 0) * 10;
+      aspiring[s.key] = (alignmentScores[`core:${s.key}`] ?? 0) * 10;
     }
   }
 
-  const radarData = VALUES.map(v => ({
-    value: v.label,
-    current: result.normalized[v.key],
-    aspiring: aspiring[v.key],
-  }));
-
-  // Gap reveal: aspirational values that fell outside the revealed top 3.
-  const aspirationalCoreKeys = slots
-    .filter((s): s is { kind: 'core'; key: ValueKey } => s.kind === 'core')
-    .map(s => s.key);
-  const gaps = findAspirationalGaps(aspirationalCoreKeys, result);
-  const topGap = gaps[0];
-
-  // Strongest alignment: a top-3 revealed value that the user also chose in slots.
-  const top3 = new Set([result.revealed.primary, result.revealed.secondary, result.revealed.tertiary]);
-  const alignedValue = aspirationalCoreKeys.find(k => top3.has(k));
-
-  const primaryLabel = getValueByKey(result.revealed.primary).label;
-  const aspirationalLabels = aspirationalCoreKeys.map(k => getValueByKey(k).label);
-
   return (
-    <div className="space-y-10 pb-12">
-      <div className="space-y-3 text-center">
-        <p className="text-xs font-display uppercase tracking-widest text-accent">Your Value Compass</p>
-        <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
-          Where your life is, and where you want it.
-        </h1>
+    <div className="space-y-10 pb-16 min-h-[70vh]">
+      <div className="space-y-2 text-center">
+        <p className="text-xs font-display uppercase tracking-widest text-accent">
+          Your Compass · {beat} / 3
+        </p>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-card border border-border rounded-2xl p-5 md:p-6"
-      >
-        <ResponsiveContainer width="100%" height={360}>
-          <RadarChart data={radarData} outerRadius="72%">
-            <PolarGrid stroke="hsl(var(--border))" />
-            <PolarAngleAxis
-              dataKey="value"
-              tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
-            />
-            <Radar
-              name="Current behaviour signals"
-              dataKey="current"
-              stroke="hsl(var(--accent))"
-              fill="hsl(var(--accent))"
-              fillOpacity={0.25}
-            />
-            <Radar
-              name="Aspiring values"
-              dataKey="aspiring"
-              stroke="hsl(var(--primary))"
-              fill="hsl(var(--primary))"
-              fillOpacity={0.2}
-            />
-            <Legend
-              wrapperStyle={{ paddingTop: 12, fontFamily: 'var(--font-display)', fontSize: 13 }}
-              iconType="circle"
-            />
-          </RadarChart>
-        </ResponsiveContainer>
-      </motion.div>
-
-      {/* Gap reveal — the emotional moment */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25, duration: 0.5 }}
-        className="space-y-5"
-      >
-        <p className="text-xs font-display uppercase tracking-widest text-muted-foreground">What this tells you</p>
-
-        <div className="space-y-4 text-foreground/90 leading-relaxed">
-          <p className="text-lg font-display">
-            Your behaviour has been pointing at <strong className="text-foreground">{primaryLabel}</strong>.
-          </p>
-          <p>
-            But the values you said you want to live by — {prettyList(aspirationalLabels)} — tell a different story
-            about who you're becoming.
-          </p>
-
-          {topGap && (
-            <div className="p-5 rounded-xl bg-accent/5 border border-accent/20">
-              <p className="text-foreground">
-                <strong>{getValueByKey(topGap.value).label}</strong> matters to you, but in your real choices it came
-                up <strong>{ordinal(topGap.rank)}</strong> out of eight. That's the widest gap between who you say you
-                are and how you actually spend your week.
-              </p>
-            </div>
-          )}
-
-          {alignedValue && (
-            <p className="text-muted-foreground italic">
-              You are already living in alignment with <strong className="text-foreground not-italic">
-                {getValueByKey(alignedValue).label}
-              </strong> — your behaviour and your aspiration agree here.
+      <AnimatePresence mode="wait">
+        {beat === 1 && (
+          <motion.section
+            key="beat1"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+            className="space-y-6 text-foreground/90 leading-relaxed"
+          >
+            <p className="text-xl font-display text-foreground">Here's what came up.</p>
+            <p>
+              Across the choices you just made, three values showed up more often than the others:
             </p>
-          )}
+            <p className="text-2xl md:text-3xl font-display font-semibold text-foreground">
+              {revealedLabels[0]}. {revealedLabels[1]}. {revealedLabels[2]}.
+            </p>
+            <p>
+              These have been quietly shaping your decisions — how you've been spending your energy, your time, the things you've been protecting. You may already feel this on some level.
+            </p>
 
-          <p className="text-foreground pt-2">
-            This isn't a verdict. It's a starting point. The space between the two lines on the compass is exactly
-            where a more aligned life gets built.
-          </p>
-        </div>
-      </motion.div>
+            <button
+              onClick={() => setBeat(2)}
+              className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-medium text-base hover:opacity-90 transition-opacity shadow-md mt-4"
+            >
+              Continue →
+            </button>
+          </motion.section>
+        )}
 
-      <button
-        onClick={onContinue}
-        className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-medium text-base hover:opacity-90 transition-opacity shadow-md"
-      >
-        Explore next steps
-      </button>
+        {beat === 2 && (
+          <motion.section
+            key="beat2"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+            className="space-y-6 text-foreground/90 leading-relaxed"
+          >
+            <p className="text-xl font-display text-foreground">Now — what you said you want to prioritise:</p>
+            <p className="text-2xl md:text-3xl font-display font-semibold text-foreground">
+              {aspirationalLabels.join('. ')}.
+            </p>
+            <p>That's a different shape.</p>
+
+            <button
+              onClick={() => setBeat(3)}
+              className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-medium text-base hover:opacity-90 transition-opacity shadow-md mt-4"
+            >
+              Continue →
+            </button>
+          </motion.section>
+        )}
+
+        {beat === 3 && (
+          <motion.section
+            key="beat3"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="space-y-6"
+          >
+            <GapBars
+              values={VALUES.map(v => ({
+                key: v.key,
+                label: v.label,
+                current: result.normalized[v.key],
+                aspiring: aspiring[v.key],
+              }))}
+            />
+
+            <div className="space-y-4 text-foreground/90 leading-relaxed pt-2">
+              {fullOverlap ? (
+                <>
+                  <p>
+                    The values you want at the centre and the ones you've been living are the same.
+                  </p>
+                  <p className="text-muted-foreground">
+                    That's not nothing. It means the story you tell yourself about your life matches what your week actually does. The work, if there is any, is in the second tier — the values that are present but quieter than you'd like them to be.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p>
+                    {gaps.length} of the {total} values you want at the centre of your life haven't been at the centre of your choices.
+                  </p>
+                  <p>
+                    {gaps[0] && (
+                      <><strong className="text-foreground">{getValueByKey(gaps[0].value).label}</strong> came up <strong>{ordinal(gaps[0].rank)}</strong>. </>
+                    )}
+                    {gaps[1] && (
+                      <><strong className="text-foreground">{getValueByKey(gaps[1].value).label}</strong> came up <strong>{ordinal(gaps[1].rank)}</strong>.</>
+                    )}
+                  </p>
+                  <p className="text-muted-foreground">
+                    That's not a verdict. It's the gap between the life you've been living and the one you've been reaching for. Most people find one. Some find it's been there for years.
+                  </p>
+                  <p className="text-foreground">
+                    The question isn't whether the gap is wrong. It's whether you want to close it.
+                  </p>
+                </>
+              )}
+            </div>
+
+            <button
+              onClick={onContinue}
+              className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-medium text-base hover:opacity-90 transition-opacity shadow-md mt-4"
+            >
+              Show me how →
+            </button>
+          </motion.section>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-function prettyList(items: string[]): string {
-  if (items.length === 0) return '—';
-  if (items.length === 1) return items[0];
-  return `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;
+function GapBars({ values }: { values: { key: ValueKey; label: string; current: number; aspiring: number }[] }) {
+  // Sort by gap size descending so the most striking gap is on top
+  const sorted = [...values].sort((a, b) => Math.abs(b.aspiring - a.current) - Math.abs(a.aspiring - a.current));
+  return (
+    <div className="bg-card border border-border rounded-2xl p-5 md:p-6 space-y-4">
+      <div className="flex items-center gap-5 text-xs font-display text-muted-foreground">
+        <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded-sm bg-accent/70" /> Current</span>
+        <span className="inline-flex items-center gap-2"><span className="w-3 h-3 rounded-sm bg-primary/70" /> Aspiring</span>
+      </div>
+      <div className="space-y-3">
+        {sorted.map(v => {
+          const cur = Math.max(0, Math.min(100, v.current));
+          const asp = Math.max(0, Math.min(100, v.aspiring));
+          const lo = Math.min(cur, asp);
+          const hi = Math.max(cur, asp);
+          return (
+            <div key={v.key} className="space-y-1.5">
+              <div className="flex items-baseline justify-between text-sm">
+                <span className="font-display text-foreground">{v.label}</span>
+                <span className="text-xs text-muted-foreground tabular-nums">
+                  gap {Math.round(hi - lo)}
+                </span>
+              </div>
+              <div className="relative h-2.5 rounded-full bg-secondary overflow-hidden">
+                {/* gap band */}
+                <div
+                  className="absolute top-0 bottom-0 bg-foreground/10"
+                  style={{ left: `${lo}%`, width: `${hi - lo}%` }}
+                />
+                {/* current marker */}
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-accent ring-2 ring-card"
+                  style={{ left: `calc(${cur}% - 6px)` }}
+                />
+                {/* aspiring marker */}
+                <div
+                  className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary ring-2 ring-card"
+                  style={{ left: `calc(${asp}% - 6px)` }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function ordinal(n: number): string {
