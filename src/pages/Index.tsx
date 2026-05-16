@@ -26,22 +26,22 @@ const Index = () => {
           className="max-w-lg text-center space-y-8"
         >
           <div className="space-y-5">
-            <h1 className="text-4xl md:text-5xl font-display font-semibold text-foreground leading-[1.1]">
-              Find your<br />
-              <span className="text-accent italic">true north.</span>
+            <h1 className="text-4xl md:text-5xl font-display font-semibold text-foreground leading-[1.15]">
+              The values you live by aren't always the ones you'd name.
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto">
-              Your values aren't what you say they are — they're what your behaviour reveals.
-              A guided exercise to uncover what's actually driving your life.
+              Norte is a 10-minute exercise that shows you the values behind the choices you've actually been making — and the gap between those and the life you say you want.
             </p>
           </div>
 
-          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground font-body">
+          <div className="flex items-center justify-center gap-3 md:gap-6 text-sm text-muted-foreground font-body flex-wrap">
             <span>~10 min</span>
             <span aria-hidden>·</span>
-            <span>13 trade-offs</span>
+            <span>13 questions</span>
             <span aria-hidden>·</span>
-            <span>Completely private</span>
+            <span>No account</span>
+            <span aria-hidden>·</span>
+            <span>Private</span>
           </div>
 
           <motion.button
@@ -50,7 +50,7 @@ const Index = () => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Begin Discovery
+            Start →
           </motion.button>
 
           <p className="text-xs text-muted-foreground">No account needed</p>
@@ -61,15 +61,13 @@ const Index = () => {
       <footer className="px-6 py-10 border-t border-border/60">
         <div className="max-w-2xl mx-auto text-center space-y-3">
           <p className="text-xs font-display uppercase tracking-widest text-muted-foreground">
-            The method behind Norte
+            How it works
           </p>
           <p className="text-sm text-foreground/75 leading-relaxed max-w-md mx-auto">
-            Norte is built on the principle that values are revealed through behaviour and trade-offs, not declarations.
-            Our 13-scenario inference draws on decades of work in values psychology and behavioural decision-making.
+            Norte doesn't ask what you value. It puts you in 13 everyday trade-offs and watches what you choose. The pattern that emerges is what's actually been driving your week — even when the story you tell yourself sounds different.
           </p>
           <p className="text-xs text-muted-foreground">
-            Based on Schwartz's Theory of Basic Human Values, Acceptance and Commitment Therapy (ACT) values work,
-            and behavioural-economics research on revealed preference.
+            Grounded in Schwartz's values research, Acceptance and Commitment Therapy, and behavioural-economics work on revealed preference.
           </p>
         </div>
       </footer>
