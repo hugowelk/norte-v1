@@ -219,7 +219,15 @@ export function QuizFlow() {
               />
             )}
             {phase === 'paywall' && (
-              <Paywall onBack={() => setPhase('compass')} />
+              <Paywall
+                onBack={() => setPhase('compass')}
+                sampleValue={(() => {
+                  if (!core || !result) return undefined;
+                  const top3 = new Set([result.revealed.primary, result.revealed.secondary, result.revealed.tertiary]);
+                  const firstGap = core.slots.map(s => s.key).find(k => !top3.has(k));
+                  return firstGap ?? result.revealed.primary;
+                })()}
+              />
             )}
           </motion.div>
         </AnimatePresence>
