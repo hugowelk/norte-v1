@@ -94,7 +94,7 @@ export function QuizFlow() {
       setScenarioIdx(scenarioIdx + 1);
       setPhase('tradeoffs');
     } else {
-      const r = computeScores(answers);
+      const r = computeScores(answers, timeAnswer, moneyAnswer);
       setResult(r);
       setPhase('results');
     }
