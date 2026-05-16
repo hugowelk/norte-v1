@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, type LucideIcon } from 'lucide-react';
 import { type BehaviourOption, type BehaviourAnswer } from '@/lib/values';
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
   subtitle: string;
   question: string;
   options: BehaviourOption[];
-  optionIcons: React.ComponentType<{ size?: number; className?: string; strokeWidth?: number }>[];
+  optionIcons: LucideIcon[];
   maxSelections: number;
   stepLabel: string;
   existing?: BehaviourAnswer;
