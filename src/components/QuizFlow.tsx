@@ -6,6 +6,13 @@ import {
   Plane, ShoppingBag, GraduationCap, Home, PiggyBank, Activity, Gift, Palette, Sofa, Wrench,
 } from 'lucide-react';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   TIME_OPTIONS, MONEY_OPTIONS, type BehaviourAnswer,
 } from '@/lib/values';
 import { SCENARIOS, computeScores, type Answer, type ScoreResult } from '@/lib/algorithm';
@@ -116,6 +123,22 @@ export function QuizFlow() {
     else if (phase === 'coreValues') setPhase('results');
   };
 
+  const handleJump = (val: string) => {
+    if (val === 'time') { setPhase('time'); }
+    else if (val === 'money') { setPhase('money'); }
+    else if (val === 'tradeoffIntro') { setScenarioIdx(0); setPhase('tradeoffIntro'); }
+    else if (val.startsWith('tradeoff-')) {
+      const idx = parseInt(val.replace('tradeoff-', ''), 10);
+      setScenarioIdx(idx);
+      setPhase('tradeoffs');
+    }
+    else if (val === 'results') { setPhase('results'); }
+    else if (val === 'coreValues') { setPhase('coreValues'); }
+    else if (val === 'alignment') { setPhase('alignment'); }
+    else if (val === 'compass') { setPhase('compass'); }
+    else if (val === 'paywall') { setPhase('paywall'); }
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {phase !== 'paywall' && (
@@ -130,6 +153,30 @@ export function QuizFlow() {
           </div>
         </div>
       )}
+
+      {/* Designer nav */}
+      <div className="fixed top-3 right-4 z-[60]">
+        <Select onValueChange={handleJump} value={phase === 'tradeoffs' ? `tradeoff-${scenarioIdx}` : phase}>
+          <SelectTrigger className="w-44 h-8 text-xs bg-background/80 backdrop-blur border-border/60">
+            <SelectValue placeholder="Jump to page…" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="time">1 · Time</SelectItem>
+            <SelectItem value="money">2 · Money</SelectItem>
+            <SelectItem value="tradeoffIntro">3 · Trade-off Intro</SelectItem>
+            {SCENARIOS.map((s, i) => (
+              <SelectItem key={s.id} value={`tradeoff-${i}`}>
+                3.{i + 1} · {s.id}
+              </SelectItem>
+            ))}
+            <SelectItem value="results">4 · Results</SelectItem>
+            <SelectItem value="coreValues">5 · Core Values</SelectItem>
+            <SelectItem value="alignment">6 · Alignment</SelectItem>
+            <SelectItem value="compass">7 · Compass</SelectItem>
+            <SelectItem value="paywall">8 · Paywall</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
 
       {showBack && (
         <button
