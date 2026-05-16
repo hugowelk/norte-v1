@@ -36,12 +36,12 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
   return (
     <div className="space-y-8 pb-12">
       <div className="space-y-3 text-center">
-        <p className="text-xs font-display uppercase tracking-widest text-accent">Alignment Check</p>
+        <p className="text-xs font-display uppercase tracking-widest text-accent">A quick check</p>
         <h2 className="text-2xl md:text-3xl font-display font-semibold text-foreground leading-tight">
-          How much is your life reflecting each one?
+          How present is each of these in your life right now?
         </h2>
         <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          We've placed each slider based on your behaviour so far. Adjust to where it actually feels.
+          The sliders start where your trade-offs suggest. Move them to where it actually feels.
         </p>
       </div>
 
@@ -66,10 +66,10 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
                 max={10}
                 step={1}
               />
-              <div className="flex justify-between text-xs text-muted-foreground">
-                <span>Not reflected</span>
-                <span>Suggested from behaviour: {sug}</span>
-                <span>Strongly reflected</span>
+              <div className="flex justify-between items-center text-xs text-muted-foreground">
+                <span className="font-medium">Barely here</span>
+                <span className="italic">Norte suggests: {sug}</span>
+                <span className="font-medium">Lived every day</span>
               </div>
             </div>
           );
@@ -80,7 +80,7 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
         onClick={() => onComplete(scores)}
         className="w-full py-4 rounded-lg bg-primary text-primary-foreground font-display font-medium hover:opacity-90 transition-opacity"
       >
-        See your value compass
+        See your compass →
       </button>
     </div>
   );

@@ -17,7 +17,7 @@ export function TradeoffScenario({ scenario, onAnswer }: Props) {
         </p>
         {isSplit && (
           <p className="text-xs font-display uppercase tracking-widest text-muted-foreground">
-            The widest choice
+            This one's bigger
           </p>
         )}
       </div>
