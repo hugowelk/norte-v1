@@ -20,9 +20,7 @@ export function ValueCompass({ result, slots, alignmentScores, onContinue }: Pro
   const revealed = [result.revealed.primary, result.revealed.secondary, result.revealed.tertiary];
   const revealedLabels = revealed.map(k => getValueByKey(k).label);
 
-  const aspirationalCoreKeys = slots
-    .filter((s): s is { kind: 'core'; key: ValueKey } => s.kind === 'core')
-    .map(s => s.key);
+  const aspirationalCoreKeys = slots.map(s => s.key);
   const aspirationalTop3 = aspirationalCoreKeys.slice(0, 3);
   const aspirationalLabels = aspirationalTop3.map(k => getValueByKey(k).label);
 
@@ -30,15 +28,13 @@ export function ValueCompass({ result, slots, alignmentScores, onContinue }: Pro
   const total = aspirationalCoreKeys.length;
   const fullOverlap = gaps.length === 0 && aspirationalCoreKeys.length > 0;
 
-  // Per-value aspiring score (0-100) from sliders
+  // Per-value aspiring score (0-100) from sliders (all 8 values, since Alignment now scores all)
   const aspiring: Record<ValueKey, number> = {
     achievement: 0, connection: 0, aliveness: 0, enjoyment: 0,
     meaning: 0, contribution: 0, stability: 0, autonomy: 0,
   };
-  for (const s of slots) {
-    if (s.kind === 'core') {
-      aspiring[s.key] = (alignmentScores[`core:${s.key}`] ?? 0) * 10;
-    }
+  for (const v of VALUES) {
+    aspiring[v.key] = (alignmentScores[`core:${v.key}`] ?? 0) * 10;
   }
 
   return (
