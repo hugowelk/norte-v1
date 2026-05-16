@@ -197,8 +197,9 @@ export function QuizFlow() {
                 onContinue={() => setPhase('coreValues')}
               />
             )}
-            {phase === 'coreValues' && (
+            {phase === 'coreValues' && result && (
               <CoreValuesSelection
+                revealedTop3={[result.revealed.primary, result.revealed.secondary, result.revealed.tertiary]}
                 onComplete={r => { setCore(r); setPhase('alignment'); }}
               />
             )}
