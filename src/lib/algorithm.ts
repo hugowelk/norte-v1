@@ -1,4 +1,4 @@
-import { VALUES, type ValueKey } from './values';
+import { VALUES, TIME_OPTIONS, MONEY_OPTIONS, type ValueKey, type BehaviourAnswer, type BehaviourOption } from './values';
 
 export type Answer = 'A' | 'B';
 export type Tier = 'warmup' | 'revealing' | 'hard' | 'hard-split';
