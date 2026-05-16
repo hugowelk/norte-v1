@@ -80,7 +80,7 @@ export function BehaviourQuiz({
             value={draft}
             onChange={e => setDraft(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addCustom())}
-            placeholder={`Something else that took your ${title.toLowerCase()}…`}
+            placeholder={`Something else that's been taking your ${title.toLowerCase()}…`}
             className="flex-1 px-4 py-3 rounded-lg border-2 border-border bg-card text-base font-body text-foreground placeholder:text-muted-foreground focus:border-primary/60 focus:outline-none"
           />
           <button
