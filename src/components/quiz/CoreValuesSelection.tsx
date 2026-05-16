@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Plus, X, GripVertical } from 'lucide-react';
+import { ChevronDown, X, GripVertical } from 'lucide-react';
 import {
   DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors,
   type DragEndEvent,
@@ -13,31 +13,21 @@ import { VALUES, getValueByKey, type ValueKey, type Value } from '@/lib/values';
 import { ValueIcon } from '../ValueIcon';
 import { cn } from '@/lib/utils';
 
-export interface CustomValue {
-  key: string;       // prefixed "custom:"
-  label: string;
-  description: string;
-}
-
-export type SelectableValue = { kind: 'core'; key: ValueKey } | { kind: 'custom'; custom: CustomValue };
+export type SelectableValue = { kind: 'core'; key: ValueKey };
 
 export interface CoreValuesResult {
   slots: SelectableValue[];      // length 5, ordered
-  customValues: CustomValue[];   // any custom values the user defined
 }
 
 interface Props {
+  revealedTop3?: ValueKey[];
   onComplete: (r: CoreValuesResult) => void;
 }
 
 const TOTAL_SLOTS = 5;
 
-export function CoreValuesSelection({ onComplete }: Props) {
+export function CoreValuesSelection({ revealedTop3, onComplete }: Props) {
   const [slots, setSlots] = useState<(SelectableValue | null)[]>(Array(TOTAL_SLOTS).fill(null));
-  const [customs, setCustoms] = useState<CustomValue[]>([]);
-  const [showCustomForm, setShowCustomForm] = useState(false);
-  const [customLabel, setCustomLabel] = useState('');
-  const [customDesc, setCustomDesc] = useState('');
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -47,16 +37,14 @@ export function CoreValuesSelection({ onComplete }: Props) {
   const filledSlots = slots.filter(Boolean) as SelectableValue[];
   const allFilled = filledSlots.length === TOTAL_SLOTS;
 
-  const slottedKeys = new Set(filledSlots.map(s => s.kind === 'core' ? `core:${s.key}` : `custom:${s.custom.key}`));
+  const slottedKeys = new Set(filledSlots.map(s => `core:${s.key}`));
 
   const addToNextSlot = (item: SelectableValue) => {
-    const key = item.kind === 'core' ? `core:${item.key}` : `custom:${item.custom.key}`;
+    const key = `core:${item.key}`;
     if (slottedKeys.has(key)) {
-      // remove from slot
       setSlots(prev => prev.map(s => {
         if (!s) return s;
-        const sKey = s.kind === 'core' ? `core:${s.key}` : `custom:${s.custom.key}`;
-        return sKey === key ? null : s;
+        return `core:${s.key}` === key ? null : s;
       }));
       return;
     }
@@ -79,29 +67,12 @@ export function CoreValuesSelection({ onComplete }: Props) {
     setSlots(prev => arrayMove(prev, from, to));
   };
 
-  const submitCustom = () => {
-    const label = customLabel.trim();
-    if (!label) return;
-    const cv: CustomValue = {
-      key: `${Date.now()}`,
-      label,
-      description: customDesc.trim() || 'A value you named yourself.',
-    };
-    setCustoms(prev => [...prev, cv]);
-    setCustomLabel('');
-    setCustomDesc('');
-    setShowCustomForm(false);
-    // auto-slot if room
-    const idx = slots.findIndex(s => s === null);
-    if (idx !== -1) {
-      setSlots(prev => prev.map((s, i) => i === idx ? { kind: 'custom', custom: cv } : s));
-    }
-  };
-
   const handleContinue = () => {
     if (!allFilled) return;
-    onComplete({ slots: filledSlots, customValues: customs });
+    onComplete({ slots: filledSlots });
   };
+
+  const revealedLabels = revealedTop3?.map(k => getValueByKey(k).label) ?? [];
 
   return (
     <div className="space-y-10 pb-12">
@@ -116,7 +87,14 @@ export function CoreValuesSelection({ onComplete }: Props) {
         <p className="text-xs text-muted-foreground pt-1">Tap to add — drag to reorder</p>
       </div>
 
-      {/* Slots */}
+      {revealedLabels.length === 3 && (
+        <div className="rounded-xl bg-accent/10 px-5 py-4">
+          <p className="text-sm md:text-base text-foreground/85 leading-relaxed italic font-body">
+            Your revealed top 3 were <span className="not-italic font-medium text-foreground">{revealedLabels[0]}</span>, <span className="not-italic font-medium text-foreground">{revealedLabels[1]}</span>, and <span className="not-italic font-medium text-foreground">{revealedLabels[2]}</span>. The interesting question is which of these you want to keep at the centre — and what else you want to bring in.
+          </p>
+        </div>
+      )}
+
       <div>
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={slots.map((s, i) => slotId(s, i))} strategy={verticalListSortingStrategy}>
@@ -135,7 +113,6 @@ export function CoreValuesSelection({ onComplete }: Props) {
         </DndContext>
       </div>
 
-      {/* Library */}
       <div className="space-y-2.5">
         <p className="text-xs font-display uppercase tracking-widest text-muted-foreground px-1">
           Tap a value to add it
@@ -148,55 +125,6 @@ export function CoreValuesSelection({ onComplete }: Props) {
             onClick={() => addToNextSlot({ kind: 'core', key: v.key })}
           />
         ))}
-        {customs.map(cv => (
-          <CustomLibraryCard
-            key={cv.key}
-            custom={cv}
-            selected={slottedKeys.has(`custom:${cv.key}`)}
-            onClick={() => addToNextSlot({ kind: 'custom', custom: cv })}
-          />
-        ))}
-
-        {!showCustomForm ? (
-          <button
-            onClick={() => setShowCustomForm(true)}
-            className="w-full flex items-center justify-center gap-2 px-5 py-4 rounded-xl border-2 border-dashed border-border text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors"
-          >
-            <Plus size={18} /> Add your own value
-          </button>
-        ) : (
-          <div className="rounded-xl border-2 border-primary/30 bg-card p-4 space-y-3">
-            <input
-              autoFocus
-              value={customLabel}
-              onChange={e => setCustomLabel(e.target.value)}
-              placeholder="Value name (e.g. Curiosity)"
-              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-base font-display text-foreground focus:border-primary/60 focus:outline-none"
-            />
-            <textarea
-              value={customDesc}
-              onChange={e => setCustomDesc(e.target.value)}
-              placeholder="What does it mean to you? (optional)"
-              rows={2}
-              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-sm font-body text-foreground focus:border-primary/60 focus:outline-none resize-none"
-            />
-            <div className="flex gap-2 justify-end">
-              <button
-                onClick={() => { setShowCustomForm(false); setCustomLabel(''); setCustomDesc(''); }}
-                className="px-3 py-2 text-sm font-display text-muted-foreground hover:text-foreground"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={submitCustom}
-                disabled={!customLabel.trim()}
-                className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-display text-sm font-medium disabled:opacity-50"
-              >
-                Add value
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       <button
@@ -220,7 +148,7 @@ export function CoreValuesSelection({ onComplete }: Props) {
 
 function slotId(slot: SelectableValue | null, idx: number): string {
   if (!slot) return `empty-${idx}`;
-  return slot.kind === 'core' ? `slot-core-${slot.key}` : `slot-custom-${slot.custom.key}`;
+  return `slot-core-${slot.key}`;
 }
 
 function SlotRow({
@@ -260,14 +188,8 @@ function SlotRow({
       <span className="w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-display text-xs font-medium">
         {index + 1}
       </span>
-      {item.kind === 'core' ? (
-        <>
-          <ValueIcon value={item.key} size={18} />
-          <span className="font-display font-medium text-foreground flex-1">{getValueByKey(item.key).label}</span>
-        </>
-      ) : (
-        <span className="font-display font-medium text-foreground flex-1">{item.custom.label}</span>
-      )}
+      <ValueIcon value={item.key} size={18} />
+      <span className="font-display font-medium text-foreground flex-1">{getValueByKey(item.key).label}</span>
       <button onClick={onRemove} className="text-muted-foreground hover:text-foreground" aria-label="Remove">
         <X size={16} />
       </button>
@@ -311,24 +233,5 @@ function LibraryCard({ value, selected, onClick }: { value: Value; selected: boo
         )}
       </AnimatePresence>
     </div>
-  );
-}
-
-function CustomLibraryCard({ custom, selected, onClick }: { custom: CustomValue; selected: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        'w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 text-left transition-colors',
-        selected ? 'border-primary/40 bg-primary/5' : 'border-border bg-card hover:border-primary/30',
-      )}
-    >
-      <span className="w-5 h-5 rounded-full bg-accent/20 border border-accent/30" />
-      <div className="flex-1">
-        <p className="font-display font-medium text-foreground">{custom.label}</p>
-        <p className="text-xs text-muted-foreground">{custom.description}</p>
-      </div>
-      {selected && <span className="text-xs font-display uppercase tracking-wider text-primary">Added</span>}
-    </button>
   );
 }
