@@ -1,98 +1,124 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { QUIZ_QUESTIONS, calculateValueScores, getTopValues, type QuizAnswers, type ValueKey } from '@/lib/values';
-import { QuizSection } from './quiz/QuizSection';
+import {
+  Briefcase, Heart, Users as UsersIcon, HeartPulse, BookOpen, Gamepad2, HandHeart as HandHeartIcon,
+  Moon, Sparkles as SparklesIcon, Bed,
+  Plane, ShoppingBag, GraduationCap, Home, PiggyBank, Activity, Gift, Palette, Sofa, Wrench,
+} from 'lucide-react';
+import {
+  TIME_OPTIONS, MONEY_OPTIONS, type BehaviourAnswer,
+} from '@/lib/values';
+import { SCENARIOS, computeScores, type Answer, type ScoreResult } from '@/lib/algorithm';
+import { BehaviourQuiz } from './quiz/BehaviourQuiz';
+import { TradeoffIntro } from './quiz/TradeoffIntro';
+import { TradeoffScenario } from './quiz/TradeoffScenario';
+import { TradeoffTransition } from './quiz/TradeoffTransition';
 import { ValueResults } from './quiz/ValueResults';
-import { ValueSorting } from './quiz/ValueSorting';
-import { ValueRanking } from './quiz/ValueRanking';
-import { AlignmentReflection } from './quiz/AlignmentReflection';
-import { ActionPlanning } from './quiz/ActionPlanning';
-import { FinalInsights } from './quiz/FinalInsights';
+import { CoreValuesSelection, type CoreValuesResult } from './quiz/CoreValuesSelection';
+import { AlignmentReflection, type AlignmentScores } from './quiz/AlignmentReflection';
+import { ValueCompass } from './quiz/ValueCompass';
+import { Paywall } from './quiz/Paywall';
 
-type Phase = 'quiz' | 'results' | 'sorting' | 'ranking' | 'alignment' | 'actions' | 'insights';
+type Phase =
+  | 'time'
+  | 'money'
+  | 'tradeoffIntro'
+  | 'tradeoffs'
+  | 'tradeoffTransition'
+  | 'results'
+  | 'coreValues'
+  | 'alignment'
+  | 'compass'
+  | 'paywall';
 
-export interface UserData {
-  answers: QuizAnswers;
-  scores: Record<ValueKey, number>;
-  inferredValues: ValueKey[];
-  coreValues: ValueKey[];
-  rankedValues: ValueKey[];
-  alignmentScores: Record<ValueKey, number>;
-  actions: { value: ValueKey; action: string; when: string }[];
-}
+const TIME_ICONS = [Briefcase, Heart, UsersIcon, HeartPulse, BookOpen, Gamepad2, HandHeartIcon, Moon, SparklesIcon, Bed];
+const MONEY_ICONS = [Plane, ShoppingBag, GraduationCap, Home, PiggyBank, Activity, Gift, Palette, Sofa, Wrench];
 
 const pageVariants = {
-  enter: { opacity: 0, y: 30 },
+  enter: { opacity: 0, y: 20 },
   center: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -30 },
+  exit: { opacity: 0, y: -20 },
 };
 
 export function QuizFlow() {
-  const [phase, setPhase] = useState<Phase>('quiz');
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [userData, setUserData] = useState<UserData>({
-    answers: {},
-    scores: {} as Record<ValueKey, number>,
-    inferredValues: [],
-    coreValues: [],
-    rankedValues: [],
-    alignmentScores: {} as Record<ValueKey, number>,
-    actions: [],
-  });
+  const [phase, setPhase] = useState<Phase>('time');
+  const [scenarioIdx, setScenarioIdx] = useState(0);
+  const [pendingTransition, setPendingTransition] = useState<string | null>(null);
 
-  const totalQuestions = QUIZ_QUESTIONS.length;
-  const progress = phase === 'quiz' ? ((questionIndex) / totalQuestions) * 100 : 100;
+  const [timeAnswer, setTimeAnswer] = useState<BehaviourAnswer>();
+  const [moneyAnswer, setMoneyAnswer] = useState<BehaviourAnswer>();
+  const [tradeoffAnswers, setTradeoffAnswers] = useState<Answer[]>([]);
+  const [result, setResult] = useState<ScoreResult>();
+  const [core, setCore] = useState<CoreValuesResult>();
+  const [alignmentScores, setAlignmentScores] = useState<AlignmentScores>({});
 
-  const handleQuizAnswer = (questionId: string, selectedIndices: number[]) => {
-    const newAnswers = { ...userData.answers, [questionId]: selectedIndices };
-    setUserData(prev => ({ ...prev, answers: newAnswers }));
+  // Progress: rough estimate across the whole flow
+  const totalSteps = 2 /*time+money*/ + 1 /*intro*/ + SCENARIOS.length + 4 /*results,core,align,compass*/;
+  let completed = 0;
+  if (phase === 'time') completed = 0;
+  else if (phase === 'money') completed = 1;
+  else if (phase === 'tradeoffIntro') completed = 2;
+  else if (phase === 'tradeoffs' || phase === 'tradeoffTransition') completed = 3 + scenarioIdx;
+  else if (phase === 'results') completed = 3 + SCENARIOS.length;
+  else if (phase === 'coreValues') completed = 4 + SCENARIOS.length;
+  else if (phase === 'alignment') completed = 5 + SCENARIOS.length;
+  else if (phase === 'compass') completed = 6 + SCENARIOS.length;
+  else if (phase === 'paywall') completed = totalSteps;
+  const progress = Math.min(100, (completed / totalSteps) * 100);
 
-    if (questionIndex < totalQuestions - 1) {
-      setQuestionIndex(prev => prev + 1);
+  const handleTime = (a: BehaviourAnswer) => {
+    setTimeAnswer(a);
+    setPhase('money');
+  };
+
+  const handleMoney = (a: BehaviourAnswer) => {
+    setMoneyAnswer(a);
+    setPhase('tradeoffIntro');
+  };
+
+  const handleTradeoffAnswer = (a: Answer) => {
+    const next = [...tradeoffAnswers];
+    next[scenarioIdx] = a;
+    setTradeoffAnswers(next);
+    const current = SCENARIOS[scenarioIdx];
+    if (current.transitionAfter) {
+      setPendingTransition(current.transitionAfter);
+      setPhase('tradeoffTransition');
+      return;
+    }
+    advanceTradeoff(next);
+  };
+
+  const advanceTradeoff = (answers: Answer[]) => {
+    if (scenarioIdx < SCENARIOS.length - 1) {
+      setScenarioIdx(scenarioIdx + 1);
+      setPhase('tradeoffs');
     } else {
-      const scores = calculateValueScores(newAnswers);
-      const inferred = getTopValues(scores, 7);
-      setUserData(prev => ({ ...prev, answers: newAnswers, scores, inferredValues: inferred }));
+      const r = computeScores(answers);
+      setResult(r);
       setPhase('results');
     }
   };
 
-  const handleResultsContinue = () => setPhase('sorting');
-
-  const handleSortingComplete = (core: ValueKey[]) => {
-    setUserData(prev => ({ ...prev, coreValues: core }));
-    setPhase('ranking');
+  const handleTransitionContinue = () => {
+    setPendingTransition(null);
+    advanceTradeoff(tradeoffAnswers);
   };
 
-  const handleRankingComplete = (ranked: ValueKey[]) => {
-    setUserData(prev => ({ ...prev, rankedValues: ranked }));
-    setPhase('alignment');
-  };
+  const showBack =
+    (phase === 'money') ||
+    (phase === 'tradeoffIntro') ||
+    (phase === 'coreValues');
 
-  const handleAlignmentComplete = (scores: Record<ValueKey, number>) => {
-    setUserData(prev => ({ ...prev, alignmentScores: scores }));
-    setPhase('actions');
-  };
-
-  const handleActionsComplete = (actions: { value: ValueKey; action: string; when: string }[]) => {
-    setUserData(prev => ({ ...prev, actions }));
-    setPhase('insights');
-  };
-
-  const handleGoBack = () => {
-    if (phase === 'quiz' && questionIndex > 0) {
-      setQuestionIndex(prev => prev - 1);
-    } else if (phase === 'results') setPhase('quiz');
-    else if (phase === 'sorting') setPhase('results');
-    else if (phase === 'ranking') setPhase('sorting');
-    else if (phase === 'alignment') setPhase('ranking');
-    else if (phase === 'actions') setPhase('alignment');
+  const handleBack = () => {
+    if (phase === 'money') setPhase('time');
+    else if (phase === 'tradeoffIntro') setPhase('money');
+    else if (phase === 'coreValues') setPhase('results');
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Progress bar */}
-      {phase !== 'insights' && (
+      {phase !== 'paywall' && (
         <div className="fixed top-0 left-0 right-0 z-50">
           <div className="h-1 bg-secondary">
             <motion.div
@@ -105,20 +131,19 @@ export function QuizFlow() {
         </div>
       )}
 
-      {/* Back button */}
-      {phase !== 'insights' && (phase !== 'quiz' || questionIndex > 0) && (
+      {showBack && (
         <button
-          onClick={handleGoBack}
+          onClick={handleBack}
           className="fixed top-6 left-6 z-50 text-muted-foreground hover:text-foreground transition-colors text-sm font-display flex items-center gap-1"
         >
           ← Back
         </button>
       )}
 
-      <div className="flex-1 flex items-center justify-center px-4 py-16">
+      <div className="flex-1 flex items-start md:items-center justify-center px-4 py-16">
         <AnimatePresence mode="wait">
           <motion.div
-            key={phase === 'quiz' ? `quiz-${questionIndex}` : phase}
+            key={phase === 'tradeoffs' ? `t-${scenarioIdx}` : phase}
             variants={pageVariants}
             initial="enter"
             animate="center"
@@ -126,48 +151,74 @@ export function QuizFlow() {
             transition={{ duration: 0.35, ease: 'easeOut' }}
             className="w-full max-w-2xl"
           >
-            {phase === 'quiz' && (
-              <QuizSection
-                question={QUIZ_QUESTIONS[questionIndex]}
-                currentStep={questionIndex + 1}
-                totalSteps={totalQuestions}
-                onAnswer={handleQuizAnswer}
-                existingAnswer={userData.answers[QUIZ_QUESTIONS[questionIndex].id]}
+            {phase === 'time' && (
+              <BehaviourQuiz
+                title="Time"
+                stepLabel="Time Reality · Part 1 of 3"
+                subtitle="How you spend your time reveals what you truly prioritise."
+                question="Where does most of your time go in a typical week?"
+                options={TIME_OPTIONS}
+                optionIcons={TIME_ICONS}
+                maxSelections={3}
+                existing={timeAnswer}
+                onContinue={handleTime}
               />
             )}
-            {phase === 'results' && (
+            {phase === 'money' && (
+              <BehaviourQuiz
+                title="Money"
+                stepLabel="Money Behaviour · Part 1 of 3"
+                subtitle="Where your money goes shows what you value in practice."
+                question="Where did most of your discretionary spending go in the past year?"
+                options={MONEY_OPTIONS}
+                optionIcons={MONEY_ICONS}
+                maxSelections={3}
+                existing={moneyAnswer}
+                onContinue={handleMoney}
+              />
+            )}
+            {phase === 'tradeoffIntro' && (
+              <TradeoffIntro onBegin={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
+            )}
+            {phase === 'tradeoffs' && (
+              <TradeoffScenario
+                scenario={SCENARIOS[scenarioIdx]}
+                onAnswer={handleTradeoffAnswer}
+              />
+            )}
+            {phase === 'tradeoffTransition' && pendingTransition && (
+              <TradeoffTransition message={pendingTransition} onContinue={handleTransitionContinue} />
+            )}
+            {phase === 'results' && result && (
               <ValueResults
-                inferredValues={userData.inferredValues}
-                scores={userData.scores}
-                onContinue={handleResultsContinue}
+                result={result}
+                timeAnswer={timeAnswer}
+                moneyAnswer={moneyAnswer}
+                onContinue={() => setPhase('coreValues')}
               />
             )}
-            {phase === 'sorting' && (
-              <ValueSorting
-                inferredValues={userData.inferredValues}
-                onComplete={handleSortingComplete}
+            {phase === 'coreValues' && (
+              <CoreValuesSelection
+                onComplete={r => { setCore(r); setPhase('alignment'); }}
               />
             )}
-            {phase === 'ranking' && (
-              <ValueRanking
-                coreValues={userData.coreValues}
-                onComplete={handleRankingComplete}
-              />
-            )}
-            {phase === 'alignment' && (
+            {phase === 'alignment' && core && result && (
               <AlignmentReflection
-                rankedValues={userData.rankedValues}
-                onComplete={handleAlignmentComplete}
+                slots={core.slots}
+                result={result}
+                onComplete={s => { setAlignmentScores(s); setPhase('compass'); }}
               />
             )}
-            {phase === 'actions' && (
-              <ActionPlanning
-                rankedValues={userData.rankedValues}
-                onComplete={handleActionsComplete}
+            {phase === 'compass' && core && result && (
+              <ValueCompass
+                result={result}
+                slots={core.slots}
+                alignmentScores={alignmentScores}
+                onContinue={() => setPhase('paywall')}
               />
             )}
-            {phase === 'insights' && (
-              <FinalInsights userData={userData} />
+            {phase === 'paywall' && (
+              <Paywall onBack={() => setPhase('compass')} />
             )}
           </motion.div>
         </AnimatePresence>
