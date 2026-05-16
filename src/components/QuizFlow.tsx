@@ -6,6 +6,13 @@ import {
   Plane, ShoppingBag, GraduationCap, Home, PiggyBank, Activity, Gift, Palette, Sofa, Wrench,
 } from 'lucide-react';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   TIME_OPTIONS, MONEY_OPTIONS, type BehaviourAnswer,
 } from '@/lib/values';
 import { SCENARIOS, computeScores, type Answer, type ScoreResult } from '@/lib/algorithm';
