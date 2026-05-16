@@ -16,6 +16,24 @@ import {
   TIME_OPTIONS, MONEY_OPTIONS, type BehaviourAnswer,
 } from '@/lib/values';
 import { SCENARIOS, computeScores, type Answer, type ScoreResult } from '@/lib/algorithm';
+import { VALUES, type ValueKey } from '@/lib/values';
+
+// Mock data for designer preview when jumping past the quiz
+const MOCK_TIME: BehaviourAnswer = { selectedIndices: [0, 1, 2], custom: [] };
+const MOCK_MONEY: BehaviourAnswer = { selectedIndices: [0, 1, 2], custom: [] };
+const MOCK_ANSWERS: Answer[] = SCENARIOS.map((_, i) => (i % 2 === 0 ? 'A' : 'B'));
+function mockResult(): ScoreResult { return computeScores(MOCK_ANSWERS, MOCK_TIME, MOCK_MONEY); }
+function mockCore(result: ScoreResult): { slots: { kind: 'core'; key: ValueKey }[] } {
+  // Pick 5 values: top 2 revealed + next 3 from ranking, for variety
+  const keys = [result.ranking[0], result.ranking[1], result.ranking[3], result.ranking[4], result.ranking[5]];
+  return { slots: keys.map(key => ({ kind: 'core' as const, key })) };
+}
+function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<string, number> {
+  const out: Record<string, number> = {};
+  const allKeys = new Set<ValueKey>([...slots.map(s => s.key), ...VALUES.slice(0, 3).map(v => v.key)]);
+  allKeys.forEach(k => { out[k] = Math.round((result.normalized[k] ?? 50) * 0.6); });
+  return out;
+}
 import { BehaviourQuiz } from './quiz/BehaviourQuiz';
 import { TradeoffIntro } from './quiz/TradeoffIntro';
 import { TradeoffScenario } from './quiz/TradeoffScenario';
