@@ -106,13 +106,14 @@ export function CoreValuesSelection({ onComplete }: Props) {
   return (
     <div className="space-y-10 pb-12">
       <div className="space-y-3 text-center">
-        <p className="text-xs font-display uppercase tracking-widest text-accent">Your Core Values</p>
+        <p className="text-xs font-display uppercase tracking-widest text-accent">Your Aspiration</p>
         <h2 className="text-2xl md:text-3xl font-display font-semibold text-foreground leading-tight">
-          Choose the 5 values you want to live by.
+          Now — pick the 5 values you want at the centre of your life.
         </h2>
         <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          Pick from the list below, in priority order. You can drag to reorder, or add your own.
+          Not what came up. What you'd choose if you were choosing on purpose. Put them in priority order.
         </p>
+        <p className="text-xs text-muted-foreground pt-1">Tap to add — drag to reorder</p>
       </div>
 
       {/* Slots */}
