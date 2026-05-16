@@ -208,7 +208,11 @@ export function CoreValuesSelection({ onComplete }: Props) {
             : 'bg-muted text-muted-foreground cursor-not-allowed'
         }`}
       >
-        {allFilled ? 'Continue' : `Pick ${TOTAL_SLOTS - filledSlots.length} more`}
+        {filledSlots.length === 0
+          ? 'Pick 5 to continue'
+          : allFilled
+            ? 'Continue →'
+            : `Pick ${TOTAL_SLOTS - filledSlots.length} more`}
       </button>
     </div>
   );
