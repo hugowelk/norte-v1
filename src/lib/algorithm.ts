@@ -116,21 +116,67 @@ const ZERO_SCORES = (): Record<ValueKey, number> => ({
   meaning: 0, contribution: 0, stability: 0, autonomy: 0,
 });
 
-export function computeScores(answers: Answer[]): ScoreResult {
+const INTAKE_CAP = 3;
+
+// Per-value max contribution from one intake (Time or Money), based on the top
+// `INTAKE_CAP` weighted picks available for that value.
+function maxFromIntake(options: BehaviourOption[]): Record<ValueKey, number> {
+  const buckets: Record<ValueKey, number[]> = {
+    achievement: [], connection: [], aliveness: [], enjoyment: [],
+    meaning: [], contribution: [], stability: [], autonomy: [],
+  };
+  for (const opt of options) {
+    for (const [k, w] of opt.weights) buckets[k].push(w);
+  }
+  const result = ZERO_SCORES();
+  for (const v of VALUES) {
+    buckets[v.key].sort((a, b) => b - a);
+    result[v.key] = buckets[v.key].slice(0, INTAKE_CAP).reduce((s, x) => s + x, 0);
+  }
+  return result;
+}
+
+// Computed once at module load (per spec)
+const TIME_MAX = maxFromIntake(TIME_OPTIONS);
+const MONEY_MAX = maxFromIntake(MONEY_OPTIONS);
+export const MAX_SCORES: Record<ValueKey, number> = (() => {
+  const m = ZERO_SCORES();
+  for (const v of VALUES) m[v.key] = v.maxScore + TIME_MAX[v.key] + MONEY_MAX[v.key];
+  return m;
+})();
+
+function applyIntake(scores: Record<ValueKey, number>, answer: BehaviourAnswer | undefined, options: BehaviourOption[]) {
+  if (!answer) return;
+  const picks = answer.selectedIndices.slice(0, INTAKE_CAP);
+  for (const idx of picks) {
+    const opt = options[idx];
+    if (!opt) continue;
+    for (const [k, w] of opt.weights) scores[k] += w;
+  }
+}
+
+export function computeScores(
+  answers: Answer[],
+  time?: BehaviourAnswer,
+  money?: BehaviourAnswer,
+): ScoreResult {
   if (answers.length !== SCENARIOS.length) {
     throw new Error(`Expected ${SCENARIOS.length} answers, got ${answers.length}`);
   }
 
   const raw = ZERO_SCORES();
 
+  // 1. Time + Money weighted picks
+  applyIntake(raw, time, TIME_OPTIONS);
+  applyIntake(raw, money, MONEY_OPTIONS);
+
+  // 2. Scenario answers
   for (const scenario of SCENARIOS) {
     const ans = answers[scenario.index];
     if (ans !== 'A' && ans !== 'B') {
       throw new Error(`Missing answer at scenario ${scenario.id}`);
     }
     const chosen = ans === 'A' ? scenario.optionA : scenario.optionB;
-    // Split scenarios add the per-value weight to each value on the winning side.
-    // Non-split scenarios award the scenario weight to the (single) value.
     for (const v of chosen.values) {
       raw[v] += scenario.weight;
     }
@@ -138,10 +184,9 @@ export function computeScores(answers: Answer[]): ScoreResult {
 
   const normalized = ZERO_SCORES();
   for (const v of VALUES) {
-    normalized[v.key] = Math.round((raw[v.key] / v.maxScore) * 100);
+    normalized[v.key] = Math.round((raw[v.key] / MAX_SCORES[v.key]) * 100);
   }
 
-  // Ranking with tiebreaker: highest-weight scenario where the value was chosen wins.
   const ranking = [...VALUES.map(v => v.key)].sort((a, b) => {
     if (normalized[b] !== normalized[a]) return normalized[b] - normalized[a];
     return highestWinningWeight(b, answers) - highestWinningWeight(a, answers);
@@ -153,7 +198,6 @@ export function computeScores(answers: Answer[]): ScoreResult {
     tertiary: ranking[2],
   };
 
-  // Co-primary if normalized scores AND tiebreaker weight are identical.
   if (
     normalized[ranking[0]] === normalized[ranking[1]] &&
     highestWinningWeight(ranking[0], answers) === highestWinningWeight(ranking[1], answers)
