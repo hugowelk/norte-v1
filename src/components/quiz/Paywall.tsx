@@ -5,6 +5,7 @@ import { ValueIcon } from '../ValueIcon';
 
 interface Props {
   onBack: () => void;
+  onUnlock: () => void;
   sampleValue?: ValueKey;
 }
 
@@ -43,7 +44,7 @@ const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
   },
 };
 
-export function Paywall({ onBack, sampleValue }: Props) {
+export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
   const key = sampleValue ?? 'aliveness';
   const sample = SAMPLE_ACTIONS[key];
 
@@ -106,7 +107,7 @@ export function Paywall({ onBack, sampleValue }: Props) {
       </p>
 
       <button
-        onClick={() => {/* placeholder */}}
+        onClick={onUnlock}
         className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-semibold text-base hover:opacity-90 transition-opacity shadow-md"
       >
         Get my plan — $7 →
