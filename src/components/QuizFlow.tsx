@@ -141,6 +141,22 @@ export function QuizFlow() {
     else if (phase === 'coreValues') setPhase('results');
   };
 
+  const ensureResult = (): ScoreResult => {
+    if (result) return result;
+    const r = mockResult();
+    setResult(r);
+    if (!timeAnswer) setTimeAnswer(MOCK_TIME);
+    if (!moneyAnswer) setMoneyAnswer(MOCK_MONEY);
+    if (tradeoffAnswers.length === 0) setTradeoffAnswers(MOCK_ANSWERS);
+    return r;
+  };
+  const ensureCore = (r: ScoreResult) => {
+    if (core) return core;
+    const c = mockCore(r);
+    setCore(c);
+    return c;
+  };
+
   const handleJump = (val: string) => {
     if (val === 'time') { setPhase('time'); }
     else if (val === 'money') { setPhase('money'); }
@@ -150,11 +166,21 @@ export function QuizFlow() {
       setScenarioIdx(idx);
       setPhase('tradeoffs');
     }
-    else if (val === 'results') { setPhase('results'); }
-    else if (val === 'coreValues') { setPhase('coreValues'); }
-    else if (val === 'alignment') { setPhase('alignment'); }
-    else if (val === 'compass') { setPhase('compass'); }
-    else if (val === 'paywall') { setPhase('paywall'); }
+    else if (val === 'results') { ensureResult(); setPhase('results'); }
+    else if (val === 'coreValues') { ensureResult(); setPhase('coreValues'); }
+    else if (val === 'alignment') {
+      const r = ensureResult();
+      const c = ensureCore(r);
+      if (Object.keys(alignmentScores).length === 0) setAlignmentScores(mockAlignment(c.slots, r));
+      setPhase('alignment');
+    }
+    else if (val === 'compass') {
+      const r = ensureResult();
+      const c = ensureCore(r);
+      if (Object.keys(alignmentScores).length === 0) setAlignmentScores(mockAlignment(c.slots, r));
+      setPhase('compass');
+    }
+    else if (val === 'paywall') { ensureResult(); setPhase('paywall'); }
   };
 
   return (
