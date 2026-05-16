@@ -148,12 +148,12 @@ export function buildBehaviourNarrative(
 ): string {
   const timeHits = (time?.selectedIndices ?? [])
     .map(i => TIME_OPTIONS[i])
-    .filter(o => o && o.signals.includes(valueKey))
+    .filter(o => o && signalsOf(o).includes(valueKey))
     .map(o => o.label.toLowerCase());
 
   const moneyHits = (money?.selectedIndices ?? [])
     .map(i => MONEY_OPTIONS[i])
-    .filter(o => o && o.signals.includes(valueKey))
+    .filter(o => o && signalsOf(o).includes(valueKey))
     .map(o => o.label.toLowerCase());
 
   const parts: string[] = [];
