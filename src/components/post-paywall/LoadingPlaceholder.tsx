@@ -87,6 +87,7 @@ export function LoadingPlaceholder() {
 
       if (error) throw error;
       if (data?.success && data?.report_id) {
+        markOwnedReport(data.report_id);
         clearPostPaywall();
         navigate(`/r/${data.report_id}`, { replace: true });
         return;
