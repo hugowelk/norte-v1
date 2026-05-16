@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { readPostPaywall, clearPostPaywall } from '@/lib/postPaywallStore';
-import { findAspirationalGaps } from '@/lib/algorithm';
 import { TIME_OPTIONS, MONEY_OPTIONS } from '@/lib/values';
 import { Button } from '@/components/ui/button';
 
