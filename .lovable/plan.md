@@ -1,94 +1,78 @@
-# Prompt 3 — Report Page `/r/:reportId`
+# Prompt 4 — PDF Export, Edge Cases & Polish
 
-Build the public report page and supporting share UX. Adds `react-markdown` + `remark-gfm` for parsing.
+Finishing pass: print stylesheet, abandoned-session recovery, defensive layout, SEO/OG, and lightweight analytics.
 
-## Routing
+## 1 · Print stylesheet
 
-- Add `<Route path="/r/:reportId" element={<ReportPage />} />` in `src/App.tsx`. Public (no `RequirePayment` gate).
+Add a `@media print` block to `src/index.css` that:
+- Hides chrome via class hooks: `.no-print`, `nav`, `header`, `footer`.
+- Resets `.report-content` (max-width, padding, margin).
+- Defines print typography (DM Sans body 11pt, DM Serif Display H2 18pt dark green, olive bold, etc.).
+- Sets `@page A4` with `@bottom-center: "norte.app · your reading"` and `@bottom-right: counter(page)`, suppressed on `:first` page.
+- Adds `.pdf-header` (display: none on screen, block on print) styles.
+- `orphans/widows: 3`, `page-break-after: avoid` on H2, `page-break-inside: avoid` on `ol li`.
+- Defensive `overflow-wrap: break-word` on `.report-content p, li, h2`.
 
-## Data
+Apply class hooks in `ReportPage.tsx`:
+- `<article className="report-content">` wraps markdown.
+- `ShareHeader` and `PrivacyNotice` get `no-print`.
+- Actions cluster + footer line get `no-print`.
+- New `<div className="pdf-header">` with title + formatted `report.created_at` (via `Intl.DateTimeFormat('en-US', { year:'numeric', month:'long', day:'numeric' })`).
 
-- Fetch with `supabase.from('reports').select('id, created_at, report_markdown, input_data').eq('id', reportId).maybeSingle()`.
-- Loading: lightweight cream-bg pulse (same compass mark from loading screen, no status text).
-- Not found / error: render the 404 state described below.
-- Fire-and-forget view increment via a new SECURITY DEFINER RPC `public.increment_report_view(p_id text)` (RLS blocks anon updates, so we need a function). Call `supabase.rpc('increment_report_view', { p_id: reportId })` — don't await.
+## 2 · Abandoned-session recovery
 
-## Components / Files
+New edge function `check-report-status` (public, no JWT):
+- `POST` `{ paymentSessionId }`.
+- Looks up `reports` by `payment_session_id`.
+- Returns `{ status: 'complete', report_id }` if found, else `{ status: 'pending' }`. (No 24h expiry table to query — treat all not-found as pending; client-side timestamp guards expiry.)
+
+Frontend:
+- `src/lib/pendingSession.ts` — localStorage helpers (`setPendingSession({ id, startedAt })`, `getPendingSession()`, `clearPendingSession()`). 24h client-side expiry.
+- `LoadingPlaceholder` calls `setPendingSession` on mount, `clearPendingSession` on success, leaves it on failure.
+- New top-level effect in `App.tsx` (small `<SessionRecovery />` component inside `<BrowserRouter>`): on mount, if a pending session exists and current path is not `/post-paywall/loading` or `/r/*`, call `check-report-status`. If complete → `markOwnedReport` + clear + `navigate(/r/{id})`. If pending → `navigate(/post-paywall/loading)` only when assessment data still present (so LoadingPlaceholder can re-fire). If expired → clear silently.
+
+## 3 · SEO / OG
+
+Add a small `useDocumentMeta` hook (`src/lib/useDocumentMeta.ts`) that imperatively sets/removes `<meta>` tags in `document.head`. Use it inside `ReportPage`:
+- `<meta name="robots" content="noindex">`
+- `og:title`, `og:description`, `og:url`, `og:image` (placeholder `https://norte.app/og-default.png` per spec).
+- Restore previous values on unmount.
+
+## 4 · Analytics
+
+`src/lib/analytics.ts` — `track(event, props)` that `console.log`s a structured `[analytics] event { props }` payload. Wired at:
+- `report_generated` (LoadingPlaceholder success, includes `generation_time_ms` measured from request start).
+- `report_viewed` (ReportPage after fetch ok, with `is_creator`).
+- `report_pdf_downloaded` (ReportActions Download click).
+- `report_link_copied` (ReportActions Copy click).
+- `report_upsell_clicked` (ReportActions primary CTA click, and ShareHeader link click — pass `cta_location: 'footer' | 'header'`).
+- `report_404` (ReportPage when not-found).
+
+## 5 · Polish
+
+Apply subtle tweaks while editing components:
+- 1px muted `<hr>` between report body and actions cluster (`mt-16 mb-12` rhythm).
+- Confirm primary button visually heavier via existing size + variant.
+- Privacy notice padding bumped to keep it quiet (already done).
+
+## Files
 
 New:
-- `src/pages/ReportPage.tsx` — orchestrator: fetch, 404, share header, privacy notice, markdown, actions, footer.
-- `src/components/report/ShareHeader.tsx` — top bar shown to non-creators, dismissible.
-- `src/components/report/PrivacyNotice.tsx` — one-time creator notice with the report URL and `Got it`.
-- `src/components/report/ReportMarkdown.tsx` — memoized `ReactMarkdown` with typography overrides.
-- `src/components/report/ReportActions.tsx` — Download PDF / Copy link / Take Norte yourself.
-- `src/components/report/ReportNotFound.tsx` — 404 state.
-- `src/lib/reportOwnership.ts` — localStorage helpers (`isOwnedReport`, `markOwnedReport`, dismiss flags).
+- `supabase/functions/check-report-status/index.ts`
+- `src/lib/pendingSession.ts`
+- `src/lib/analytics.ts`
+- `src/lib/useDocumentMeta.ts`
+- `src/components/SessionRecovery.tsx`
 
 Edited:
-- `src/App.tsx` — add route.
-- `src/components/post-paywall/LoadingPlaceholder.tsx` — on success call `markOwnedReport(report_id)` before navigating, so the creator's first view shows the privacy notice (not the share header).
-
-## Layout
-
-- Container: `max-w-[640px] mx-auto px-6 md:px-0 pt-20 pb-16`.
-- Share header (only when not owner): full-width bar above container, ~48px tall, cream slightly darker than bg (use `bg-secondary/40` or similar token already in palette), centered copy `Someone shared their Norte reading with you. Curious about yours? →` (italic prefix, link to `/`), `×` button on right, dismissal stored at `norte_dismissed_share_header_{id}`.
-- Privacy notice (only when owner AND not yet seen): card with dashed olive border above the report. Stores `norte_seen_privacy_notice_{id}` on dismiss.
-- Markdown body (see typography below).
-- 72px gap → actions cluster: vertical on mobile, `md:flex-row` on desktop, gap 16px.
-- 64px gap → footer line: `Norte · Anyone with this link can read this report.` centered, 14px, muted.
-
-## Markdown typography
-
-`ReactMarkdown` with `remarkGfm`, components map:
-- `p`: `text-[18px] leading-[1.65] text-foreground mb-5 font-sans`
-- `h2`: `font-display text-[30px] leading-[1.2] text-primary mt-14 mb-5` (primary = brand dark green)
-- `h3`: `font-display text-[22px] leading-[1.3] text-primary mt-10 mb-3`
-- `strong`: `font-semibold text-accent` (accent = olive)
-- `em`: `italic`
-- `ul`, `ol`: standard spacing; `li` `pt-6` for first-level numbered items (matches "5 shifts" rhythm)
-- `blockquote`: `border-l-2 border-accent pl-4 italic text-muted-foreground`
-- `a`: `underline text-primary`
-
-Memoize via `useMemo` keyed on `report_markdown` so re-renders don't re-parse.
-
-## Actions
-
-- `Download as PDF`: `variant="outline"`, calls `window.print()`.
-- `Copy share link`: `variant="outline"`, writes `window.location.href`, fires sonner `toast('Link copied — anyone with it can read your report.')`.
-- `Take Norte yourself — $8`: primary (`variant="default"`), `navigate('/')`.
-- All buttons `min-h-12` (≥48px tap target).
-
-## 404 state
-
-Centered cream page, no chrome:
-```
-# This report doesn't exist
-The link you followed may be wrong, or the report may have been removed.
-[ Take Norte yourself → ]
-```
-Button links to `/`.
-
-## Database migration
-
-```sql
-create or replace function public.increment_report_view(p_id text)
-returns void
-language sql
-security definer
-set search_path = public
-as $$
-  update public.reports set view_count = view_count + 1 where id = p_id;
-$$;
-
-grant execute on function public.increment_report_view(text) to anon, authenticated;
-```
-
-## Deps
-
-```
-bun add react-markdown remark-gfm
-```
+- `src/index.css` (print block + pdf-header styles + overflow-wrap)
+- `src/pages/ReportPage.tsx` (classes, pdf-header, meta, analytics, hr)
+- `src/components/report/ShareHeader.tsx` (`no-print`, analytics)
+- `src/components/report/PrivacyNotice.tsx` (`no-print`)
+- `src/components/report/ReportActions.tsx` (analytics)
+- `src/components/post-paywall/LoadingPlaceholder.tsx` (pending session + analytics)
+- `src/App.tsx` (mount `<SessionRecovery />`)
 
 ## Out of scope
 
-Print-specific styles (Prompt 4), PDF generation, SSR/SSG, email delivery.
+Real analytics provider (PostHog/Plausible), Stripe wiring, account-based report lists.
