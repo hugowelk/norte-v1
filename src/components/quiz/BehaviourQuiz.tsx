@@ -49,7 +49,7 @@ export function BehaviourQuiz({
         {question}
       </h2>
 
-      <p className="text-sm text-muted-foreground">Select up to {maxSelections}</p>
+      <p className="text-sm text-muted-foreground">Pick up to {maxSelections}</p>
 
       <div className="space-y-2.5">
         {options.map((option, idx) => {
