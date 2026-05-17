@@ -15,7 +15,7 @@ export function PrivacyNotice({ reportId }: Props) {
       <p className="font-semibold text-foreground mb-2">Your report has a unique link.</p>
       <p className="font-mono text-sm text-muted-foreground break-all mb-3">{url}</p>
       <p className="text-base text-foreground mb-4">
-        Anyone with this link can read it. Share where it makes sense — or keep it private.
+        Anyone with this link can read it. Share where it makes sense, or keep it private.
       </p>
       <Button
         variant="outline"

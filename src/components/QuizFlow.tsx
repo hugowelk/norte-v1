@@ -2,32 +2,21 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Briefcase, Heart, Users as UsersIcon, HeartPulse, BookOpen, Gamepad2, HandHeart as HandHeartIcon,
-  Moon, Sparkles as SparklesIcon, Bed,
-  Plane, ShoppingBag, GraduationCap, Home, PiggyBank, Activity, Gift, Palette, Sofa, Wrench,
-} from 'lucide-react';
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  TIME_OPTIONS, MONEY_OPTIONS, type BehaviourAnswer,
-} from '@/lib/values';
 import { SCENARIOS, computeScores, findAspirationalGaps, type Answer, type ScoreResult } from '@/lib/algorithm';
 import { VALUES, getValueByKey, type ValueKey } from '@/lib/values';
 import { writePostPaywall, genPaymentSessionId, type AssessmentSnapshot, type LoudestGap } from '@/lib/postPaywallStore';
 
 // Mock data for designer preview when jumping past the quiz
-const MOCK_TIME: BehaviourAnswer = { selectedIndices: [0, 1, 2], custom: [] };
-const MOCK_MONEY: BehaviourAnswer = { selectedIndices: [0, 1, 2], custom: [] };
 const MOCK_ANSWERS: Answer[] = SCENARIOS.map((_, i) => (i % 2 === 0 ? 'A' : 'B'));
-function mockResult(): ScoreResult { return computeScores(MOCK_ANSWERS, MOCK_TIME, MOCK_MONEY); }
+function mockResult(): ScoreResult { return computeScores(MOCK_ANSWERS); }
 function mockCore(result: ScoreResult): { slots: { kind: 'core'; key: ValueKey }[] } {
-  // Pick 5 values: top 2 revealed + next 3 from ranking, for variety
-  const keys = [result.ranking[0], result.ranking[1], result.ranking[3], result.ranking[4], result.ranking[5]];
+  const keys = [result.ranking[0], result.ranking[1], result.ranking[2]];
   return { slots: keys.map(key => ({ kind: 'core' as const, key })) };
 }
 function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<string, number> {
@@ -36,7 +25,6 @@ function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<
   allKeys.forEach(k => { out[k] = Math.round((result.normalized[k] ?? 50) * 0.6); });
   return out;
 }
-import { BehaviourQuiz } from './quiz/BehaviourQuiz';
 import { TradeoffIntro } from './quiz/TradeoffIntro';
 import { TradeoffScenario } from './quiz/TradeoffScenario';
 import { TradeoffTransition } from './quiz/TradeoffTransition';
@@ -47,8 +35,6 @@ import { ValueCompass } from './quiz/ValueCompass';
 import { Paywall } from './quiz/Paywall';
 
 type Phase =
-  | 'time'
-  | 'money'
   | 'tradeoffIntro'
   | 'tradeoffs'
   | 'tradeoffTransition'
@@ -58,9 +44,6 @@ type Phase =
   | 'compass'
   | 'paywall';
 
-const TIME_ICONS = [Briefcase, Heart, UsersIcon, HeartPulse, BookOpen, Gamepad2, HandHeartIcon, Moon, SparklesIcon, Bed];
-const MONEY_ICONS = [Plane, ShoppingBag, GraduationCap, Home, PiggyBank, Activity, Gift, Palette, Sofa, Wrench];
-
 const pageVariants = {
   enter: { opacity: 0, y: 20 },
   center: { opacity: 1, y: 0 },
@@ -69,12 +52,10 @@ const pageVariants = {
 
 export function QuizFlow() {
   const navigate = useNavigate();
-  const [phase, setPhase] = useState<Phase>('time');
+  const [phase, setPhase] = useState<Phase>('tradeoffIntro');
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [pendingTransition, setPendingTransition] = useState<string | null>(null);
 
-  const [timeAnswer, setTimeAnswer] = useState<BehaviourAnswer>();
-  const [moneyAnswer, setMoneyAnswer] = useState<BehaviourAnswer>();
   const [tradeoffAnswers, setTradeoffAnswers] = useState<Answer[]>([]);
   const [result, setResult] = useState<ScoreResult>();
   const [core, setCore] = useState<CoreValuesResult>();
@@ -87,28 +68,16 @@ export function QuizFlow() {
   }, [phase, scenarioIdx]);
 
   // Progress: rough estimate across the whole flow
-  const totalSteps = 2 /*time+money*/ + 1 /*intro*/ + SCENARIOS.length + 4 /*results,core,align,compass*/;
+  const totalSteps = 1 /*intro*/ + SCENARIOS.length + 4 /*results,core,align,compass*/;
   let completed = 0;
-  if (phase === 'time') completed = 0;
-  else if (phase === 'money') completed = 1;
-  else if (phase === 'tradeoffIntro') completed = 2;
-  else if (phase === 'tradeoffs' || phase === 'tradeoffTransition') completed = 3 + scenarioIdx;
-  else if (phase === 'results') completed = 3 + SCENARIOS.length;
-  else if (phase === 'coreValues') completed = 4 + SCENARIOS.length;
-  else if (phase === 'alignment') completed = 5 + SCENARIOS.length;
-  else if (phase === 'compass') completed = 6 + SCENARIOS.length;
+  if (phase === 'tradeoffIntro') completed = 0;
+  else if (phase === 'tradeoffs' || phase === 'tradeoffTransition') completed = 1 + scenarioIdx;
+  else if (phase === 'results') completed = 1 + SCENARIOS.length;
+  else if (phase === 'coreValues') completed = 2 + SCENARIOS.length;
+  else if (phase === 'alignment') completed = 3 + SCENARIOS.length;
+  else if (phase === 'compass') completed = 4 + SCENARIOS.length;
   else if (phase === 'paywall') completed = totalSteps;
   const progress = Math.min(100, (completed / totalSteps) * 100);
-
-  const handleTime = (a: BehaviourAnswer) => {
-    setTimeAnswer(a);
-    setPhase('money');
-  };
-
-  const handleMoney = (a: BehaviourAnswer) => {
-    setMoneyAnswer(a);
-    setPhase('tradeoffIntro');
-  };
 
   const handleTradeoffAnswer = (a: Answer) => {
     const next = [...tradeoffAnswers];
@@ -128,7 +97,7 @@ export function QuizFlow() {
       setScenarioIdx(scenarioIdx + 1);
       setPhase('tradeoffs');
     } else {
-      const r = computeScores(answers, timeAnswer, moneyAnswer);
+      const r = computeScores(answers);
       setResult(r);
       setPhase('results');
     }
@@ -139,23 +108,16 @@ export function QuizFlow() {
     advanceTradeoff(tradeoffAnswers);
   };
 
-  const showBack =
-    (phase === 'money') ||
-    (phase === 'tradeoffIntro') ||
-    (phase === 'coreValues');
+  const showBack = (phase === 'coreValues');
 
   const handleBack = () => {
-    if (phase === 'money') setPhase('time');
-    else if (phase === 'tradeoffIntro') setPhase('money');
-    else if (phase === 'coreValues') setPhase('results');
+    if (phase === 'coreValues') setPhase('results');
   };
 
   const ensureResult = (): ScoreResult => {
     if (result) return result;
     const r = mockResult();
     setResult(r);
-    if (!timeAnswer) setTimeAnswer(MOCK_TIME);
-    if (!moneyAnswer) setMoneyAnswer(MOCK_MONEY);
     if (tradeoffAnswers.length === 0) setTradeoffAnswers(MOCK_ANSWERS);
     return r;
   };
@@ -167,9 +129,7 @@ export function QuizFlow() {
   };
 
   const handleJump = (val: string) => {
-    if (val === 'time') { setPhase('time'); }
-    else if (val === 'money') { setPhase('money'); }
-    else if (val === 'tradeoffIntro') { setScenarioIdx(0); setPhase('tradeoffIntro'); }
+    if (val === 'tradeoffIntro') { setScenarioIdx(0); setPhase('tradeoffIntro'); }
     else if (val.startsWith('tradeoff-')) {
       const idx = parseInt(val.replace('tradeoff-', ''), 10);
       setScenarioIdx(idx);
@@ -214,19 +174,17 @@ export function QuizFlow() {
             <SelectValue placeholder="Jump to page…" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="time">1 · Time</SelectItem>
-            <SelectItem value="money">2 · Money</SelectItem>
-            <SelectItem value="tradeoffIntro">3 · Trade-off Intro</SelectItem>
+            <SelectItem value="tradeoffIntro">1 · Trade-off Intro</SelectItem>
             {SCENARIOS.map((s, i) => (
               <SelectItem key={s.id} value={`tradeoff-${i}`}>
-                3.{i + 1} · {s.id}
+                1.{i + 1} · {s.id}
               </SelectItem>
             ))}
-            <SelectItem value="results">4 · Results</SelectItem>
-            <SelectItem value="coreValues">5 · Core Values</SelectItem>
-            <SelectItem value="alignment">6 · Alignment</SelectItem>
-            <SelectItem value="compass">7 · Compass</SelectItem>
-            <SelectItem value="paywall">8 · Paywall</SelectItem>
+            <SelectItem value="results">2 · Results</SelectItem>
+            <SelectItem value="coreValues">3 · Core Values</SelectItem>
+            <SelectItem value="alignment">4 · Alignment</SelectItem>
+            <SelectItem value="compass">5 · Compass</SelectItem>
+            <SelectItem value="paywall">6 · Paywall</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -251,32 +209,6 @@ export function QuizFlow() {
             transition={{ duration: 0.35, ease: 'easeOut' }}
             className="w-full max-w-2xl"
           >
-            {phase === 'time' && (
-              <BehaviourQuiz
-                title="Time"
-                stepLabel="Time · Part 1 of 3"
-                subtitle="Where your time goes is one of the strongest signals of what you've been prioritising."
-                question="In a typical week, where does most of your time actually go?"
-                options={TIME_OPTIONS}
-                optionIcons={TIME_ICONS}
-                maxSelections={3}
-                existing={timeAnswer}
-                onContinue={handleTime}
-              />
-            )}
-            {phase === 'money' && (
-              <BehaviourQuiz
-                title="Money"
-                stepLabel="Money · Part 2 of 3"
-                subtitle="Where your money has been going often says something different than what you'd planned for it."
-                question="Looking back at the past year — where did most of your non-essential spending actually go?"
-                options={MONEY_OPTIONS}
-                optionIcons={MONEY_ICONS}
-                maxSelections={3}
-                existing={moneyAnswer}
-                onContinue={handleMoney}
-              />
-            )}
             {phase === 'tradeoffIntro' && (
               <TradeoffIntro onBegin={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
             )}
@@ -292,8 +224,6 @@ export function QuizFlow() {
             {phase === 'results' && result && (
               <ValueResults
                 result={result}
-                timeAnswer={timeAnswer}
-                moneyAnswer={moneyAnswer}
                 onContinue={() => setPhase('coreValues')}
               />
             )}
@@ -342,7 +272,7 @@ export function QuizFlow() {
                   const snapshot: AssessmentSnapshot = {
                     revealed_top_3: top3,
                     revealed_full_ranking: r.ranking,
-                    aspirational_top_5: aspirational,
+                    aspirational_top_3: aspirational,
                     loudest_gap: gaps[0]
                       ? { value: gaps[0].value, aspirational_rank: aspirational.indexOf(gaps[0].value) + 1, revealed_rank: gaps[0].rank }
                       : null,
@@ -351,8 +281,6 @@ export function QuizFlow() {
                       aspirational_rank: aspirational.indexOf(g.value) + 1,
                       revealed_rank: g.rank,
                     })),
-                    time_picks: (timeAnswer?.selectedIndices ?? []).map(i => TIME_OPTIONS[i]?.label).filter(Boolean) as string[],
-                    money_picks: (moneyAnswer?.selectedIndices ?? []).map(i => MONEY_OPTIONS[i]?.label).filter(Boolean) as string[],
                   };
                   writePostPaywall({
                     paymentSessionId: genPaymentSessionId(),

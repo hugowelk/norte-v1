@@ -47,7 +47,7 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
 
       <div className="space-y-4">
         <p className="text-xs font-display uppercase tracking-widest text-muted-foreground px-1">
-          The 5 you picked
+          The 3 you picked
         </p>
         {pickedKeys.map(k => (
           <SliderRow
@@ -67,7 +67,7 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
             className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-card/60 hover:bg-card transition-colors text-left"
           >
             <span className="text-sm font-body text-foreground/80 italic">
-              You didn't pick these — but they came up in your trade-offs. Tap to see where they sit.
+              You didn't pick these, but they came up in your trade-offs. Tap to see where they sit.
             </span>
             <ChevronDown size={16} className={cn('text-muted-foreground transition-transform shrink-0', otherOpen && 'rotate-180')} />
           </button>

@@ -46,7 +46,7 @@ export function Q2Chapter() {
       <ul className="space-y-1.5 text-sm italic text-muted-foreground">
         <li>"Just left my job, figuring out what's next."</li>
         <li>"New parent, lost my edges."</li>
-        <li>"Stuck — last few years feel like autopilot."</li>
+        <li>"Stuck. Last few years feel like autopilot."</li>
       </ul>
 
       <button

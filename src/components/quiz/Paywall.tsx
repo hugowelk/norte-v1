@@ -12,15 +12,15 @@ interface Props {
 const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
   aliveness: {
     title: 'A small shift this week · toward Aliveness',
-    body: 'Move your daily decision about exercise from the morning to the night before. Decide tonight what tomorrow looks like — not in the morning, when your tired brain will negotiate it away.',
+    body: 'Move your daily decision about exercise from the morning to the night before. Decide tonight what tomorrow looks like, not in the morning, when your tired brain will negotiate it away.',
   },
   achievement: {
     title: 'A small shift this week · toward Achievement',
-    body: 'Pick the one project that, if it moved, would make the rest of the week feel different. Block 90 minutes for it tomorrow morning — before email, before anything else.',
+    body: 'Pick the one project that, if it moved, would make the rest of the week feel different. Block 90 minutes for it tomorrow morning, before email, before anything else.',
   },
   connection: {
     title: 'A small shift this week · toward Connection',
-    body: 'Text one person you keep meaning to call. Not to schedule something — just to say the thing you would have said if they were in the room.',
+    body: 'Text one person you keep meaning to call. Not to schedule something. Just to say the thing you would have said if they were in the room.',
   },
   enjoyment: {
     title: 'A small shift this week · toward Enjoyment',
@@ -32,7 +32,7 @@ const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
   },
   contribution: {
     title: 'A small shift this week · toward Contribution',
-    body: 'Find one small way to help someone where you cannot be paid back. Fifteen minutes. The size of the act is irrelevant — the unilateralness is the point.',
+    body: 'Find one small way to help someone where you cannot be paid back. Fifteen minutes. The size of the act is irrelevant. The unilateralness is the point.',
   },
   stability: {
     title: 'A small shift this week · toward Stability',
@@ -40,7 +40,7 @@ const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
   },
   autonomy: {
     title: 'A small shift this week · toward Autonomy',
-    body: 'Find one recurring obligation you said yes to out of habit. This week, renegotiate it or drop it — even a small one. The muscle is in the choosing.',
+    body: 'Find one recurring obligation you said yes to out of habit. This week, renegotiate it or drop it, even a small one. The muscle is in the choosing.',
   },
 };
 
@@ -64,7 +64,7 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
           Turn the gap into something you can actually move.
         </h1>
         <p className="text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
-          You've seen what's been driving your week, and where you want it to be heading. The next step is the harder one — designing the small shifts that close the distance.
+          You've seen what's been driving your week, and where you want it to be heading. The next step is designing the small shifts that close the distance.
         </p>
       </div>
 
@@ -78,7 +78,7 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
             Not a goal list. The specific behaviours that have been pulling you toward your top revealed value, and the small ones that could pull you toward the values you want at the centre instead.
           </Bullet>
           <Bullet icon={MessageCircle} title="A real conversation, not a checklist">
-            Norte's AI guide works through your compass with you — asking the questions a thoughtful friend would, and helping you design shifts that fit the life you actually have.
+            Norte's AI guide works through your compass with you, asking the questions a thoughtful friend would, and helping you design shifts that fit the life you actually have.
           </Bullet>
           <Bullet icon={Sparkles} title="Yours to keep">
             Export your plan, revisit it, share it with someone who knows you.
@@ -103,14 +103,14 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
         </div>
       </div>
       <p className="text-center text-xs text-muted-foreground -mt-6">
-        One sample, drawn from your top gap — {getValueByKey(key).label}.
+        One sample from your {getValueByKey(key).label} gap.
       </p>
 
       <button
         onClick={onUnlock}
         className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-semibold text-base hover:opacity-90 transition-opacity shadow-md"
       >
-        Get my plan — $7 →
+        Get my plan ($7) →
       </button>
       <button
         onClick={onBack}

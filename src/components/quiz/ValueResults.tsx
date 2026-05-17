@@ -1,19 +1,17 @@
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
-import { getValueByKey, buildBehaviourNarrative, type ValueKey, type BehaviourAnswer } from '@/lib/values';
+import { getValueByKey, type ValueKey } from '@/lib/values';
 import { type ScoreResult } from '@/lib/algorithm';
 import { ValueIcon } from '../ValueIcon';
 import { cn } from '@/lib/utils';
 
 interface Props {
   result: ScoreResult;
-  timeAnswer: BehaviourAnswer | undefined;
-  moneyAnswer: BehaviourAnswer | undefined;
   onContinue: () => void;
 }
 
-export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Props) {
+export function ValueResults({ result, onContinue }: Props) {
   const top3 = [result.revealed.primary, result.revealed.secondary, result.revealed.tertiary];
   const rest = result.ranking.slice(3);
   const [restOpen, setRestOpen] = useState(false);
@@ -39,7 +37,6 @@ export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Pr
             key={key}
             valueKey={key}
             rank={i + 1}
-            narrative={buildBehaviourNarrative(key, timeAnswer, moneyAnswer)}
           />
         ))}
       </div>
@@ -85,11 +82,10 @@ export function ValueResults({ result, timeAnswer, moneyAnswer, onContinue }: Pr
 }
 
 function TopValueCard({
-  valueKey, rank, narrative,
+  valueKey, rank,
 }: {
   valueKey: ValueKey;
   rank: number;
-  narrative: string;
 }) {
   const value = getValueByKey(valueKey);
   return (
@@ -107,7 +103,7 @@ function TopValueCard({
         <p className="font-display font-medium text-foreground text-lg">{value.label}</p>
       </div>
       <p className="px-5 pb-5 text-sm text-foreground/80 leading-relaxed border-t border-border/60 pt-3">
-        {narrative}
+        {value.longDescription}
       </p>
     </motion.div>
   );

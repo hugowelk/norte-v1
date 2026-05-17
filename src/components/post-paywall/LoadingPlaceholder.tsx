@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { readPostPaywall, clearPostPaywall } from '@/lib/postPaywallStore';
 import { markOwnedReport } from '@/lib/reportOwnership';
-import { TIME_OPTIONS, MONEY_OPTIONS } from '@/lib/values';
 import { Button } from '@/components/ui/button';
 import { setPendingSession, clearPendingSession } from '@/lib/pendingSession';
 import { track } from '@/lib/analytics';
@@ -24,37 +23,27 @@ function buildRequestBody() {
   if (!state.paymentSessionId || !a) return null;
 
   const topThree = new Set(a.revealed_top_3);
-  const gaps = a.aspirational_top_5
+  const gaps = a.aspirational_top_3
     .filter(v => !topThree.has(v))
     .map(v => ({ value: v, rank: a.revealed_full_ranking.indexOf(v) + 1 }))
     .filter(x => x.rank > 0);
   const loudest = gaps[0]
-    ? { value: gaps[0].value, aspirational_rank: a.aspirational_top_5.indexOf(gaps[0].value) + 1, revealed_rank: gaps[0].rank }
+    ? { value: gaps[0].value, aspirational_rank: a.aspirational_top_3.indexOf(gaps[0].value) + 1, revealed_rank: gaps[0].rank }
     : null;
   const otherGaps = gaps.slice(1).map(g => ({
     value: g.value,
-    aspirational_rank: a.aspirational_top_5.indexOf(g.value) + 1,
+    aspirational_rank: a.aspirational_top_3.indexOf(g.value) + 1,
     revealed_rank: g.rank,
   }));
-
-  // time/money picks may already be labels (set at paywall handoff) or indices — normalize.
-  const toLabels = (arr: string[], options: typeof TIME_OPTIONS) =>
-    arr.map(v => {
-      const n = Number(v);
-      if (!Number.isNaN(n) && options[n]) return options[n].label;
-      return v;
-    });
 
   return {
     paymentSessionId: state.paymentSessionId,
     assessmentResults: {
       revealed_top_3: a.revealed_top_3,
       revealed_full_ranking: a.revealed_full_ranking,
-      aspirational_top_5: a.aspirational_top_5,
+      aspirational_top_3: a.aspirational_top_3,
       loudest_gap: loudest,
       other_gaps: otherGaps,
-      time_picks: toLabels(a.time_picks, TIME_OPTIONS),
-      money_picks: toLabels(a.money_picks, MONEY_OPTIONS),
     },
     postPaywallAnswers: {
       name: state.name,
@@ -136,8 +125,7 @@ export function LoadingPlaceholder() {
             Please contact{' '}
             <a href="mailto:support@norte.app" className="underline">
               support@norte.app
-            </a>{' '}
-            — your payment is safe and we'll get this to you.
+            </a>. Your payment is safe and we'll get this to you.
           </p>
         </div>
       </div>
@@ -153,7 +141,7 @@ export function LoadingPlaceholder() {
               Something interrupted the generation.
             </p>
             <p className="text-base text-muted-foreground">
-              We've saved your answers — try again?
+              We've saved your answers. Try again?
             </p>
           </div>
           <Button onClick={run} size="lg">Retry →</Button>
