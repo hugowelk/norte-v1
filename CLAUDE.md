@@ -105,10 +105,10 @@ If a sentence sounds like a self-help book or a wellness app, rewrite it.
 - **Typography**: DM Serif Display (headlines), DM Sans (body)
 - **State**: React state and context (no Redux unless absolutely needed)
 - **Payments**: Stripe (one-time payment, $7–9 USD)
-- **AI**: Anthropic API for Phase 3 action plan generation
+- **AI**: Google Gemini via Lovable AI gateway (currently). Originally intended Anthropic API; switch deferred.
 - **Hosting**: Lovable for prototyping, [final host TBD]
 - **Language**: English only. (App was originally Portuguese but shifted to English in v3.)
-- **Backend**: Supabase (purpose to be confirmed during engineering pass)
+- **Backend**: Supabase. One table (`reports`) stores AI-generated reports keyed by Stripe session ID. No auth. Public read by report ID. One Edge Function (`generate-report`) handles AI generation. Another (`check-report-status`) handles session recovery.
 
 ## Current state vs. target state
 
@@ -118,6 +118,10 @@ The repo is currently at v1 (pre-rewrite). CLAUDE.md describes the v3 target sta
 - maxScore values reflecting pre-v3 coverage (target: updated per the coverage table above)
 - Placeholder test file only (target: real algorithm tests)
 - Aspirational flow expecting 5 values (target: 3)
+- The system prompt in `supabase/functions/generate-report/prompt.ts` outputs 5 behaviour shifts (target: 3)
+- The system prompt references "13 trade-offs" (target: 15)
+- The system prompt has a "The pattern" section using time_picks and money_picks (target: removed)
+- The Edge Function still expects `aspirational_top_5` in payload (target: `aspirational_top_3`)
 
 ## Folder conventions
 
@@ -160,6 +164,20 @@ The work splits between Claude Code (engineering) and Lovable (UI). Don't try to
 5. For any algorithm change, verify the coverage table above is still accurate
 6. For any copy change, run the voice rules audit (em-dashes, hedging, AI phrases)
 7. Commit messages: imperative mood, specific, no fluff
+
+## Deferred work
+
+The following items were discovered during initial investigation but are deferred to a dedicated AI prompt session:
+
+- Rewrite system prompt in `supabase/functions/generate-report/prompt.ts` to:
+  - Reference 15 trade-offs (was 13)
+  - Output 3 behaviour shifts (was 5)
+  - Remove the time_picks / money_picks "pattern" section
+  - Match the voice rules (no em-dashes, no hedging, no AI tropes)
+- Update Edge Function payload to expect `aspirational_top_3` (was `aspirational_top_5`)
+- AI provider decision: keep Gemini or switch to Anthropic (currently Gemini)
+
+After the engineering pass, the Edge Function will be temporarily broken because the data shape it receives will no longer match what the prompt references. Do not run user tests until the AI prompt session is complete.
 
 ## What Hugo cares about
 
