@@ -53,7 +53,7 @@ export const VALUES: Value[] = [
     description: 'Pleasure, fun, the texture of a good day.',
     longDescription: 'Life is meant to be enjoyed in the moment. You make room for play, beauty, and small pleasures, not just productivity.',
     icon: Sparkles,
-    maxScore: 3.5,
+    maxScore: 5.0,
   },
   {
     key: 'meaning',
@@ -69,7 +69,7 @@ export const VALUES: Value[] = [
     description: 'Making things better for others.',
     longDescription: 'You measure a good life partly by what it gives back — to people, causes, or community. Helping is not a side activity.',
     icon: HandHeart,
-    maxScore: 3.5,
+    maxScore: 5.0,
   },
   {
     key: 'stability',
@@ -77,7 +77,7 @@ export const VALUES: Value[] = [
     description: 'Safety, predictability, solid ground.',
     longDescription: 'You build from a place of security. Knowing what to expect — financially, emotionally, structurally — is what frees you to act.',
     icon: Shield,
-    maxScore: 5.0,
+    maxScore: 6.5,
   },
   {
     key: 'autonomy',
@@ -85,7 +85,7 @@ export const VALUES: Value[] = [
     description: 'Owning your time and your choices.',
     longDescription: 'Independence is oxygen. You need control over your hours, your decisions, and the shape of your days.',
     icon: Feather,
-    maxScore: 3.5,
+    maxScore: 5.0,
   },
 ];
 
