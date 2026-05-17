@@ -47,7 +47,7 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
 
       <div className="space-y-4">
         <p className="text-xs font-display uppercase tracking-widest text-muted-foreground px-1">
-          The 5 you picked
+          The 3 you picked
         </p>
         {pickedKeys.map(k => (
           <SliderRow

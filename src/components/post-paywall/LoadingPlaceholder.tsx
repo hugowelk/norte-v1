@@ -23,16 +23,16 @@ function buildRequestBody() {
   if (!state.paymentSessionId || !a) return null;
 
   const topThree = new Set(a.revealed_top_3);
-  const gaps = a.aspirational_top_5
+  const gaps = a.aspirational_top_3
     .filter(v => !topThree.has(v))
     .map(v => ({ value: v, rank: a.revealed_full_ranking.indexOf(v) + 1 }))
     .filter(x => x.rank > 0);
   const loudest = gaps[0]
-    ? { value: gaps[0].value, aspirational_rank: a.aspirational_top_5.indexOf(gaps[0].value) + 1, revealed_rank: gaps[0].rank }
+    ? { value: gaps[0].value, aspirational_rank: a.aspirational_top_3.indexOf(gaps[0].value) + 1, revealed_rank: gaps[0].rank }
     : null;
   const otherGaps = gaps.slice(1).map(g => ({
     value: g.value,
-    aspirational_rank: a.aspirational_top_5.indexOf(g.value) + 1,
+    aspirational_rank: a.aspirational_top_3.indexOf(g.value) + 1,
     revealed_rank: g.rank,
   }));
 
@@ -41,7 +41,7 @@ function buildRequestBody() {
     assessmentResults: {
       revealed_top_3: a.revealed_top_3,
       revealed_full_ranking: a.revealed_full_ranking,
-      aspirational_top_5: a.aspirational_top_5,
+      aspirational_top_3: a.aspirational_top_3,
       loudest_gap: loudest,
       other_gaps: otherGaps,
     },

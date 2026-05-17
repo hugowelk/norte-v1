@@ -16,8 +16,7 @@ import { writePostPaywall, genPaymentSessionId, type AssessmentSnapshot, type Lo
 const MOCK_ANSWERS: Answer[] = SCENARIOS.map((_, i) => (i % 2 === 0 ? 'A' : 'B'));
 function mockResult(): ScoreResult { return computeScores(MOCK_ANSWERS); }
 function mockCore(result: ScoreResult): { slots: { kind: 'core'; key: ValueKey }[] } {
-  // Pick 5 values: top 2 revealed + next 3 from ranking, for variety
-  const keys = [result.ranking[0], result.ranking[1], result.ranking[3], result.ranking[4], result.ranking[5]];
+  const keys = [result.ranking[0], result.ranking[1], result.ranking[2]];
   return { slots: keys.map(key => ({ kind: 'core' as const, key })) };
 }
 function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<string, number> {
@@ -273,7 +272,7 @@ export function QuizFlow() {
                   const snapshot: AssessmentSnapshot = {
                     revealed_top_3: top3,
                     revealed_full_ranking: r.ranking,
-                    aspirational_top_5: aspirational,
+                    aspirational_top_3: aspirational,
                     loudest_gap: gaps[0]
                       ? { value: gaps[0].value, aspirational_rank: aspirational.indexOf(gaps[0].value) + 1, revealed_rank: gaps[0].rank }
                       : null,
