@@ -5,7 +5,7 @@ import { PostPaywallLayout } from './PostPaywallLayout';
 import { usePostPaywallStore, type BlockerAnswer } from '@/lib/postPaywallStore';
 
 const OPTIONS: { key: Exclude<BlockerAnswer, null>; label: string }[] = [
-  { key: 'not_tried', label: "I haven't really tried — it's been on the to-do list" },
+  { key: 'not_tried', label: "I haven't really tried. It's been on the to-do list." },
   { key: 'other_priorities_win', label: "I've tried, but other priorities keep winning" },
   { key: 'dont_know_what_it_looks_like', label: "I'm not sure what \u201Cliving by it\u201D would actually look like" },
   { key: 'hard_right_now', label: 'Something in my life makes it genuinely hard right now' },

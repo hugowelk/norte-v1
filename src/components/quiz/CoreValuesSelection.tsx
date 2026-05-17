@@ -79,18 +79,18 @@ export function CoreValuesSelection({ revealedTop3, onComplete }: Props) {
       <div className="space-y-3 text-center">
         <p className="text-xs font-display uppercase tracking-widest text-accent">Your Aspiration</p>
         <h2 className="text-2xl md:text-3xl font-display font-semibold text-foreground leading-tight">
-          Now — pick the 3 values you want at the centre of your life.
+          Now. Pick the 3 values you want at the centre of your life.
         </h2>
         <p className="text-sm text-muted-foreground max-w-md mx-auto">
           Not what came up. What you'd choose if you were choosing on purpose. Put them in priority order.
         </p>
-        <p className="text-xs text-muted-foreground pt-1">Tap to add — drag to reorder</p>
+        <p className="text-xs text-muted-foreground pt-1">Tap to add, drag to reorder</p>
       </div>
 
       {revealedLabels.length === 3 && (
         <div className="rounded-xl bg-accent/10 px-5 py-4">
           <p className="text-sm md:text-base text-foreground/85 leading-relaxed italic font-body">
-            Your revealed top 3 were <span className="not-italic font-medium text-foreground">{revealedLabels[0]}</span>, <span className="not-italic font-medium text-foreground">{revealedLabels[1]}</span>, and <span className="not-italic font-medium text-foreground">{revealedLabels[2]}</span>. The interesting question is which of these you want to keep at the centre — and what else you want to bring in.
+            Your revealed top 3 were <span className="not-italic font-medium text-foreground">{revealedLabels[0]}</span>, <span className="not-italic font-medium text-foreground">{revealedLabels[1]}</span>, and <span className="not-italic font-medium text-foreground">{revealedLabels[2]}</span>. The interesting question is which of these you want to keep at the centre, and what else you want to bring in.
           </p>
         </div>
       )}

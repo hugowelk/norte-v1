@@ -125,8 +125,7 @@ export function LoadingPlaceholder() {
             Please contact{' '}
             <a href="mailto:support@norte.app" className="underline">
               support@norte.app
-            </a>{' '}
-            — your payment is safe and we'll get this to you.
+            </a>. Your payment is safe and we'll get this to you.
           </p>
         </div>
       </div>
@@ -142,7 +141,7 @@ export function LoadingPlaceholder() {
               Something interrupted the generation.
             </p>
             <p className="text-base text-muted-foreground">
-              We've saved your answers — try again?
+              We've saved your answers. Try again?
             </p>
           </div>
           <Button onClick={run} size="lg">Retry →</Button>

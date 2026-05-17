@@ -84,7 +84,7 @@ export default function ReportPage() {
 
       <article className="report-content max-w-[640px] mx-auto px-6 md:px-0 pt-20 pb-16">
         <div className="pdf-header">
-          <div className="pdf-header-title">NORTE — Your reading</div>
+          <div className="pdf-header-title">NORTE. Your reading</div>
           <div className="pdf-header-date">{formattedDate}</div>
         </div>
 

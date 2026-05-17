@@ -63,7 +63,7 @@ export function ValueCompass({ result, slots, alignmentScores, onContinue }: Pro
               {revealedLabels[0]}. {revealedLabels[1]}. {revealedLabels[2]}.
             </p>
             <p>
-              These have been quietly shaping your decisions — how you've been spending your energy, your time, the things you've been protecting. You may already feel this on some level.
+              These have been quietly shaping your decisions. The energy you spend, the time you give, the things you protect. You may already feel this on some level.
             </p>
 
             <button
@@ -84,7 +84,7 @@ export function ValueCompass({ result, slots, alignmentScores, onContinue }: Pro
             transition={{ duration: 0.4 }}
             className="space-y-6 text-foreground/90 leading-relaxed"
           >
-            <p className="text-xl font-display text-foreground">Now — what you said you want to prioritise:</p>
+            <p className="text-xl font-display text-foreground">Now. What you said you want to prioritise:</p>
             <p className="text-2xl md:text-3xl font-display font-semibold text-foreground">
               {aspirationalLabels.join('. ')}.
             </p>
@@ -123,7 +123,7 @@ export function ValueCompass({ result, slots, alignmentScores, onContinue }: Pro
                     The values you want at the centre and the ones you've been living are the same.
                   </p>
                   <p className="text-muted-foreground">
-                    That's not nothing. It means the story you tell yourself about your life matches what your week actually does. The work, if there is any, is in the second tier — the values that are present but quieter than you'd like them to be.
+                    That's not nothing. It means the story you tell yourself about your life matches what your week actually does. The work, if there is any, is in the second tier. The values that are present but quieter than you'd like.
                   </p>
                 </>
               ) : (

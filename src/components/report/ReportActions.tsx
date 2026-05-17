@@ -11,7 +11,7 @@ export function ReportActions({ reportId }: Props) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast('Link copied — anyone with it can read your report.', { duration: 2500 });
+      toast('Link copied. Anyone with it can read your report.', { duration: 2500 });
       track('report_link_copied', { report_id: reportId });
     } catch {
       toast.error('Could not copy link.');
@@ -37,7 +37,7 @@ export function ReportActions({ reportId }: Props) {
         Copy share link
       </Button>
       <Button size="lg" className="min-h-12" onClick={handleUpsell}>
-        Take Norte yourself — $8
+        Take Norte yourself ($8)
       </Button>
     </div>
   );

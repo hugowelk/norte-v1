@@ -18,7 +18,7 @@ export function TradeoffIntro({ onBegin }: Props) {
       </h2>
       <div className="space-y-4 text-base md:text-lg text-foreground/80 leading-relaxed">
         <p>
-          You'll see 13 everyday situations. In each one, pick the option closest to how you'd <em>actually</em> act — not how you wish you would.
+          You'll see 15 everyday situations. In each one, pick the option closest to how you'd <em>actually</em> act, not how you wish you would.
         </p>
         <p className="text-muted-foreground">
           The first answer is usually the truest one.

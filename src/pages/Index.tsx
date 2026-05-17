@@ -30,7 +30,7 @@ const Index = () => {
               The values you live by aren't always the ones you'd name.
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto">
-              Norte is a 10-minute exercise that shows you the values behind the choices you've actually been making — and the gap between those and the life you say you want.
+              Norte is a 10-minute exercise that shows you the values behind the choices you've actually been making, and the gap between those and the life you say you want.
             </p>
           </div>
 
@@ -64,7 +64,7 @@ const Index = () => {
             How it works
           </p>
           <p className="text-sm text-foreground/75 leading-relaxed max-w-md mx-auto">
-            Norte doesn't ask what you value. It puts you in 13 everyday trade-offs and watches what you choose. The pattern that emerges is what's actually been driving your week — even when the story you tell yourself sounds different.
+            Norte doesn't ask what you value. It puts you in 15 everyday trade-offs and watches what you choose. The pattern that emerges is what's actually been driving your week, even when the story you tell yourself sounds different.
           </p>
           <p className="text-xs text-muted-foreground">
             Grounded in Schwartz's values research, Acceptance and Commitment Therapy, and behavioural-economics work on revealed preference.
