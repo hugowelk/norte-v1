@@ -1,4 +1,4 @@
-import { VALUES, TIME_OPTIONS, MONEY_OPTIONS, type ValueKey, type BehaviourAnswer, type BehaviourOption } from './values';
+import { VALUES, type ValueKey } from './values';
 
 export type Answer = 'A' | 'B';
 export type Tier = 'warmup' | 'revealing' | 'hard' | 'hard-split';
@@ -116,61 +116,20 @@ const ZERO_SCORES = (): Record<ValueKey, number> => ({
   meaning: 0, contribution: 0, stability: 0, autonomy: 0,
 });
 
-const INTAKE_CAP = 3;
-
-// Per-value max contribution from one intake (Time or Money), based on the top
-// `INTAKE_CAP` weighted picks available for that value.
-function maxFromIntake(options: BehaviourOption[]): Record<ValueKey, number> {
-  const buckets: Record<ValueKey, number[]> = {
-    achievement: [], connection: [], aliveness: [], enjoyment: [],
-    meaning: [], contribution: [], stability: [], autonomy: [],
-  };
-  for (const opt of options) {
-    for (const [k, w] of opt.weights) buckets[k].push(w);
-  }
-  const result = ZERO_SCORES();
-  for (const v of VALUES) {
-    buckets[v.key].sort((a, b) => b - a);
-    result[v.key] = buckets[v.key].slice(0, INTAKE_CAP).reduce((s, x) => s + x, 0);
-  }
-  return result;
-}
-
-// Computed once at module load (per spec)
-const TIME_MAX = maxFromIntake(TIME_OPTIONS);
-const MONEY_MAX = maxFromIntake(MONEY_OPTIONS);
 export const MAX_SCORES: Record<ValueKey, number> = (() => {
   const m = ZERO_SCORES();
-  for (const v of VALUES) m[v.key] = v.maxScore + TIME_MAX[v.key] + MONEY_MAX[v.key];
+  for (const v of VALUES) m[v.key] = v.maxScore;
   return m;
 })();
 
-function applyIntake(scores: Record<ValueKey, number>, answer: BehaviourAnswer | undefined, options: BehaviourOption[]) {
-  if (!answer) return;
-  const picks = answer.selectedIndices.slice(0, INTAKE_CAP);
-  for (const idx of picks) {
-    const opt = options[idx];
-    if (!opt) continue;
-    for (const [k, w] of opt.weights) scores[k] += w;
-  }
-}
-
-export function computeScores(
-  answers: Answer[],
-  time?: BehaviourAnswer,
-  money?: BehaviourAnswer,
-): ScoreResult {
+export function computeScores(answers: Answer[]): ScoreResult {
   if (answers.length !== SCENARIOS.length) {
     throw new Error(`Expected ${SCENARIOS.length} answers, got ${answers.length}`);
   }
 
   const raw = ZERO_SCORES();
 
-  // 1. Time + Money weighted picks
-  applyIntake(raw, time, TIME_OPTIONS);
-  applyIntake(raw, money, MONEY_OPTIONS);
-
-  // 2. Scenario answers
+  // Scenario answers
   for (const scenario of SCENARIOS) {
     const ans = answers[scenario.index];
     if (ans !== 'A' && ans !== 'B') {

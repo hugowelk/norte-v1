@@ -23,8 +23,6 @@ export interface AssessmentSnapshot {
   aspirational_top_5: ValueKey[];
   loudest_gap: { value: ValueKey; aspirational_rank: number; revealed_rank: number } | null;
   other_gaps: Array<{ value: ValueKey; aspirational_rank: number; revealed_rank: number }>;
-  time_picks: string[];
-  money_picks: string[];
 }
 
 export interface PostPaywallState {

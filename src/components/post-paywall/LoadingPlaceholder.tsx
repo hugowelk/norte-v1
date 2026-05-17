@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { readPostPaywall, clearPostPaywall } from '@/lib/postPaywallStore';
 import { markOwnedReport } from '@/lib/reportOwnership';
-import { TIME_OPTIONS, MONEY_OPTIONS } from '@/lib/values';
 import { Button } from '@/components/ui/button';
 import { setPendingSession, clearPendingSession } from '@/lib/pendingSession';
 import { track } from '@/lib/analytics';
@@ -37,14 +36,6 @@ function buildRequestBody() {
     revealed_rank: g.rank,
   }));
 
-  // time/money picks may already be labels (set at paywall handoff) or indices — normalize.
-  const toLabels = (arr: string[], options: typeof TIME_OPTIONS) =>
-    arr.map(v => {
-      const n = Number(v);
-      if (!Number.isNaN(n) && options[n]) return options[n].label;
-      return v;
-    });
-
   return {
     paymentSessionId: state.paymentSessionId,
     assessmentResults: {
@@ -53,8 +44,6 @@ function buildRequestBody() {
       aspirational_top_5: a.aspirational_top_5,
       loudest_gap: loudest,
       other_gaps: otherGaps,
-      time_picks: toLabels(a.time_picks, TIME_OPTIONS),
-      money_picks: toLabels(a.money_picks, MONEY_OPTIONS),
     },
     postPaywallAnswers: {
       name: state.name,
