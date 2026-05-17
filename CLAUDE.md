@@ -37,7 +37,7 @@ autonomy      — control over time and choices
 
 ## The 15 scenarios
 
-Single source of truth: `[path/to/scenarios file]` (update with actual path).
+Single source of truth: `src/lib/algorithm.ts` (SCENARIOS array).
 
 Each scenario has:
 - An ID (C1–C15)
@@ -108,21 +108,35 @@ If a sentence sounds like a self-help book or a wellness app, rewrite it.
 - **AI**: Anthropic API for Phase 3 action plan generation
 - **Hosting**: Lovable for prototyping, [final host TBD]
 - **Language**: English only. (App was originally Portuguese but shifted to English in v3.)
+- **Backend**: Supabase (purpose to be confirmed during engineering pass)
+
+## Current state vs. target state
+
+The repo is currently at v1 (pre-rewrite). CLAUDE.md describes the v3 target state. Until the engineering pass is complete, expect to find:
+- 13 scenarios in SCENARIOS (target: 15)
+- TIME_OPTIONS, MONEY_OPTIONS, applyIntake, INTAKE_CAP still active (target: removed)
+- maxScore values reflecting pre-v3 coverage (target: updated per the coverage table above)
+- Placeholder test file only (target: real algorithm tests)
+- Aspirational flow expecting 5 values (target: 3)
 
 ## Folder conventions
 
-[Fill in with actual repo structure once Claude Code reads it. Suggested layout to look for:]
-
 ```
 /src
-  /algorithm     — scoring, scenario definitions, types
-  /components    — UI components
-  /pages         — routes/screens
-  /content       — value definitions, scenario copy, methodology page
-  /lib           — API clients, utilities
+  /components
+    /quiz         — Quiz components (BehaviourQuiz, TradeoffScenario, ValueResults, Paywall)
+    /post-paywall — Post-paywall barrier questions (Q1–Q4)
+    /report       — Report rendering components
+    /ui           — shadcn/ui primitives
+  /hooks
+  /integrations/supabase
+  /lib
+    algorithm.ts  — SCENARIOS array, computeScores, scoring logic
+    values.ts     — VALUES array with maxScore, TIME_OPTIONS, MONEY_OPTIONS (to be removed)
+  /pages          — Top-level route components
+  /test           — Test files
+/supabase         — Supabase backend config
 ```
-
-If the repo structure differs, document it here on first session.
 
 ## What's in progress (May 2026)
 
@@ -140,7 +154,7 @@ The work splits between Claude Code (engineering) and Lovable (UI). Don't try to
 ## How to work in this repo
 
 1. Read this file first
-2. Read the spec at `[path/to/values-app-spec.md]` (update with actual path) for the full product spec
+2. There is no spec file in this repo yet. The 15-scenario content and algorithm rules are documented in CLAUDE.md itself.
 3. Branch from main for any change
 4. Run the test suite before committing if it exists; flag if it doesn't
 5. For any algorithm change, verify the coverage table above is still accurate
