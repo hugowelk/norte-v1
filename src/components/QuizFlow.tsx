@@ -26,6 +26,7 @@ function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<
   return out;
 }
 import { TradeoffIntro } from './quiz/TradeoffIntro';
+import { HowItWorksSlide } from './quiz/HowItWorksSlide';
 import { TradeoffScenario } from './quiz/TradeoffScenario';
 import { TradeoffTransition } from './quiz/TradeoffTransition';
 import { ValueResults } from './quiz/ValueResults';
@@ -36,6 +37,7 @@ import { Paywall } from './quiz/Paywall';
 
 type Phase =
   | 'tradeoffIntro'
+  | 'howItWorks'
   | 'tradeoffs'
   | 'tradeoffTransition'
   | 'results'
@@ -210,7 +212,10 @@ export function QuizFlow() {
             className="w-full max-w-2xl"
           >
             {phase === 'tradeoffIntro' && (
-              <TradeoffIntro onBegin={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
+              <TradeoffIntro onBegin={() => setPhase('howItWorks')} />
+            )}
+            {phase === 'howItWorks' && (
+              <HowItWorksSlide onContinue={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
             )}
             {phase === 'tradeoffs' && (
               <TradeoffScenario
