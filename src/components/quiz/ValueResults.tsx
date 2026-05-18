@@ -1,17 +1,46 @@
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getValueByKey, type ValueKey } from '@/lib/values';
-import { type ScoreResult } from '@/lib/algorithm';
+import { SCENARIOS, type Answer, type ScoreResult } from '@/lib/algorithm';
+import { VALUE_EXPLANATIONS } from '@/lib/valueExplanations';
 import { ValueIcon } from '../ValueIcon';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { cn } from '@/lib/utils';
 
 interface Props {
   result: ScoreResult;
+  answers: Answer[];
   onContinue: () => void;
 }
 
-export function ValueResults({ result, onContinue }: Props) {
+// Truncate at word boundary near `max` chars.
+function truncate(text: string, max = 100): string {
+  if (text.length <= max) return text;
+  const slice = text.slice(0, max);
+  const lastSpace = slice.lastIndexOf(' ');
+  const cut = lastSpace > 40 ? slice.slice(0, lastSpace) : slice;
+  return cut.replace(/[,.;:]$/, '') + '…';
+}
+
+// Return the user-chosen option labels that scored for this value.
+function receiptsFor(value: ValueKey, answers: Answer[]): string[] {
+  const out: string[] = [];
+  for (const s of SCENARIOS) {
+    const ans = answers[s.index];
+    if (ans !== 'A' && ans !== 'B') continue;
+    const chosen = ans === 'A' ? s.optionA : s.optionB;
+    if (chosen.values.includes(value)) {
+      // Strip a leading "I " for cleaner reading and drop trailing period.
+      const label = chosen.label.replace(/\.$/, '');
+      out.push(truncate(label, 100));
+    }
+  }
+  return out;
+}
+
+export function ValueResults({ result, answers, onContinue }: Props) {
   const top3 = [result.revealed.primary, result.revealed.secondary, result.revealed.tertiary];
   const rest = result.ranking.slice(3);
   const [restOpen, setRestOpen] = useState(false);
@@ -24,11 +53,11 @@ export function ValueResults({ result, onContinue }: Props) {
           Here's what came up.
         </h2>
         <p className="text-muted-foreground max-w-md mx-auto">
-          Across the trade-offs you just made, these are the three values that showed up most often.
+          Across the 15 trade-offs you just made, these are the three values that showed up most often.
         </p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <p className="text-xs font-display uppercase tracking-widest text-muted-foreground px-1">
           Your revealed top 3
         </p>
@@ -37,6 +66,7 @@ export function ValueResults({ result, onContinue }: Props) {
             key={key}
             valueKey={key}
             rank={i + 1}
+            receipts={receiptsFor(key, answers)}
           />
         ))}
       </div>
@@ -71,6 +101,18 @@ export function ValueResults({ result, onContinue }: Props) {
         )}
       </div>
 
+      <div className="border-t border-border pt-6 text-center space-y-2">
+        <p className="text-sm text-muted-foreground font-body leading-relaxed">
+          These results come from a deterministic algorithm grounded in ACT, the Valued Living Questionnaire, and the Bull's Eye Values Survey. No AI guessing.
+        </p>
+        <Link
+          to="/methodology"
+          className="inline-block text-sm font-display text-accent hover:text-accent/80 transition-colors"
+        >
+          Read the methodology →
+        </Link>
+      </div>
+
       <button
         onClick={onContinue}
         className="w-full py-4 rounded-lg bg-primary text-primary-foreground font-display font-medium hover:opacity-90 transition-opacity"
@@ -82,12 +124,16 @@ export function ValueResults({ result, onContinue }: Props) {
 }
 
 function TopValueCard({
-  valueKey, rank,
+  valueKey, rank, receipts,
 }: {
   valueKey: ValueKey;
   rank: number;
+  receipts: string[];
 }) {
   const value = getValueByKey(valueKey);
+  const explanation = VALUE_EXPLANATIONS[valueKey];
+  const [open, setOpen] = useState(false);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -102,9 +148,44 @@ function TopValueCard({
         <ValueIcon value={valueKey} size={22} />
         <p className="font-display font-medium text-foreground text-lg">{value.label}</p>
       </div>
-      <p className="px-5 pb-5 text-sm text-foreground/80 leading-relaxed border-t border-border/60 pt-3">
-        {value.longDescription}
-      </p>
+
+      <div className="px-5 pb-5 pt-4 border-t border-border/60 space-y-4">
+        <p className="text-sm text-foreground/85 leading-relaxed font-body">
+          {explanation.definition}
+        </p>
+        <p className="text-sm text-foreground/75 leading-relaxed font-body">
+          {explanation.pattern}
+        </p>
+        <div className="rounded-lg bg-secondary/40 border border-border/60 px-4 py-3">
+          <p className="text-xs font-display uppercase tracking-widest text-muted-foreground mb-1.5">
+            The cost when this dominates
+          </p>
+          <p className="text-sm text-foreground/80 leading-relaxed font-body">
+            {explanation.cost}
+          </p>
+        </div>
+
+        {receipts.length > 0 && (
+          <Collapsible open={open} onOpenChange={setOpen}>
+            <CollapsibleTrigger className="flex items-center gap-1.5 text-xs font-display uppercase tracking-widest text-accent hover:text-accent/80 transition-colors">
+              <ChevronRight size={14} className={cn('transition-transform', open && 'rotate-90')} />
+              Why this value?
+            </CollapsibleTrigger>
+            <CollapsibleContent className="pt-3">
+              <p className="text-xs text-muted-foreground font-body mb-2">
+                You picked:
+              </p>
+              <ul className="space-y-1.5">
+                {receipts.map((r, idx) => (
+                  <li key={idx} className="text-sm text-foreground/75 font-body leading-snug pl-3 border-l-2 border-accent/40">
+                    "{r}"
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleContent>
+          </Collapsible>
+        )}
+      </div>
     </motion.div>
   );
 }
