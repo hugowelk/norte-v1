@@ -132,6 +132,7 @@ export function QuizFlow() {
 
   const handleJump = (val: string) => {
     if (val === 'tradeoffIntro') { setScenarioIdx(0); setPhase('tradeoffIntro'); }
+    else if (val === 'howItWorks') { setScenarioIdx(0); setPhase('howItWorks'); }
     else if (val.startsWith('tradeoff-')) {
       const idx = parseInt(val.replace('tradeoff-', ''), 10);
       setScenarioIdx(idx);
@@ -177,6 +178,7 @@ export function QuizFlow() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="tradeoffIntro">1 · Trade-off Intro</SelectItem>
+            <SelectItem value="howItWorks">1b · How it works</SelectItem>
             {SCENARIOS.map((s, i) => (
               <SelectItem key={s.id} value={`tradeoff-${i}`}>
                 1.{i + 1} · {s.id}
