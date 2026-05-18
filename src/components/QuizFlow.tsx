@@ -26,6 +26,7 @@ function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<
   return out;
 }
 import { TradeoffIntro } from './quiz/TradeoffIntro';
+import { HowItWorksSlide } from './quiz/HowItWorksSlide';
 import { TradeoffScenario } from './quiz/TradeoffScenario';
 import { TradeoffTransition } from './quiz/TradeoffTransition';
 import { ValueResults } from './quiz/ValueResults';
@@ -36,6 +37,7 @@ import { Paywall } from './quiz/Paywall';
 
 type Phase =
   | 'tradeoffIntro'
+  | 'howItWorks'
   | 'tradeoffs'
   | 'tradeoffTransition'
   | 'results'
@@ -130,6 +132,7 @@ export function QuizFlow() {
 
   const handleJump = (val: string) => {
     if (val === 'tradeoffIntro') { setScenarioIdx(0); setPhase('tradeoffIntro'); }
+    else if (val === 'howItWorks') { setScenarioIdx(0); setPhase('howItWorks'); }
     else if (val.startsWith('tradeoff-')) {
       const idx = parseInt(val.replace('tradeoff-', ''), 10);
       setScenarioIdx(idx);
@@ -175,6 +178,7 @@ export function QuizFlow() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="tradeoffIntro">1 · Trade-off Intro</SelectItem>
+            <SelectItem value="howItWorks">1b · How it works</SelectItem>
             {SCENARIOS.map((s, i) => (
               <SelectItem key={s.id} value={`tradeoff-${i}`}>
                 1.{i + 1} · {s.id}
@@ -210,7 +214,10 @@ export function QuizFlow() {
             className="w-full max-w-2xl"
           >
             {phase === 'tradeoffIntro' && (
-              <TradeoffIntro onBegin={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
+              <TradeoffIntro onBegin={() => setPhase('howItWorks')} />
+            )}
+            {phase === 'howItWorks' && (
+              <HowItWorksSlide onContinue={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
             )}
             {phase === 'tradeoffs' && (
               <TradeoffScenario
