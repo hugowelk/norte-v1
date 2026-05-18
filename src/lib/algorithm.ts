@@ -67,7 +67,7 @@ export const SCENARIOS: Scenario[] = [
     optionB: { label: 'I say yes. Building a life with someone means giving up some of the room you had.', values: ['connection'] },
   },
   {
-    id: 'C14', index: 8, tier: 'revealing', weight: 1.5,
+    id: 'C14', index: 8, tier: 'hard', weight: 2.0,
     prompt: "A neighbour you barely know is going through a rough stretch and has started leaning on you, hard. Errands, late-night calls, small favours that aren't small anymore. Pulling back means leaving them more alone. Not pulling back means losing real chunks of your week.",
     optionA: { label: "I keep showing up. Walking away from someone who needs help isn't the person I want to be.", values: ['contribution'] },
     optionB: { label: "I pull back. I can't be the safety net for someone if I lose myself doing it.", values: ['autonomy'] },
