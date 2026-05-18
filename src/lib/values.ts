@@ -69,7 +69,7 @@ export const VALUES: Value[] = [
     description: 'Making things better for others.',
     longDescription: 'You measure a good life partly by what it gives back, to people, causes, or community. Helping is not a side activity.',
     icon: HandHeart,
-    maxScore: 5.0,
+    maxScore: 5.5,
   },
   {
     key: 'stability',
@@ -85,7 +85,7 @@ export const VALUES: Value[] = [
     description: 'Owning your time and your choices.',
     longDescription: 'Independence is oxygen. You need control over your hours, your decisions, and the shape of your days.',
     icon: Feather,
-    maxScore: 5.0,
+    maxScore: 5.5,
   },
 ];
 
