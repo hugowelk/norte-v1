@@ -13,12 +13,12 @@ export function TradeoffIntro({ onBegin }: Props) {
       className="text-center space-y-8 max-w-lg mx-auto"
     >
       <p className="text-xs font-display uppercase tracking-widest text-accent">Part 1</p>
-      <h2 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
-        There's no right answer.
+      <h2 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight text-balance">
+        Answering the next questions will give you a clear picture of what values you've been living by in the last couple of months
       </h2>
       <div className="space-y-4 text-base md:text-lg text-foreground/80 leading-relaxed">
         <p>
-          You'll see 15 everyday situations. In each one, pick the option closest to how you'd <em>actually</em> act, not how you wish you would.
+          You'll see 15 everyday situations. In each one, pick the option closest to how you'd <em>actually</em> act, not how you WISH you would. Think about your behaviour in the past 3 months.
         </p>
         <p className="text-muted-foreground">
           The first answer is usually the truest one.
