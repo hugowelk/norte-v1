@@ -187,6 +187,7 @@ export function QuizFlow() {
                 1.{i + 1} · {s.id}
               </SelectItem>
             ))}
+            <SelectItem value="processing">1c · Processing</SelectItem>
             <SelectItem value="results">2 · Results</SelectItem>
             <SelectItem value="coreValues">3 · Core Values</SelectItem>
             <SelectItem value="alignment">4 · Alignment</SelectItem>
@@ -230,6 +231,9 @@ export function QuizFlow() {
             )}
             {phase === 'tradeoffTransition' && pendingTransition && (
               <TradeoffTransition message={pendingTransition} onContinue={handleTransitionContinue} />
+            )}
+            {phase === 'processing' && (
+              <ProcessingTransition onComplete={() => setPhase('results')} />
             )}
             {phase === 'results' && result && (
               <ValueResults
