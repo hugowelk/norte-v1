@@ -137,25 +137,31 @@ const Index = () => {
               </h2>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
                   n: '01',
-                  icon: Scale,
-                  title: 'Sit with 15 trade-offs',
-                  body: 'Realistic, everyday choices. Two options, both reasonable, each pointing to a different value. No right answers. About 10 minutes.',
+                  icon: ClipboardList,
+                  title: 'Answer 15 quick scenarios',
+                  body: 'Fifteen everyday trade-offs. Two options, both reasonable, each pointing to a different value. About 10 minutes. No right answers.',
                 },
                 {
                   n: '02',
-                  icon: Target,
-                  title: 'See your revealed pattern',
-                  body: 'A deterministic algorithm scores all 8 values from your choices and shows the three that have actually been steering your week.',
+                  icon: BarChart3,
+                  title: 'Visualise your priorities',
+                  body: 'A deterministic algorithm scores all 8 values from your choices and shows the three that have actually been steering your decisions.',
                 },
                 {
                   n: '03',
+                  icon: Target,
+                  title: 'Pick your values and check the gap',
+                  body: 'Choose the 3 values you want at the centre of your life. Rate how present each one feels today. Norte names the distance.',
+                },
+                {
+                  n: '04',
                   icon: Sparkles,
-                  title: 'Read the gap',
-                  body: 'Pick the values you wish were centred. Norte names the gap between revealed and aspirational, and writes you a personal reading on how to close it.',
+                  title: 'Get your personal reading',
+                  body: 'A clear summary of what is already working, what needs to shift, and specific steps to close the gap between where you are and where you want to be.',
                 },
               ].map((step) => {
                 const Icon = step.icon;
