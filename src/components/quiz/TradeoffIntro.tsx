@@ -12,7 +12,7 @@ export function TradeoffIntro({ onBegin }: Props) {
       transition={{ duration: 0.5 }}
       className="text-center space-y-8 max-w-lg mx-auto"
     >
-      <p className="text-xs font-display uppercase tracking-widest text-accent">Part 3 of 3</p>
+      <p className="text-xs font-display uppercase tracking-widest text-accent">Part 1</p>
       <h2 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
         There's no right answer.
       </h2>
