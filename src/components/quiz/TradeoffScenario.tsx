@@ -13,7 +13,7 @@ export function TradeoffScenario({ scenario, onAnswer }: Props) {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <p className="text-xs font-display uppercase tracking-widest text-accent">
-          {scenario.index + 1} of 13
+          {scenario.index + 1} of 15
         </p>
         {isSplit && (
           <p className="text-xs font-display uppercase tracking-widest text-muted-foreground">
