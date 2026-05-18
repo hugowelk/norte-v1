@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Compass, BookOpen, Brain, ClipboardList, BarChart3, Target, Sparkles, ArrowRight, Quote } from 'lucide-react';
+import { Compass, BookOpen, Brain, ClipboardList, BarChart3, Scale, Target, Sparkles, ArrowRight, Quote } from 'lucide-react';
 import { QuizFlow } from '@/components/QuizFlow';
 
 const Index = () => {
