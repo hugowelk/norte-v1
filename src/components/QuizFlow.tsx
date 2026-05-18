@@ -29,6 +29,7 @@ import { TradeoffIntro } from './quiz/TradeoffIntro';
 import { HowItWorksSlide } from './quiz/HowItWorksSlide';
 import { TradeoffScenario } from './quiz/TradeoffScenario';
 import { TradeoffTransition } from './quiz/TradeoffTransition';
+import { ProcessingTransition } from './quiz/ProcessingTransition';
 import { ValueResults } from './quiz/ValueResults';
 import { CoreValuesSelection, type CoreValuesResult } from './quiz/CoreValuesSelection';
 import { AlignmentReflection, type AlignmentScores } from './quiz/AlignmentReflection';
@@ -40,6 +41,7 @@ type Phase =
   | 'howItWorks'
   | 'tradeoffs'
   | 'tradeoffTransition'
+  | 'processing'
   | 'results'
   | 'coreValues'
   | 'alignment'
@@ -101,7 +103,7 @@ export function QuizFlow() {
     } else {
       const r = computeScores(answers);
       setResult(r);
-      setPhase('results');
+      setPhase('processing');
     }
   };
 
@@ -138,6 +140,7 @@ export function QuizFlow() {
       setScenarioIdx(idx);
       setPhase('tradeoffs');
     }
+    else if (val === 'processing') { ensureResult(); setPhase('processing'); }
     else if (val === 'results') { ensureResult(); setPhase('results'); }
     else if (val === 'coreValues') { ensureResult(); setPhase('coreValues'); }
     else if (val === 'alignment') {
@@ -184,6 +187,7 @@ export function QuizFlow() {
                 1.{i + 1} · {s.id}
               </SelectItem>
             ))}
+            <SelectItem value="processing">1c · Processing</SelectItem>
             <SelectItem value="results">2 · Results</SelectItem>
             <SelectItem value="coreValues">3 · Core Values</SelectItem>
             <SelectItem value="alignment">4 · Alignment</SelectItem>
@@ -227,6 +231,9 @@ export function QuizFlow() {
             )}
             {phase === 'tradeoffTransition' && pendingTransition && (
               <TradeoffTransition message={pendingTransition} onContinue={handleTransitionContinue} />
+            )}
+            {phase === 'processing' && (
+              <ProcessingTransition onComplete={() => setPhase('results')} />
             )}
             {phase === 'results' && result && (
               <ValueResults
