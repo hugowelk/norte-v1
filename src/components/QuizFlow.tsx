@@ -231,6 +231,7 @@ export function QuizFlow() {
             {phase === 'results' && result && (
               <ValueResults
                 result={result}
+                answers={tradeoffAnswers}
                 onContinue={() => setPhase('coreValues')}
               />
             )}
