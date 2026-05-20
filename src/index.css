@@ -231,3 +231,27 @@
     @bottom-right { content: ""; }
   }
 }
+
+/* Hero background wave lines */
+@keyframes wave-drift {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(-3%, -6px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@keyframes wave-drift-alt {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(3%, 8px, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+.wave-line {
+  will-change: transform;
+  transform-origin: center;
+}
+.wave-line-1 { animation: wave-drift 18s ease-in-out infinite; }
+.wave-line-2 { animation: wave-drift-alt 22s ease-in-out infinite; }
+.wave-line-3 { animation: wave-drift-alt 26s ease-in-out infinite; }
+.wave-line-4 { animation: wave-drift 30s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-line { animation: none; }
+}
