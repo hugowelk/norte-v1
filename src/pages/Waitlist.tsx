@@ -68,17 +68,6 @@ const Waitlist = () => {
           className="max-w-2xl mx-auto w-full text-center space-y-10"
         >
 
-          <div className="flex justify-center">
-            <img
-              src={waitlistIllustration}
-              alt="Hand-drawn compass over sage mountains and terracotta topographic lines"
-              width={1024}
-              height={1024}
-              className="w-56 md:w-72 h-auto select-none"
-              draggable={false}
-            />
-          </div>
-
           <p className="text-xs font-display uppercase tracking-widest text-accent">Launching soon</p>
 
           <h1 className="text-4xl md:text-6xl font-display font-semibold text-foreground leading-[1.05] tracking-tight">
