@@ -53,7 +53,10 @@ const Waitlist = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="px-6 py-5 border-b border-border/60">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <span className="font-display font-semibold text-lg tracking-tight text-foreground">Norte</span>
+          <a href="/" className="flex items-center gap-2 text-foreground">
+            <Compass className="h-5 w-5 text-accent" strokeWidth={1.75} aria-hidden="true" />
+            <span className="font-display font-semibold text-lg tracking-tight">Norte</span>
+          </a>
           <a href="/methodology" className="text-sm text-muted-foreground hover:text-foreground font-body transition-colors">
             Methodology
           </a>
