@@ -29,6 +29,7 @@ const App = () => (
         <SessionRecovery />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/waitlist" element={<Waitlist />} />
           <Route path="/methodology" element={<Methodology />} />
           <Route path="/post-paywall/q1" element={<RequirePayment><Q1Name /></RequirePayment>} />
           <Route path="/post-paywall/q2" element={<RequirePayment><Q2Chapter /></RequirePayment>} />
