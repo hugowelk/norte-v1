@@ -60,84 +60,114 @@ const Waitlist = () => {
         </div>
       </header>
 
-      <main className="flex-1 flex items-center px-4 py-20 md:py-28">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="max-w-2xl mx-auto w-full text-center space-y-10"
-        >
+      <main className="flex-1">
+        <section className="flex items-center px-4 py-20 md:py-28">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-2xl mx-auto w-full text-center space-y-10"
+          >
 
-          <p className="text-xs font-display uppercase tracking-widest text-accent">Launching soon</p>
+            <p className="text-xs font-display uppercase tracking-widest text-accent">Launching soon</p>
 
-          <h1 className="text-4xl md:text-6xl font-display font-semibold text-foreground leading-[1.05] tracking-tight">
-            Your real values aren't what you say. They're what you choose when something's at stake.
-          </h1>
+            <h1 className="text-4xl md:text-6xl font-display font-semibold text-foreground leading-[1.05] tracking-tight">
+              Your real values aren't what you say. They're what you choose when something's at stake.
+            </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mx-auto">
-            Norte uses 15 trade-off scenarios to reveal the values that guide your decisions. Methodology grounded in ACT.
-          </p>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mx-auto">
+              Norte uses 15 trade-off scenarios to reveal the values that guide your decisions. Methodology grounded in ACT.
+            </p>
 
-          {status === 'success' ? (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="pt-4"
-            >
-              <p className="text-2xl font-display text-foreground">You're on the list.</p>
-              <p className="text-muted-foreground font-body mt-3">We'll be in touch when Norte opens.</p>
-            </motion.div>
-          ) : (
-            <form onSubmit={onSubmit} className="pt-4 space-y-3 max-w-md mx-auto text-left">
-              <div>
-                <label htmlFor="name" className="sr-only">Name</label>
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  autoComplete="name"
-                  maxLength={100}
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground font-body placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="sr-only">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@email.com"
-                  autoComplete="email"
-                  maxLength={255}
-                  required
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground font-body placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
-                />
-              </div>
-
-              {error && (
-                <p className="text-sm text-destructive font-body">{error}</p>
-              )}
-
-              <motion.button
-                type="submit"
-                disabled={status === 'loading'}
-                className="w-full px-10 py-4 bg-primary text-primary-foreground rounded-xl font-display font-semibold text-lg hover:opacity-90 transition-opacity shadow-md disabled:opacity-60"
-                whileHover={{ scale: status === 'loading' ? 1 : 1.01 }}
-                whileTap={{ scale: status === 'loading' ? 1 : 0.99 }}
+            {status === 'success' ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="pt-4"
               >
-                {status === 'loading' ? 'Joining…' : 'Join the waitlist'}
-              </motion.button>
+                <p className="text-2xl font-display text-foreground">You're on the list.</p>
+                <p className="text-muted-foreground font-body mt-3">We'll be in touch when Norte opens.</p>
+              </motion.div>
+            ) : (
+              <form onSubmit={onSubmit} className="pt-4 space-y-3 max-w-md mx-auto text-left">
+                <div>
+                  <label htmlFor="name" className="sr-only">Name</label>
+                  <input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name"
+                    autoComplete="name"
+                    maxLength={100}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground font-body placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="sr-only">Email</label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@email.com"
+                    autoComplete="email"
+                    maxLength={255}
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground font-body placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition"
+                  />
+                </div>
 
-              <p className="text-xs text-muted-foreground font-body text-center pt-2">
-                No spam. One email when we open access.
+                {error && (
+                  <p className="text-sm text-destructive font-body">{error}</p>
+                )}
+
+                <motion.button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="w-full px-10 py-4 bg-primary text-primary-foreground rounded-xl font-display font-semibold text-lg hover:opacity-90 transition-opacity shadow-md disabled:opacity-60"
+                  whileHover={{ scale: status === 'loading' ? 1 : 1.01 }}
+                  whileTap={{ scale: status === 'loading' ? 1 : 0.99 }}
+                >
+                  {status === 'loading' ? 'Joining…' : 'Join the waitlist'}
+                </motion.button>
+
+                <p className="text-xs text-muted-foreground font-body text-center pt-2">
+                  No spam. One email when we open access.
+                </p>
+              </form>
+            )}
+          </motion.div>
+        </section>
+
+        <section className="border-t border-border/60 px-4 py-20 md:py-28 bg-muted/30">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.6 }}
+            className="max-w-2xl mx-auto w-full space-y-8"
+          >
+            <p className="text-xs font-display uppercase tracking-widest text-accent text-center">Why Norte</p>
+
+            <h2 className="text-3xl md:text-5xl font-display font-semibold text-foreground leading-[1.1] tracking-tight text-center">
+              Losing your direction is heavier than it looks.
+            </h2>
+
+            <div className="space-y-5 text-lg text-muted-foreground font-body leading-relaxed">
+              <p>
+                Most people don't struggle because they lack ambition. They struggle because they can't name what they're aiming for. The days fill up, the choices pile on, and the sense of a clear north quietly fades.
               </p>
-            </form>
-          )}
-        </motion.div>
+              <p>
+                That gap between how you're living and what actually matters to you shows up as tension. As restlessness. As the low anxiety that sits underneath good days and bad ones, and slowly wears on your mental health.
+              </p>
+              <p className="text-foreground">
+                Norte is here to help you find that north again. To turn vague pressure into something you can see, name, and move toward, with less noise and more ease.
+              </p>
+            </div>
+          </motion.div>
+        </section>
       </main>
 
       <footer className="px-6 py-6 border-t border-border/60">
