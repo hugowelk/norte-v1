@@ -57,9 +57,6 @@ const Waitlist = () => {
             <Compass className="h-5 w-5 text-accent" strokeWidth={1.75} aria-hidden="true" />
             <span className="font-display font-semibold text-lg tracking-tight">Norte</span>
           </a>
-          <a href="/methodology" className="text-sm text-muted-foreground hover:text-foreground font-body transition-colors">
-            Methodology
-          </a>
         </div>
       </header>
 
