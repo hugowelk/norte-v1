@@ -73,7 +73,7 @@ const Waitlist = () => {
       </div>
 
       <header className="relative z-10 px-6 py-5 border-b border-border/60">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-6xl mx-auto flex items-center justify-between text-center">
           <a href="/" className="flex items-center gap-2 text-foreground">
             <Compass className="h-5 w-5 text-accent" strokeWidth={1.75} aria-hidden="true" />
             <span className="font-display font-semibold text-lg tracking-tight">Norte</span>
