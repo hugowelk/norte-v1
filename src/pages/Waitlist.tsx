@@ -70,7 +70,6 @@ const Waitlist = () => {
           transition={{ duration: 0.6 }}
           className="max-w-2xl mx-auto w-full text-center space-y-10"
         >
-          <p className="text-xs font-display uppercase tracking-widest text-accent">Launching soon</p>
 
           <div className="flex justify-center">
             <img
