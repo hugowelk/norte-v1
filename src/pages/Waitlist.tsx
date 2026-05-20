@@ -10,10 +10,10 @@ const schema = z.object({
 });
 
 const Waitlist = () => {
-  useDocumentMeta({
-    title: 'Norte — Join the waitlist',
-    description: 'Norte reveals the values that guide your decisions. Join the waitlist for early access.',
-  });
+  useDocumentMeta([
+    { name: 'description', content: 'Norte reveals the values that guide your decisions. Join the waitlist for early access.' },
+  ]);
+  if (typeof document !== 'undefined') document.title = 'Norte — Join the waitlist';
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
