@@ -63,25 +63,26 @@ const Waitlist = () => {
       <main className="flex-1">
         <section className="relative overflow-hidden flex items-center px-4 py-20 md:py-28">
           {/* Subtle animated background waves */}
-          <div aria-hidden="true" className="wave-bg pointer-events-none absolute inset-0 -z-0">
+          <div aria-hidden="true" className="wave-bg pointer-events-none absolute inset-x-0 top-0 -z-0 h-[42%] md:h-[38%]">
             <svg
               className="absolute inset-0 w-full h-full"
-              viewBox="0 0 1440 600"
+              viewBox="0 0 1440 240"
               preserveAspectRatio="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <g fill="none" strokeLinecap="round">
                 <path className="wave-line wave-line-1" stroke="hsl(var(--sage))" strokeWidth="1.2"
-                  d="M-200,300 C200,220 400,380 720,300 C1040,220 1240,380 1640,300" />
+                  d="M-200,110 C200,70 400,150 720,110 C1040,70 1240,150 1640,110" />
                 <path className="wave-line wave-line-2" stroke="hsl(var(--terracotta))" strokeWidth="1"
-                  d="M-200,360 C220,280 420,440 720,360 C1020,280 1220,440 1640,360" />
+                  d="M-200,130 C220,90 420,170 720,130 C1020,90 1220,170 1640,130" />
                 <path className="wave-line wave-line-3" stroke="hsl(var(--sage))" strokeWidth="0.8"
-                  d="M-200,240 C240,160 440,320 720,240 C1000,160 1200,320 1640,240" />
+                  d="M-200,90 C240,50 440,130 720,90 C1000,50 1200,130 1640,90" />
                 <path className="wave-line wave-line-4" stroke="hsl(var(--accent))" strokeWidth="0.8"
-                  d="M-200,420 C260,340 460,500 720,420 C980,340 1180,500 1640,420" />
+                  d="M-200,150 C260,110 460,190 720,150 C980,110 1180,190 1640,150" />
               </g>
             </svg>
           </div>
+
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
