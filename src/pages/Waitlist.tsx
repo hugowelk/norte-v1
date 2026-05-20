@@ -4,7 +4,7 @@ import { Compass } from 'lucide-react';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
-import waitlistIllustration from '@/assets/waitlist-illustration.jpg';
+
 
 const schema = z.object({
   name: z.string().trim().min(1, 'Add your name').max(100, 'Too long'),
@@ -57,9 +57,6 @@ const Waitlist = () => {
             <Compass className="h-5 w-5 text-accent" strokeWidth={1.75} aria-hidden="true" />
             <span className="font-display font-semibold text-lg tracking-tight">Norte</span>
           </a>
-          <a href="/methodology" className="text-sm text-muted-foreground hover:text-foreground font-body transition-colors">
-            Methodology
-          </a>
         </div>
       </header>
 
@@ -70,17 +67,6 @@ const Waitlist = () => {
           transition={{ duration: 0.6 }}
           className="max-w-2xl mx-auto w-full text-center space-y-10"
         >
-
-          <div className="flex justify-center">
-            <img
-              src={waitlistIllustration}
-              alt="Hand-drawn compass over sage mountains and terracotta topographic lines"
-              width={1024}
-              height={1024}
-              className="w-56 md:w-72 h-auto select-none"
-              draggable={false}
-            />
-          </div>
 
           <p className="text-xs font-display uppercase tracking-widest text-accent">Launching soon</p>
 
