@@ -242,13 +242,13 @@
 */
 :root {
   --wave-opacity: 0.18;
-  --wave-speed: 22s;
+  --wave-speed: 12s;
   --wave-speed-scale-1: 0.82;
   --wave-speed-scale-2: 1;
   --wave-speed-scale-3: 1.18;
   --wave-speed-scale-4: 1.36;
-  --wave-amplitude: 3%;
-  --wave-amplitude-y: 7px;
+  --wave-amplitude: 6%;
+  --wave-amplitude-y: 16px;
 }
 
 .wave-bg { opacity: var(--wave-opacity); }
