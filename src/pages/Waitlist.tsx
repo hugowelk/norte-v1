@@ -61,13 +61,35 @@ const Waitlist = () => {
       </header>
 
       <main className="flex-1">
-        <section className="flex items-center px-4 py-20 md:py-28">
+        <section className="relative overflow-hidden flex items-center px-4 py-20 md:py-28">
+          {/* Subtle animated background waves */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-0 opacity-[0.18]">
+            <svg
+              className="absolute inset-0 w-full h-full"
+              viewBox="0 0 1440 600"
+              preserveAspectRatio="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g fill="none" strokeLinecap="round">
+                <path className="wave-line wave-line-1" stroke="hsl(var(--sage))" strokeWidth="1.2"
+                  d="M-200,300 C200,220 400,380 720,300 C1040,220 1240,380 1640,300" />
+                <path className="wave-line wave-line-2" stroke="hsl(var(--terracotta))" strokeWidth="1"
+                  d="M-200,360 C220,280 420,440 720,360 C1020,280 1220,440 1640,360" />
+                <path className="wave-line wave-line-3" stroke="hsl(var(--sage))" strokeWidth="0.8"
+                  d="M-200,240 C240,160 440,320 720,240 C1000,160 1200,320 1640,240" />
+                <path className="wave-line wave-line-4" stroke="hsl(var(--accent))" strokeWidth="0.8"
+                  d="M-200,420 C260,340 460,500 720,420 C980,340 1180,500 1640,420" />
+              </g>
+            </svg>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-2xl mx-auto w-full text-center space-y-10"
+            className="relative z-10 max-w-2xl mx-auto w-full text-center space-y-10"
           >
+
 
             <p className="text-xs font-display uppercase tracking-widest text-accent">Launching soon</p>
 
