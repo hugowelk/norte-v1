@@ -232,26 +232,47 @@
   }
 }
 
-/* Hero background wave lines */
+/* Hero background wave lines
+   Tune these tokens to control overall subtlety:
+   --wave-opacity        : overall layer opacity (0–1)
+   --wave-speed          : base animation duration (higher = slower)
+   --wave-speed-scale-N  : per-line multiplier of the base speed
+   --wave-amplitude      : horizontal drift in %
+   --wave-amplitude-y    : vertical drift in px
+*/
+:root {
+  --wave-opacity: 0.18;
+  --wave-speed: 22s;
+  --wave-speed-scale-1: 0.82;
+  --wave-speed-scale-2: 1;
+  --wave-speed-scale-3: 1.18;
+  --wave-speed-scale-4: 1.36;
+  --wave-amplitude: 3%;
+  --wave-amplitude-y: 7px;
+}
+
+.wave-bg { opacity: var(--wave-opacity); }
+
 @keyframes wave-drift {
   0%   { transform: translate3d(0, 0, 0); }
-  50%  { transform: translate3d(-3%, -6px, 0); }
+  50%  { transform: translate3d(calc(var(--wave-amplitude) * -1), calc(var(--wave-amplitude-y) * -1), 0); }
   100% { transform: translate3d(0, 0, 0); }
 }
 @keyframes wave-drift-alt {
   0%   { transform: translate3d(0, 0, 0); }
-  50%  { transform: translate3d(3%, 8px, 0); }
+  50%  { transform: translate3d(var(--wave-amplitude), var(--wave-amplitude-y), 0); }
   100% { transform: translate3d(0, 0, 0); }
 }
 .wave-line {
   will-change: transform;
   transform-origin: center;
 }
-.wave-line-1 { animation: wave-drift 18s ease-in-out infinite; }
-.wave-line-2 { animation: wave-drift-alt 22s ease-in-out infinite; }
-.wave-line-3 { animation: wave-drift-alt 26s ease-in-out infinite; }
-.wave-line-4 { animation: wave-drift 30s ease-in-out infinite; }
+.wave-line-1 { animation: wave-drift     calc(var(--wave-speed) * var(--wave-speed-scale-1)) ease-in-out infinite; }
+.wave-line-2 { animation: wave-drift-alt calc(var(--wave-speed) * var(--wave-speed-scale-2)) ease-in-out infinite; }
+.wave-line-3 { animation: wave-drift-alt calc(var(--wave-speed) * var(--wave-speed-scale-3)) ease-in-out infinite; }
+.wave-line-4 { animation: wave-drift     calc(var(--wave-speed) * var(--wave-speed-scale-4)) ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
   .wave-line { animation: none; }
 }
+

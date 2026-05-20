@@ -63,7 +63,7 @@ const Waitlist = () => {
       <main className="flex-1">
         <section className="relative overflow-hidden flex items-center px-4 py-20 md:py-28">
           {/* Subtle animated background waves */}
-          <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-0 opacity-[0.18]">
+          <div aria-hidden="true" className="wave-bg pointer-events-none absolute inset-0 -z-0">
             <svg
               className="absolute inset-0 w-full h-full"
               viewBox="0 0 1440 600"
