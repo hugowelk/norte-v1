@@ -52,7 +52,7 @@ const Waitlist = () => {
   return (
     <div className="relative min-h-screen bg-background flex flex-col overflow-hidden">
       {/* Subtle animated background waves behind the header */}
-      <div aria-hidden="true" className="wave-bg pointer-events-none absolute inset-x-0 top-0 z-0 h-[140px] md:h-[180px]">
+      <div aria-hidden="true" className="wave-bg pointer-events-none absolute inset-x-0 top-[180px] md:top-[220px] z-0 h-[320px] md:h-[380px]">
         <svg
           className="absolute inset-0 w-full h-full"
           viewBox="0 0 1440 180"
