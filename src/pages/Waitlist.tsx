@@ -50,8 +50,29 @@ const Waitlist = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="px-6 py-5 border-b border-border/60">
+    <div className="relative min-h-screen bg-background flex flex-col overflow-hidden">
+      {/* Subtle animated background waves behind the header */}
+      <div aria-hidden="true" className="wave-bg pointer-events-none absolute inset-x-0 top-0 z-0 h-[140px] md:h-[180px]">
+        <svg
+          className="absolute inset-0 w-full h-full"
+          viewBox="0 0 1440 180"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g fill="none" strokeLinecap="round">
+            <path className="wave-line wave-line-1" stroke="hsl(var(--sage))" strokeWidth="1.2"
+              d="M-200,80 C200,40 400,120 720,80 C1040,40 1240,120 1640,80" />
+            <path className="wave-line wave-line-2" stroke="hsl(var(--terracotta))" strokeWidth="1"
+              d="M-200,100 C220,60 420,140 720,100 C1020,60 1220,140 1640,100" />
+            <path className="wave-line wave-line-3" stroke="hsl(var(--sage))" strokeWidth="0.8"
+              d="M-200,60 C240,20 440,100 720,60 C1000,20 1200,100 1640,60" />
+            <path className="wave-line wave-line-4" stroke="hsl(var(--accent))" strokeWidth="0.8"
+              d="M-200,120 C260,80 460,160 720,120 C980,80 1180,160 1640,120" />
+          </g>
+        </svg>
+      </div>
+
+      <header className="relative z-10 px-6 py-5 border-b border-border/60">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <a href="/" className="flex items-center gap-2 text-foreground">
             <Compass className="h-5 w-5 text-accent" strokeWidth={1.75} aria-hidden="true" />
@@ -60,28 +81,10 @@ const Waitlist = () => {
         </div>
       </header>
 
-      <main className="flex-1">
-        <section className="relative overflow-hidden flex items-center px-4 py-20 md:py-28">
-          {/* Subtle animated background waves */}
-          <div aria-hidden="true" className="wave-bg pointer-events-none absolute inset-x-0 top-0 -z-0 h-[42%] md:h-[38%]">
-            <svg
-              className="absolute inset-0 w-full h-full"
-              viewBox="0 0 1440 240"
-              preserveAspectRatio="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g fill="none" strokeLinecap="round">
-                <path className="wave-line wave-line-1" stroke="hsl(var(--sage))" strokeWidth="1.2"
-                  d="M-200,110 C200,70 400,150 720,110 C1040,70 1240,150 1640,110" />
-                <path className="wave-line wave-line-2" stroke="hsl(var(--terracotta))" strokeWidth="1"
-                  d="M-200,130 C220,90 420,170 720,130 C1020,90 1220,170 1640,130" />
-                <path className="wave-line wave-line-3" stroke="hsl(var(--sage))" strokeWidth="0.8"
-                  d="M-200,90 C240,50 440,130 720,90 C1000,50 1200,130 1640,90" />
-                <path className="wave-line wave-line-4" stroke="hsl(var(--accent))" strokeWidth="0.8"
-                  d="M-200,150 C260,110 460,190 720,150 C980,110 1180,190 1640,150" />
-              </g>
-            </svg>
-          </div>
+      <main className="relative z-10 flex-1">
+        <section className="relative flex items-center px-4 py-20 md:py-28">
+
+
 
 
           <motion.div
