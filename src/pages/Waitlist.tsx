@@ -4,7 +4,7 @@ import { Compass } from 'lucide-react';
 import { z } from 'zod';
 import { supabase } from '@/integrations/supabase/client';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
-import waitlistIllustration from '@/assets/waitlist-illustration.jpg';
+
 
 const schema = z.object({
   name: z.string().trim().min(1, 'Add your name').max(100, 'Too long'),
