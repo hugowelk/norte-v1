@@ -21,6 +21,9 @@ const markdownComponents: Components = {
   p: ({ node, ...props }) => (
     <p className="font-sans text-[18px] leading-[1.65] text-foreground mb-5" {...props} />
   ),
+  h2: ({ node, ...props }) => (
+    <h2 className="font-display text-[30px] leading-[1.2] text-primary mt-14 mb-5" {...props} />
+  ),
   h3: ({ node, ...props }) => (
     <h3 className="font-display text-[22px] leading-[1.3] text-primary mt-10 mb-3" {...props} />
   ),
