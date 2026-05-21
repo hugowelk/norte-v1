@@ -29,7 +29,7 @@ async function callLovableAI(inputData: unknown): Promise<string> {
       },
     ],
     temperature: 0.7,
-    max_tokens: 2000,
+    max_tokens: 2500,
   };
 
   const doFetch = () =>
