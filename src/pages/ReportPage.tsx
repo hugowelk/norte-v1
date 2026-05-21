@@ -77,6 +77,18 @@ export default function ReportPage() {
     year: 'numeric', month: 'long', day: 'numeric',
   }).format(new Date(report.created_at));
 
+  const revealedKeys = Array.isArray((report.input_data as any)?.revealed_top_3)
+    ? ((report.input_data as any).revealed_top_3 as string[]).slice(0, 3)
+    : [];
+  const revealedValues = revealedKeys
+    .map((k) => VALUES.find((v) => v.key === (k as ValueKey)))
+    .filter((v): v is (typeof VALUES)[number] => Boolean(v));
+
+  const handlePrint = () => {
+    track('report_pdf_downloaded', { report_id: report.id });
+    window.print();
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {!isOwner && (
@@ -85,7 +97,17 @@ export default function ReportPage() {
         </div>
       )}
 
-      <article className="report-content max-w-[640px] mx-auto px-6 md:px-0 pt-20 pb-16">
+      {/* Sticky top header */}
+      <header className="no-print sticky top-0 z-40 w-full bg-background/85 backdrop-blur border-b border-border/60">
+        <div className="max-w-[960px] mx-auto px-5 md:px-6 h-14 flex items-center justify-between">
+          <span className="font-display font-semibold text-lg tracking-tight text-foreground">Norte</span>
+          <Button variant="outline" size="sm" onClick={handlePrint} className="h-9">
+            Download as PDF
+          </Button>
+        </div>
+      </header>
+
+      <article className="report-content max-w-[680px] mx-auto px-5 md:px-6 pt-10 md:pt-14 pb-16">
         <div className="pdf-header">
           <div className="pdf-header-title">NORTE. Your reading</div>
           <div className="pdf-header-date">{formattedDate}</div>
@@ -95,6 +117,31 @@ export default function ReportPage() {
           <div className="no-print">
             <PrivacyNotice reportId={report.id} />
           </div>
+        )}
+
+        {/* Hero: revealed values */}
+        {revealedValues.length > 0 && (
+          <section className="no-print mb-12 md:mb-16">
+            <p className="font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground mb-5">
+              Your revealed values
+            </p>
+            <div className="flex flex-wrap gap-3">
+              {revealedValues.map((v, i) => (
+                <div
+                  key={v.key}
+                  className="flex items-center gap-3 rounded-full border border-border bg-card/50 pl-3 pr-5 py-2.5"
+                >
+                  <span className="flex items-center justify-center w-7 h-7 rounded-full bg-accent/15 text-accent font-sans text-xs font-semibold">
+                    {i + 1}
+                  </span>
+                  <span className="font-display text-[18px] md:text-[20px] text-primary leading-none">
+                    {v.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <hr className="mt-12 md:mt-14 border-0 border-t border-border/60" />
+          </section>
         )}
 
         <ReportMarkdown markdown={report.report_markdown} />
@@ -112,3 +159,4 @@ export default function ReportPage() {
     </div>
   );
 }
+
