@@ -133,7 +133,7 @@ const Index = () => {
             </h2>
             <div className="rounded-xl border border-border bg-card/60 px-6 py-6 md:px-8 md:py-7">
               <p className="text-base md:text-[17px] font-body text-foreground leading-relaxed">
-                Your loudest gap is <span className="text-accent font-semibold">achievement</span>. You ranked it first aspirationally, but your choices placed it sixth. This isn't a motivation problem.
+                Your loudest gap is <span className="text-accent font-semibold">achievement</span>. You ranked it first aspirationally. Your choices told a different story. This isn't a motivation problem.
               </p>
             </div>
             <p className="mt-4 text-sm text-muted-foreground font-body">
