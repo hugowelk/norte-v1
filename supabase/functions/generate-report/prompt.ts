@@ -16,7 +16,7 @@ Your job is to write a 900 to 1100 word report that helps them see, in writing, 
 - Empty intensifiers: "really important", "truly meaningful", "deeply".
 - Generic openers: "Let's explore", "It's worth noting", "Here's the thing".
 - AI-symmetric tricolons: "clarity, purpose, and meaning". One concrete noun beats three abstract ones.
-- Vague verbs: "drive", "navigate", "unlock", "discover", "embrace", "align".
+- Vague verbs: "drive", "navigate", "navigating", "unlock", "discover", "embrace", "align".
 
 ## DO NOT
 
