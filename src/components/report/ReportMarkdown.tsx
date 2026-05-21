@@ -43,11 +43,18 @@ const baseComponents: Components = {
 const shiftsComponents: Components = {
   ...baseComponents,
   ol: ({ node, ...props }) => (
-    <ol className="list-none pl-0 mt-6 mb-5 grid gap-4" {...props} />
+    <ol className="list-none pl-0 mt-6 mb-5 flex flex-col gap-4" {...props} />
   ),
   li: ({ node, ...props }) => (
     <li
-      className="rounded-xl border border-border bg-card/40 px-6 py-5 md:px-7 md:py-6 font-sans text-[17px] md:text-[18px] leading-[1.7] text-foreground [&>p]:mb-0 [&>p+p]:mt-3 [&>strong:first-child]:block [&>strong:first-child]:font-display [&>strong:first-child]:text-[20px] [&>strong:first-child]:md:text-[22px] [&>strong:first-child]:text-primary [&>strong:first-child]:mb-2 [&>strong:first-child]:font-normal"
+      className={[
+        'rounded-lg border border-border bg-card p-6 font-sans text-[17px] md:text-[18px] leading-[1.7] text-foreground list-none',
+        // Tight list: <li><strong>Label</strong> text...</li>
+        '[&>strong:first-child]:block [&>strong:first-child]:font-display [&>strong:first-child]:font-normal [&>strong:first-child]:text-[20px] [&>strong:first-child]:md:text-[22px] [&>strong:first-child]:text-accent [&>strong:first-child]:mb-2',
+        // Loose list: <li><p><strong>Label</strong>\ntext...</p></li>
+        '[&>p]:mb-0 [&>p+p]:mt-3',
+        '[&>p:first-child>strong:first-child]:block [&>p:first-child>strong:first-child]:font-display [&>p:first-child>strong:first-child]:font-normal [&>p:first-child>strong:first-child]:text-[20px] [&>p:first-child>strong:first-child]:md:text-[22px] [&>p:first-child>strong:first-child]:text-accent [&>p:first-child>strong:first-child]:mb-2',
+      ].join(' ')}
       {...props}
     />
   ),
@@ -68,7 +75,9 @@ function splitSections(markdown: string): { intro: string; sections: Section[] }
   let current: Section | null = null;
 
   for (const line of lines) {
-    const m = /^##\s+(.+?)\s*$/.exec(line);
+    const md = /^##\s+(.+?)\s*$/.exec(line);
+    const html = /^\s*<h2[^>]*>(.*?)<\/h2>\s*$/i.exec(line);
+    const m = md || html;
     if (m) {
       if (current) sections.push(current);
       current = { id: `s-${sections.length}`, title: m[1].trim(), body: '' };
