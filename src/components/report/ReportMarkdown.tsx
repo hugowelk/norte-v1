@@ -68,7 +68,9 @@ function splitSections(markdown: string): { intro: string; sections: Section[] }
   let current: Section | null = null;
 
   for (const line of lines) {
-    const m = /^##\s+(.+?)\s*$/.exec(line);
+    const md = /^##\s+(.+?)\s*$/.exec(line);
+    const html = /^\s*<h2[^>]*>(.*?)<\/h2>\s*$/i.exec(line);
+    const m = md || html;
     if (m) {
       if (current) sections.push(current);
       current = { id: `s-${sections.length}`, title: m[1].trim(), body: '' };
