@@ -85,7 +85,7 @@ export const VALUES: Value[] = [
     description: 'Owning your time and your choices.',
     longDescription: 'Independence is oxygen. You need control over your hours, your decisions, and the shape of your days.',
     icon: Feather,
-    maxScore: 5.5,
+    maxScore: 5.0,
   },
 ];
 

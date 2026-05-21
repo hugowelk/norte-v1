@@ -4,8 +4,8 @@ export type Answer = 'A' | 'B';
 export type Tier = 'warmup' | 'revealing' | 'hard' | 'hard-split';
 
 export interface Scenario {
-  id: string;                 // C1..C13
-  index: number;              // 0..12
+  id: string;                 // C1..C15
+  index: number;              // 0..14
   tier: Tier;
   weight: number;
   prompt: string;
