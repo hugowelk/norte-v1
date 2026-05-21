@@ -10,6 +10,9 @@ import { ReportActions } from '@/components/report/ReportActions';
 import { ReportNotFound } from '@/components/report/ReportNotFound';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import { track } from '@/lib/analytics';
+import { Button } from '@/components/ui/button';
+import { VALUES, type ValueKey } from '@/lib/values';
+
 
 interface Report {
   id: string;
