@@ -74,7 +74,7 @@ export function ReportMarkdown({ markdown }: Props) {
     // Print: render everything flat so the PDF doesn't have collapsed sections.
     const printOnly = (
       <div className="hidden print:block">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={{
           ...markdownComponents,
           h2: ({ node, ...props }) => (
             <h2 className="font-display text-[30px] leading-[1.2] text-primary mt-14 mb-5" {...props} />
@@ -88,7 +88,7 @@ export function ReportMarkdown({ markdown }: Props) {
     // No H2 headings? Just render flat.
     if (sections.length === 0) {
       return (
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={{
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={{
           ...markdownComponents,
           h2: ({ node, ...props }) => (
             <h2 className="font-display text-[30px] leading-[1.2] text-primary mt-14 mb-5" {...props} />
@@ -105,7 +105,7 @@ export function ReportMarkdown({ markdown }: Props) {
         <div className="print:hidden">
           {intro && (
             <div className="mb-8">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={markdownComponents}>
                 {intro}
               </ReactMarkdown>
             </div>
@@ -125,7 +125,7 @@ export function ReportMarkdown({ markdown }: Props) {
                   {section.title}
                 </AccordionTrigger>
                 <AccordionContent className="pb-8 pt-2">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                  <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={markdownComponents}>
                     {section.body}
                   </ReactMarkdown>
                 </AccordionContent>
