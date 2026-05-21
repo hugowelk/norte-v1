@@ -129,7 +129,7 @@ export default function ReportPage() {
               {revealedValues.map((v, i) => (
                 <div
                   key={v.key}
-                  className="flex items-center gap-3 rounded-full border border-border bg-card/50 pl-3 pr-5 py-2.5"
+                  className="flex items-center gap-3 rounded-full border border-accent/60 bg-card/50 pl-3 pr-6 py-2.5"
                 >
                   <span className="flex items-center justify-center w-7 h-7 rounded-full bg-accent/15 text-accent font-sans text-xs font-semibold">
                     {i + 1}
