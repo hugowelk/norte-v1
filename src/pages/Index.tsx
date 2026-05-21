@@ -124,12 +124,30 @@ const Index = () => {
           </div>
         </section>
 
+        {/* What the report looks like */}
+        <section className="px-4 py-20 md:py-24">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-xs font-display uppercase tracking-widest text-accent mb-3">What the report looks like</p>
+            <h2 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight mb-8">
+              A reading of your behaviour, not a personality type.
+            </h2>
+            <div className="rounded-xl border border-border bg-card/60 px-6 py-6 md:px-8 md:py-7">
+              <p className="text-base md:text-[17px] font-body text-foreground leading-relaxed">
+                Your loudest gap is <span className="text-accent font-semibold">achievement</span>. You ranked it first aspirationally, but your choices placed it sixth. This isn't a motivation problem.
+              </p>
+            </div>
+            <p className="mt-4 text-sm text-muted-foreground font-body">
+              900–1100 words. Specific to your answers. No two reports are alike.
+            </p>
+          </div>
+        </section>
+
         {/* Who it's for */}
         <section className="px-4 py-20 md:py-28">
           <div className="max-w-3xl mx-auto">
             <p className="text-xs font-display uppercase tracking-widest text-accent mb-5">Who it's for</p>
             <p className="text-2xl md:text-3xl font-display text-foreground leading-snug">
-              Norte is for people in transition. People who feel they're doing the right things but not living right. People who want to stop guessing and start knowing.
+              Norte is for people who sense a gap between the life they're building and the one they actually want. People who are doing fine on paper and quietly restless in practice. People who are done with vague self-awareness and want something concrete.
             </p>
             <div className="pt-10">
               <motion.button

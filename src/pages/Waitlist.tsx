@@ -178,18 +178,18 @@ const Waitlist = () => {
             <p className="text-xs font-display uppercase tracking-widest text-accent text-center">Why Norte</p>
 
             <h2 className="text-3xl md:text-5xl font-display font-semibold text-foreground leading-[1.1] tracking-tight text-center">
-              Losing your direction is heavier than it looks.
+              Most people have never actually named what matters to them.
             </h2>
 
             <div className="space-y-5 text-lg text-muted-foreground font-body leading-relaxed">
               <p>
-                Most people don't struggle because they lack ambition. They struggle because they can't name what they're aiming for. The days fill up, the choices pile on, and the sense of a clear north quietly fades.
+                Self-help tells you to get clear on your values. It doesn't tell you how. Picking words from a list gives you aspirations, not answers.
               </p>
               <p>
-                That gap between how you're living and what actually matters to you shows up as tension. As restlessness. As the low anxiety that sits underneath good days and bad ones, and slowly wears on your mental health.
+                Norte uses 15 trade-off scenarios to surface what you actually prioritise when something's at stake. The result isn't a label. It's a pattern, and a plan.
               </p>
               <p className="text-foreground">
-                Norte is here to help you find that north again. To turn vague pressure into something you can see, name, and move toward, with less noise and more ease.
+                One session. Grounded in ACT psychology. No journaling required.
               </p>
             </div>
           </motion.div>
