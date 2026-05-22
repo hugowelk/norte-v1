@@ -160,7 +160,7 @@ export default function ReportPage() {
         <div className="no-print mt-16 flex flex-col items-center gap-3 text-center">
           <ReviewDialog reportId={report.id} />
           <p className="text-sm text-muted-foreground italic">
-            Norte · Anyone with this link can read this report.
+            Norte - 2026© - findmyvalues.app
           </p>
         </div>
       </article>
