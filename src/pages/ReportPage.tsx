@@ -9,6 +9,7 @@ import { ReportActions } from '@/components/report/ReportActions';
 import { ReportNotFound } from '@/components/report/ReportNotFound';
 import { GapVisualization } from '@/components/report/GapVisualization';
 import { ChosenValuesHero } from '@/components/report/ChosenValuesHero';
+import { ReviewDialog } from '@/components/report/ReviewDialog';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import { track } from '@/lib/analytics';
 import { Button } from '@/components/ui/button';
