@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import { PostPaywallLayout } from './PostPaywallLayout';
 import { usePostPaywallStore } from '@/lib/postPaywallStore';
 
