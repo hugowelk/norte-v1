@@ -53,13 +53,22 @@ export default function ReportPage() {
   }, [reportId]);
 
   // SEO / OG — noindex individual reports; vague preview text so we don't leak content.
-  useDocumentMeta(reportId ? [
-    { name: 'robots', content: 'noindex' },
-    { property: 'og:title', content: 'A Norte reading' },
-    { property: 'og:description', content: "Someone's values, behaviour, and the gap between them." },
-    { property: 'og:image', content: 'https://norte.app/og-default.png' },
-    { property: 'og:url', content: `https://norte.app/r/${reportId}` },
-  ] : []);
+  // Unique title + canonical per report ID so each URL is distinguishable.
+  const shortId = reportId ? reportId.slice(0, 8) : '';
+  useDocumentMeta(
+    reportId ? [
+      { name: 'robots', content: 'noindex' },
+      { name: 'description', content: `A personal Norte values reading (${shortId}). Someone's revealed and aspirational values, and the gap between them.` },
+      { property: 'og:title', content: `A Norte reading · ${shortId}` },
+      { property: 'og:description', content: "Someone's values, behaviour, and the gap between them." },
+      { property: 'og:image', content: 'https://findmyvalues.app/og-default.png' },
+      { property: 'og:url', content: `https://findmyvalues.app/r/${reportId}` },
+    ] : [],
+    reportId ? {
+      title: `Norte reading · ${shortId}`,
+      canonical: `https://findmyvalues.app/r/${reportId}`,
+    } : undefined
+  );
 
   if (status === 'loading') {
     return (
