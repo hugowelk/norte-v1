@@ -43,7 +43,7 @@ function receiptsFor(value: ValueKey, answers: Answer[]): string[] {
 export function ValueResults({ result, answers, onContinue }: Props) {
   const top3 = [result.revealed.primary, result.revealed.secondary, result.revealed.tertiary];
   const rest = result.ranking.slice(3);
-  const [restOpen, setRestOpen] = useState(false);
+  
 
   return (
     <div className="space-y-10 pb-12">
