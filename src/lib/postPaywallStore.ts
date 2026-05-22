@@ -28,6 +28,7 @@ export interface AssessmentSnapshot {
 export interface PostPaywallState {
   paymentSessionId: string;
   name: string;
+  email: string;
   current_chapter: string;
   blocker_answer: BlockerAnswer;
   blocker_custom_text: string;
@@ -41,6 +42,7 @@ const STORAGE_KEY = 'norte_post_paywall';
 const emptyState = (): PostPaywallState => ({
   paymentSessionId: '',
   name: '',
+  email: '',
   current_chapter: '',
   blocker_answer: null,
   blocker_custom_text: '',

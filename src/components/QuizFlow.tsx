@@ -300,6 +300,7 @@ export function QuizFlow() {
                   writePostPaywall({
                     paymentSessionId: genPaymentSessionId(),
                     name: '',
+                    email: '',
                     current_chapter: '',
                     blocker_answer: null,
                     blocker_custom_text: '',
