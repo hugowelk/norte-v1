@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { QuizFlow } from '@/components/QuizFlow';
-import heroIllustration from '@/assets/hero-forked-road.png';
+
 
 
 const Index = () => {
@@ -22,42 +22,31 @@ const Index = () => {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="px-4 pt-16 pb-20 md:pt-20 md:pb-28">
+        <section className="px-4 pt-24 pb-28 md:pt-32 md:pb-36">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center"
+            className="max-w-3xl mx-auto text-center space-y-8"
           >
-            <div className="space-y-8 text-center md:text-left order-2 md:order-1">
-              <h1 className="text-4xl md:text-6xl font-display font-semibold text-foreground leading-[1.05] tracking-tight">
-                Your real values aren't what you say. They're what you choose when something's at stake.
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                Norte uses 15 trade-off scenarios to reveal the values that guide your decisions. Methodology grounded in ACT (Acceptance and Commitment Therapy).
-              </p>
-              <div className="pt-2">
-                <motion.button
-                  onClick={startQuiz}
-                  className="px-10 py-4 bg-primary text-primary-foreground rounded-xl font-display font-semibold text-lg hover:opacity-90 transition-opacity shadow-md"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Start
-                </motion.button>
-              </div>
+            <h1 className="text-4xl md:text-6xl font-display font-semibold text-foreground leading-[1.05] tracking-tight">
+              Your real values aren't what you say. They're what you choose when something's at stake.
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+              Norte uses 15 trade-off scenarios to reveal the values that guide your decisions. Methodology grounded in ACT (Acceptance and Commitment Therapy).
+            </p>
+            <div className="pt-2">
+              <motion.button
+                onClick={startQuiz}
+                className="px-10 py-4 bg-primary text-primary-foreground rounded-xl font-display font-semibold text-lg hover:opacity-90 transition-opacity shadow-md"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Start
+              </motion.button>
             </div>
-            <div className="flex justify-center md:justify-end order-1 md:order-2">
-              <img
-                src={heroIllustration}
-                alt="A person stands at a winding road with multiple forks and signposts ahead"
-                width={1024}
-                height={1024}
-                className="w-full max-w-md md:max-w-full h-auto"
-              />
-            </div>
-
           </motion.div>
+
         </section>
 
 
