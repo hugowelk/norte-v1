@@ -21,6 +21,10 @@ interface Entry {
 const PW_KEY = "norte_admin_pw";
 
 const AdminPage = () => {
+  useDocumentMeta(
+    [{ name: 'robots', content: 'noindex, nofollow' }],
+    { title: 'Norte — Admin', canonical: 'https://findmyvalues.app/admin' }
+  );
   const [password, setPassword] = useState(() => sessionStorage.getItem(PW_KEY) ?? "");
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(false);
