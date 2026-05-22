@@ -15,11 +15,6 @@ const Index = () => {
       <header className="px-6 py-5 border-b border-border/60">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <span className="font-display font-semibold text-lg tracking-tight text-foreground">Norte</span>
-          <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground font-body">
-            <a href="#how" className="hover:text-foreground transition-colors">How it works</a>
-            <a href="#what" className="hover:text-foreground transition-colors">What you get</a>
-            <a href="/methodology" className="hover:text-foreground transition-colors">Methodology</a>
-          </nav>
         </div>
       </header>
 
