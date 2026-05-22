@@ -28,12 +28,14 @@ import { CoreValuesSelection, type CoreValuesResult } from './quiz/CoreValuesSel
 import { AlignmentReflection, type AlignmentScores } from './quiz/AlignmentReflection';
 import { ValueCompass } from './quiz/ValueCompass';
 import { Paywall } from './quiz/Paywall';
+import { NameEmailCapture } from './quiz/NameEmailCapture';
 
 type Phase =
   | 'tradeoffIntro'
   | 'howItWorks'
   | 'tradeoffs'
   | 'tradeoffTransition'
+  | 'nameEmail'
   | 'processing'
   | 'results'
   | 'coreValues'
@@ -54,6 +56,8 @@ export function QuizFlow() {
   const [pendingTransition, setPendingTransition] = useState<string | null>(null);
 
   const [tradeoffAnswers, setTradeoffAnswers] = useState<Answer[]>([]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [result, setResult] = useState<ScoreResult>();
   const [core, setCore] = useState<CoreValuesResult>();
   const [alignmentScores, setAlignmentScores] = useState<AlignmentScores>({});
@@ -65,14 +69,15 @@ export function QuizFlow() {
   }, [phase, scenarioIdx]);
 
   // Progress: rough estimate across the whole flow
-  const totalSteps = 1 /*intro*/ + SCENARIOS.length + 4 /*results,core,align,compass*/;
+  const totalSteps = 1 /*intro*/ + SCENARIOS.length + 1 /*nameEmail*/ + 4 /*results,core,align,compass*/;
   let completed = 0;
   if (phase === 'tradeoffIntro') completed = 0;
   else if (phase === 'tradeoffs' || phase === 'tradeoffTransition') completed = 1 + scenarioIdx;
-  else if (phase === 'results') completed = 1 + SCENARIOS.length;
-  else if (phase === 'coreValues') completed = 2 + SCENARIOS.length;
-  else if (phase === 'alignment') completed = 3 + SCENARIOS.length;
-  else if (phase === 'compass') completed = 4 + SCENARIOS.length;
+  else if (phase === 'nameEmail') completed = 1 + SCENARIOS.length;
+  else if (phase === 'results') completed = 2 + SCENARIOS.length;
+  else if (phase === 'coreValues') completed = 3 + SCENARIOS.length;
+  else if (phase === 'alignment') completed = 4 + SCENARIOS.length;
+  else if (phase === 'compass') completed = 5 + SCENARIOS.length;
   else if (phase === 'paywall') completed = totalSteps;
   const progress = Math.min(100, (completed / totalSteps) * 100);
 
@@ -96,7 +101,7 @@ export function QuizFlow() {
     } else {
       const r = computeScores(answers);
       setResult(r);
-      setPhase('processing');
+      setPhase('nameEmail');
     }
   };
 
@@ -179,6 +184,13 @@ export function QuizFlow() {
             {phase === 'tradeoffTransition' && pendingTransition && (
               <TradeoffTransition message={pendingTransition} onContinue={handleTransitionContinue} />
             )}
+            {phase === 'nameEmail' && (
+              <NameEmailCapture
+                initialName={name}
+                initialEmail={email}
+                onContinue={(n, e) => { setName(n); setEmail(e); setPhase('processing'); }}
+              />
+            )}
             {phase === 'processing' && (
               <ProcessingTransition onComplete={() => setPhase('results')} />
             )}
@@ -246,8 +258,8 @@ export function QuizFlow() {
                   };
                   writePostPaywall({
                     paymentSessionId: genPaymentSessionId(),
-                    name: '',
-                    email: '',
+                    name,
+                    email,
                     current_chapter: '',
                     blocker_answer: null,
                     blocker_custom_text: '',
@@ -255,7 +267,7 @@ export function QuizFlow() {
                     loudest_gap: loudest,
                     assessment: snapshot,
                   });
-                  navigate('/post-paywall/q1');
+                  navigate('/post-paywall/q2');
                 }}
               />
             )}

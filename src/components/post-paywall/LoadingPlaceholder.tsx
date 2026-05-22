@@ -47,6 +47,7 @@ function buildRequestBody() {
     },
     postPaywallAnswers: {
       name: state.name,
+      email: state.email,
       current_chapter: state.current_chapter,
       blocker_answer: state.blocker_answer ?? '',
       blocker_custom_text: state.blocker_custom_text,

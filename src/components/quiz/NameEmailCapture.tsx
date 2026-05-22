@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PostPaywallLayout } from './PostPaywallLayout';
-import { usePostPaywallStore } from '@/lib/postPaywallStore';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function Q1Name() {
-  const navigate = useNavigate();
-  const { state, update } = usePostPaywallStore();
-  const [name, setName] = useState(state.name);
-  const [email, setEmail] = useState(state.email);
+interface Props {
+  initialName?: string;
+  initialEmail?: string;
+  onContinue: (name: string, email: string) => void;
+}
+
+export function NameEmailCapture({ initialName = '', initialEmail = '', onContinue }: Props) {
+  const [name, setName] = useState(initialName);
+  const [email, setEmail] = useState(initialEmail);
   const [error, setError] = useState<string | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -20,18 +21,19 @@ export function Q1Name() {
     const trimmedEmail = email.trim();
     if (!trimmedName) { setError('Please share your name.'); return; }
     if (!EMAIL_RE.test(trimmedEmail)) { setError('Please enter a valid email.'); return; }
-    update({ name: trimmedName, email: trimmedEmail });
-    navigate('/post-paywall/q2');
+    onContinue(trimmedName, trimmedEmail);
   };
 
   return (
-    <PostPaywallLayout step={1}>
-      <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
-        What should we call you in your report?
-      </h1>
-      <p className="text-sm text-muted-foreground italic">
-        Your first name and email so we can send your report.
-      </p>
+    <div className="space-y-8">
+      <div className="space-y-3">
+        <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
+          Before we read your trade-offs, what should we call you?
+        </h1>
+        <p className="text-sm text-muted-foreground italic">
+          Your first name and email so we can send your report.
+        </p>
+      </div>
 
       <div className="space-y-3">
         <input
@@ -63,6 +65,6 @@ export function Q1Name() {
       >
         Continue →
       </button>
-    </PostPaywallLayout>
+    </div>
   );
 }

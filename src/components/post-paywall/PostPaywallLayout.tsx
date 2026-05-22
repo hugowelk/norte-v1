@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 interface Props {
-  step: 1 | 2 | 3 | 4;
+  step: 1 | 2 | 3;
   backTo?: string;
   children: React.ReactNode;
 }
@@ -27,7 +27,7 @@ export function PostPaywallLayout({ step, backTo, children }: Props) {
           className="w-full max-w-[640px] space-y-8"
         >
           <p className="text-xs font-display uppercase tracking-widest text-accent">
-            Before your report · {step} of 4
+            Before your report · {step} of 3
           </p>
           {children}
         </motion.div>

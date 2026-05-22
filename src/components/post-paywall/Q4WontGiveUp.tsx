@@ -22,7 +22,7 @@ export function Q4WontGiveUp() {
   };
 
   return (
-    <PostPaywallLayout step={4} backTo="/post-paywall/q3">
+    <PostPaywallLayout step={3} backTo="/post-paywall/q3">
       <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
         If closing the gaps from how you are living your life today to how you want to live it, meant giving something up, what would you NOT be willing to give up?
       </h1>

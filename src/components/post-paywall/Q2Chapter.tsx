@@ -23,7 +23,7 @@ export function Q2Chapter() {
   };
 
   return (
-    <PostPaywallLayout step={2} backTo="/post-paywall/q1">
+    <PostPaywallLayout step={1}>
       <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
         What's the current chapter of your life right now?
       </h1>
