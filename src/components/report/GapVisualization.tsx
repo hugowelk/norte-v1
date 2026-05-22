@@ -18,7 +18,7 @@ export function GapVisualization({ revealed, aspirational }: Props) {
   const aligned = aspirational.filter(v => revealedSet.has(v));
 
   return (
-    <section className="no-print mb-12 md:mb-16">
+    <section className="mb-12 md:mb-16">
       <p className="font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground mb-5">
         Revealed vs Aspirational
       </p>
