@@ -28,6 +28,7 @@ export interface AssessmentSnapshot {
 export interface PostPaywallState {
   paymentSessionId: string;
   name: string;
+  email: string;
   current_chapter: string;
   blocker_answer: BlockerAnswer;
   blocker_custom_text: string;
