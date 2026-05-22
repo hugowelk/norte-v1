@@ -51,20 +51,20 @@ export function Q2Chapter() {
         )}
       </div>
 
-      <div className="rounded-lg border border-border bg-card/50 overflow-hidden">
+      <div>
         <button
           type="button"
           onClick={() => setShowExamples(v => !v)}
-          className="w-full flex items-center justify-between px-4 py-3 text-sm font-display text-foreground hover:bg-muted/40 transition-colors"
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <span>See examples</span>
           <ChevronDown
-            size={16}
+            size={14}
             className={`transition-transform ${showExamples ? 'rotate-180' : ''}`}
           />
         </button>
         {showExamples && (
-          <ul className="px-4 pb-4 space-y-1.5 text-sm italic text-muted-foreground animate-accordion-down">
+          <ul className="mt-2 space-y-1.5 text-sm italic text-muted-foreground animate-accordion-down">
             <li>"Just left my job, figuring out what's next."</li>
             <li>"New parent, lost my edges."</li>
             <li>"Stuck. Last few years feel like autopilot."</li>
