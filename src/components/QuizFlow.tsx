@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { SCENARIOS, computeScores, findAspirationalGaps, type Answer, type ScoreResult } from '@/lib/algorithm';
 import { VALUES, getValueByKey, type ValueKey } from '@/lib/values';
 import { writePostPaywall, genPaymentSessionId, type AssessmentSnapshot, type LoudestGap } from '@/lib/postPaywallStore';
@@ -132,31 +125,8 @@ export function QuizFlow() {
     return c;
   };
 
-  const handleJump = (val: string) => {
-    if (val === 'tradeoffIntro') { setScenarioIdx(0); setPhase('tradeoffIntro'); }
-    else if (val === 'howItWorks') { setScenarioIdx(0); setPhase('howItWorks'); }
-    else if (val.startsWith('tradeoff-')) {
-      const idx = parseInt(val.replace('tradeoff-', ''), 10);
-      setScenarioIdx(idx);
-      setPhase('tradeoffs');
-    }
-    else if (val === 'processing') { ensureResult(); setPhase('processing'); }
-    else if (val === 'results') { ensureResult(); setPhase('results'); }
-    else if (val === 'coreValues') { ensureResult(); setPhase('coreValues'); }
-    else if (val === 'alignment') {
-      const r = ensureResult();
-      const c = ensureCore(r);
-      if (Object.keys(alignmentScores).length === 0) setAlignmentScores(mockAlignment(c.slots, r));
-      setPhase('alignment');
-    }
-    else if (val === 'compass') {
-      const r = ensureResult();
-      const c = ensureCore(r);
-      if (Object.keys(alignmentScores).length === 0) setAlignmentScores(mockAlignment(c.slots, r));
-      setPhase('compass');
-    }
-    else if (val === 'paywall') { ensureResult(); setPhase('paywall'); }
-  };
+
+
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
