@@ -173,29 +173,6 @@ export function QuizFlow() {
         </div>
       )}
 
-      {/* Designer nav */}
-      <div className="fixed top-3 right-4 z-[60]">
-        <Select onValueChange={handleJump} value={phase === 'tradeoffs' ? `tradeoff-${scenarioIdx}` : phase}>
-          <SelectTrigger className="w-44 h-8 text-xs bg-background/80 backdrop-blur border-border/60">
-            <SelectValue placeholder="Jump to page…" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="tradeoffIntro">1 · Trade-off Intro</SelectItem>
-            <SelectItem value="howItWorks">1b · How it works</SelectItem>
-            {SCENARIOS.map((s, i) => (
-              <SelectItem key={s.id} value={`tradeoff-${i}`}>
-                1.{i + 1} · {s.id}
-              </SelectItem>
-            ))}
-            <SelectItem value="processing">1c · Processing</SelectItem>
-            <SelectItem value="results">2 · Results</SelectItem>
-            <SelectItem value="coreValues">3 · Core Values</SelectItem>
-            <SelectItem value="alignment">4 · Alignment</SelectItem>
-            <SelectItem value="compass">5 · Compass</SelectItem>
-            <SelectItem value="paywall">6 · Paywall</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
 
       {showBack && (
         <button
