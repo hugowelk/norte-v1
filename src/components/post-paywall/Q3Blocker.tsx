@@ -23,9 +23,9 @@ export function Q3Blocker() {
   const gapLabel = gap?.label ?? 'this value';
 
   const heading = gap?.isFallback
-    ? <>What's been making it harder to make your top one chosen value -{' '}
+    ? <>What's been making it harder to make your top one chosen value —{' '}
         <span className="font-semibold text-primary">{gapLabel}</span>, part of your routine?</>
-    : <>What's been making it harder to make your top one chosen value -{' '}
+    : <>What's been making it harder to make your top one chosen value —{' '}
         <span className="font-semibold text-primary">{gapLabel}</span>, part of your routine?</>;
 
   const canContinue =
