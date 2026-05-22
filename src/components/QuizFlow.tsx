@@ -69,14 +69,15 @@ export function QuizFlow() {
   }, [phase, scenarioIdx]);
 
   // Progress: rough estimate across the whole flow
-  const totalSteps = 1 /*intro*/ + SCENARIOS.length + 4 /*results,core,align,compass*/;
+  const totalSteps = 1 /*intro*/ + SCENARIOS.length + 1 /*nameEmail*/ + 4 /*results,core,align,compass*/;
   let completed = 0;
   if (phase === 'tradeoffIntro') completed = 0;
   else if (phase === 'tradeoffs' || phase === 'tradeoffTransition') completed = 1 + scenarioIdx;
-  else if (phase === 'results') completed = 1 + SCENARIOS.length;
-  else if (phase === 'coreValues') completed = 2 + SCENARIOS.length;
-  else if (phase === 'alignment') completed = 3 + SCENARIOS.length;
-  else if (phase === 'compass') completed = 4 + SCENARIOS.length;
+  else if (phase === 'nameEmail') completed = 1 + SCENARIOS.length;
+  else if (phase === 'results') completed = 2 + SCENARIOS.length;
+  else if (phase === 'coreValues') completed = 3 + SCENARIOS.length;
+  else if (phase === 'alignment') completed = 4 + SCENARIOS.length;
+  else if (phase === 'compass') completed = 5 + SCENARIOS.length;
   else if (phase === 'paywall') completed = totalSteps;
   const progress = Math.min(100, (completed / totalSteps) * 100);
 
