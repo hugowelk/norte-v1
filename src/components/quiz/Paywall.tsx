@@ -48,6 +48,7 @@ const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
 export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
   const key = sampleValue ?? 'aliveness';
   const sample = SAMPLE_ACTIONS[key];
+  const [copied, setCopied] = useState(false);
 
   return (
     <div className="space-y-10 pb-16">
