@@ -101,7 +101,7 @@ export function QuizFlow() {
     } else {
       const r = computeScores(answers);
       setResult(r);
-      setPhase('processing');
+      setPhase('nameEmail');
     }
   };
 
