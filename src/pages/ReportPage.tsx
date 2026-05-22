@@ -9,6 +9,7 @@ import { ReportActions } from '@/components/report/ReportActions';
 import { ReportNotFound } from '@/components/report/ReportNotFound';
 import { GapVisualization } from '@/components/report/GapVisualization';
 import { ChosenValuesHero } from '@/components/report/ChosenValuesHero';
+import { ReviewDialog } from '@/components/report/ReviewDialog';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import { track } from '@/lib/analytics';
 import { Button } from '@/components/ui/button';
@@ -156,9 +157,12 @@ export default function ReportPage() {
           <ReportActions reportId={report.id} />
         </div>
 
-        <p className="no-print mt-16 text-center text-sm text-muted-foreground italic">
-          Norte · Anyone with this link can read this report.
-        </p>
+        <div className="no-print mt-16 flex flex-col items-center gap-3 text-center">
+          <ReviewDialog reportId={report.id} />
+          <p className="text-sm text-muted-foreground italic">
+            Norte · Anyone with this link can read this report.
+          </p>
+        </div>
       </article>
     </div>
   );

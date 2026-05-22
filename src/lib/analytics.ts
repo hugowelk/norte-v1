@@ -5,7 +5,8 @@ export type AnalyticsEvent =
   | 'report_pdf_downloaded'
   | 'report_link_copied'
   | 'report_upsell_clicked'
-  | 'report_404';
+  | 'report_404'
+  | 'report_review_submitted';
 
 export function track(event: AnalyticsEvent, props: Record<string, unknown> = {}) {
   // eslint-disable-next-line no-console
