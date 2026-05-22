@@ -35,7 +35,7 @@ const Index = () => {
                 alt="A person stands at a winding road with multiple forks and signposts ahead"
                 width={1024}
                 height={1024}
-                className="w-full max-w-xl h-auto mix-blend-multiply"
+                className="w-full max-w-xl h-auto"
               />
             </div>
             <h1 className="text-4xl md:text-6xl font-display font-semibold text-foreground leading-[1.05] tracking-tight">
