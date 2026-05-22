@@ -154,16 +154,22 @@ function TopValueCard({
               Why this value?
             </CollapsibleTrigger>
             <CollapsibleContent className="pt-3">
-              <p className="text-xs text-muted-foreground font-body mb-2">
-                You picked:
-              </p>
-              <ul className="space-y-1.5">
-                {receipts.map((r, idx) => (
-                  <li key={idx} className="text-sm text-foreground/75 font-body leading-snug pl-3 border-l-2 border-accent/40">
-                    "{r}"
-                  </li>
+              <p className="text-sm text-foreground/80 font-body leading-relaxed">
+                From the 15 trade-offs, you picked{' '}
+                <span className="font-display text-foreground">{receipts.length}</span>{' '}
+                {receipts.length === 1 ? 'choice' : 'choices'} that indicate you value{' '}
+                {explanation.themes.map((t, idx) => (
+                  <span key={t}>
+                    <span className="font-display text-foreground">{t}</span>
+                    {idx < explanation.themes.length - 2
+                      ? ', '
+                      : idx === explanation.themes.length - 2
+                      ? ', and '
+                      : ''}
+                  </span>
                 ))}
-              </ul>
+                {' '}— signaling a clear tendency for prioritising {value.label.toLowerCase()}.
+              </p>
             </CollapsibleContent>
           </Collapsible>
         )}
