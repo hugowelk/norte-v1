@@ -72,34 +72,16 @@ export function ValueResults({ result, answers, onContinue }: Props) {
       </div>
 
       <div>
-        <button
-          onClick={() => setRestOpen(o => !o)}
-          className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-border bg-card/60 hover:bg-card transition-colors text-left"
-        >
-          <span className="text-xs font-display uppercase tracking-widest text-muted-foreground">
-            Other values that came up
-          </span>
-          <ChevronDown size={16} className={cn('text-muted-foreground transition-transform', restOpen && 'rotate-180')} />
-        </button>
-        {!restOpen && (
-          <p className="px-4 pt-2 text-sm text-foreground/70 font-body">
-            {rest.map((k, i) => (
-              <span key={k}>
-                <span className="text-muted-foreground tabular-nums mr-1.5">{i + 4}</span>
-                {getValueByKey(k).label}
-                {i < rest.length - 1 && <span className="text-muted-foreground/50 mx-2">·</span>}
-              </span>
-            ))}
-          </p>
-        )}
-        {restOpen && (
-          <div className="space-y-2 pt-3">
-            {rest.map((key, i) => (
-              <RestRow key={key} valueKey={key} rank={i + 4} />
-            ))}
-          </div>
-        )}
+        <p className="px-1 pb-3 text-xs font-display uppercase tracking-widest text-muted-foreground">
+          Other values that came up
+        </p>
+        <div className="space-y-2">
+          {rest.map((key, i) => (
+            <RestRow key={key} valueKey={key} rank={i + 4} />
+          ))}
+        </div>
       </div>
+
 
       <div className="border-t border-border pt-6 text-center space-y-2">
         <p className="text-sm text-muted-foreground font-body leading-relaxed">
