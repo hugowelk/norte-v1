@@ -85,9 +85,7 @@ export default function ReportPage() {
   const aspirationalKeys = Array.isArray((report.input_data as any)?.aspirational_top_3)
     ? ((report.input_data as any).aspirational_top_3 as string[]).slice(0, 3) as ValueKey[]
     : [];
-  const revealedValues = revealedKeys
-    .map((k) => VALUES.find((v) => v.key === k))
-    .filter((v): v is (typeof VALUES)[number] => Boolean(v));
+  // revealedValues kept for potential future use; rendered inside GapVisualization for now.
 
   const handlePrint = () => {
     track('report_pdf_downloaded', { report_id: report.id });
