@@ -28,7 +28,7 @@ const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
   },
   meaning: {
     title: 'A small shift this week · toward Meaning',
-    body: 'At the end of each day this week, write one sentence: what did I do today that I would do again if I had the choice? Patterns surface in five days.',
+    body: 'At the end of each day this week, write one sentence: what did I do today that I would do again if I had the choice? This ',
   },
   contribution: {
     title: 'A small shift this week · toward Contribution',
@@ -70,12 +70,12 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
 
       <div className="rounded-2xl border border-primary/30 bg-card overflow-hidden shadow-sm">
         <div className="px-6 py-5 bg-primary/5 border-b border-primary/20 flex items-baseline justify-between gap-4 flex-wrap">
-          <p className="text-xs font-display uppercase tracking-widest text-primary">Your Norte Plan</p>
+          <p className="text-xs font-display uppercase tracking-widest text-primary">YOUR NORTE REPORT AND PLAN</p>
           <p className="font-display text-sm text-foreground"><span className="font-semibold">$7</span> one-time</p>
         </div>
         <ul className="px-6 py-5 space-y-4">
-          <Bullet icon={Target} title="A plan built from your gaps">
-            Not a goal list. The specific behaviours that have been pulling you toward your top revealed value, and the small ones that could pull you toward the values you want at the centre instead.
+          <Bullet icon={Target} title="The next steps">
+            Norte can guide you through your compass. Get 3 actionable steps you can start this week to help you designing the life you actually want.
           </Bullet>
           <Bullet icon={MessageCircle} title="A real conversation, not a checklist">
             Norte's AI guide works through your compass with you, asking the questions a thoughtful friend would, and helping you design shifts that fit the life you actually have.
