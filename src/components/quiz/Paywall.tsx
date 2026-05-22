@@ -70,8 +70,27 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
 
       <div className="rounded-2xl border border-primary/30 bg-card overflow-hidden shadow-sm">
         <div className="px-6 py-5 bg-primary/5 border-b border-primary/20 flex items-baseline justify-between gap-4 flex-wrap">
-          <p className="text-xs font-display uppercase tracking-widest text-primary">YOUR NORTE REPORT AND PLAN</p>
-          <p className="font-display text-sm text-foreground"><span className="font-semibold">$7</span> one-time</p>
+          <p className="text-xs font-display uppercase tracking-widest text-primary">Your Full Values Report</p>
+          <p className="font-display text-sm text-foreground flex items-center gap-2">
+            <span className="relative inline-block">
+              <span className="font-semibold">$9</span>
+              <motion.span
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 0.4, duration: 0.5, ease: 'easeOut' }}
+                style={{ transformOrigin: 'left' }}
+                className="absolute left-0 right-0 top-1/2 h-[2px] bg-foreground"
+              />
+            </span>
+            <motion.span
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9, type: 'spring', stiffness: 300 }}
+              className="px-2 py-0.5 rounded-full bg-[hsl(20,90%,55%)] text-white text-[11px] font-display font-bold uppercase tracking-wider"
+            >
+              Free
+            </motion.span>
+          </p>
         </div>
         <ul className="px-6 py-5 space-y-4">
           <Bullet icon={Target} title="The next steps">
@@ -91,7 +110,7 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
         onClick={onUnlock}
         className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-semibold text-base hover:opacity-90 transition-opacity shadow-md"
       >
-        Get my plan ($7) →
+        Get my FREE Full Values Report →
       </button>
       <button
         onClick={onBack}
