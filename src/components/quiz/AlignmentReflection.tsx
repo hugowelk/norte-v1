@@ -34,10 +34,10 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
       <div className="space-y-3 text-center">
         <p className="text-xs font-display uppercase tracking-widest text-accent">A quick check</p>
         <h2 className="text-2xl md:text-3xl font-display font-semibold text-foreground leading-tight">
-          How present are these values in your life right now?
+          How present these values feel in your life right now?
         </h2>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          Move each slider to where it actually feels. The dotted mark shows where your trade-offs placed you.
+        <p className="text-sm text-muted-foreground max-w-md mx-auto whitespace-pre-line">
+          Move each slider to where it actually feels.{"\n"}The dotted mark shows where your trade-offs placed you.
         </p>
       </div>
 
