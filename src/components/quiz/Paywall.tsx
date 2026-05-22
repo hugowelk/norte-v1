@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Sparkles, Compass, Target, MessageCircle, Lock } from 'lucide-react';
+import { useState } from 'react';
+import { Sparkles, Compass, Target, MessageCircle, Lock, Check, Share2 } from 'lucide-react';
 import { type ValueKey, getValueByKey } from '@/lib/values';
 import { ValueIcon } from '../ValueIcon';
 
@@ -47,6 +48,7 @@ const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
 export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
   const key = sampleValue ?? 'aliveness';
   const sample = SAMPLE_ACTIONS[key];
+  const [copied, setCopied] = useState(false);
 
   return (
     <div className="space-y-10 pb-16">
@@ -64,7 +66,7 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
           Turn the gap into something you can actually move.
         </h1>
         <p className="text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
-          You've seen what's been driving your week, and where you want it to be heading. The next step is designing the small shifts that close the distance.
+          You've seen what's been driving your week, and where you want it to be heading. The next step is understanding your gaps and making the small shifts that close the distance.
         </p>
       </div>
 
@@ -112,12 +114,26 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
       >
         Get my FREE Full Values Report →
       </button>
-      <button
-        onClick={onBack}
-        className="w-full text-center text-sm font-display text-muted-foreground hover:text-foreground transition-colors"
-      >
-        Maybe later
-      </button>
+      <div className="flex items-center justify-center gap-6 text-sm font-display">
+        <button
+          onClick={onBack}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Maybe later
+        </button>
+        <span className="text-border">·</span>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText('findyourvalues.app');
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          }}
+          className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {copied ? <Check size={14} /> : <Share2 size={14} />}
+          {copied ? 'Link copied' : 'Share Norte with a friend'}
+        </button>
+      </div>
     </div>
   );
 }
