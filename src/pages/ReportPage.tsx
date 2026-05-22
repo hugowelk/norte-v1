@@ -8,9 +8,11 @@ import { ReportMarkdown } from '@/components/report/ReportMarkdown';
 import { ReportActions } from '@/components/report/ReportActions';
 import { ReportNotFound } from '@/components/report/ReportNotFound';
 import { GapVisualization } from '@/components/report/GapVisualization';
+import { ChosenValuesHero } from '@/components/report/ChosenValuesHero';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import { track } from '@/lib/analytics';
 import { Button } from '@/components/ui/button';
+import { Sparkles } from 'lucide-react';
 import { VALUES, type ValueKey } from '@/lib/values';
 
 
