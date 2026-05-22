@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { isOwnedReport } from '@/lib/reportOwnership';
 import { ShareHeader } from '@/components/report/ShareHeader';
-import { PrivacyNotice } from '@/components/report/PrivacyNotice';
 import { ReportMarkdown } from '@/components/report/ReportMarkdown';
 import { ReportActions } from '@/components/report/ReportActions';
 import { ReportNotFound } from '@/components/report/ReportNotFound';
+import { GapVisualization } from '@/components/report/GapVisualization';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 import { track } from '@/lib/analytics';
 import { Button } from '@/components/ui/button';
@@ -78,10 +78,13 @@ export default function ReportPage() {
   }).format(new Date(report.created_at));
 
   const revealedKeys = Array.isArray((report.input_data as any)?.revealed_top_3)
-    ? ((report.input_data as any).revealed_top_3 as string[]).slice(0, 3)
+    ? ((report.input_data as any).revealed_top_3 as string[]).slice(0, 3) as ValueKey[]
+    : [];
+  const aspirationalKeys = Array.isArray((report.input_data as any)?.aspirational_top_3)
+    ? ((report.input_data as any).aspirational_top_3 as string[]).slice(0, 3) as ValueKey[]
     : [];
   const revealedValues = revealedKeys
-    .map((k) => VALUES.find((v) => v.key === (k as ValueKey)))
+    .map((k) => VALUES.find((v) => v.key === k))
     .filter((v): v is (typeof VALUES)[number] => Boolean(v));
 
   const handlePrint = () => {
@@ -113,35 +116,39 @@ export default function ReportPage() {
           <div className="pdf-header-date">{formattedDate}</div>
         </div>
 
-        {isOwner && (
-          <div className="no-print">
-            <PrivacyNotice reportId={report.id} />
-          </div>
-        )}
-
-        {/* Hero: revealed values */}
+        {/* Hero: revealed values with icons */}
         {revealedValues.length > 0 && (
           <section className="no-print mb-12 md:mb-16">
             <p className="font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground mb-5">
               Your revealed values
             </p>
             <div className="flex flex-wrap gap-3">
-              {revealedValues.map((v, i) => (
-                <div
-                  key={v.key}
-                  className="flex items-center gap-3 rounded-full border border-accent/60 bg-card/50 pl-3 pr-6 py-2.5"
-                >
-                  <span className="flex items-center justify-center w-7 h-7 rounded-full bg-accent/15 text-accent font-sans text-xs font-semibold">
-                    {i + 1}
-                  </span>
-                  <span className="font-display text-[18px] md:text-[20px] text-primary leading-none">
-                    {v.label}
-                  </span>
-                </div>
-              ))}
+              {revealedValues.map((v, i) => {
+                const Icon = v.icon;
+                return (
+                  <div
+                    key={v.key}
+                    className="flex items-center gap-3 rounded-full border border-accent/60 bg-card/50 pl-3 pr-6 py-2.5"
+                  >
+                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-accent/15 text-accent font-sans text-xs font-semibold">
+                      {i + 1}
+                    </span>
+                    <Icon size={18} className="text-accent" />
+                    <span className="font-display text-[18px] md:text-[20px] text-primary leading-none">
+                      {v.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
-            <hr className="mt-12 md:mt-14 border-0 border-t border-border/60" />
           </section>
+        )}
+
+        {/* Visual gap comparison */}
+        {revealedKeys.length > 0 && aspirationalKeys.length > 0 && (
+          <div className="no-print">
+            <GapVisualization revealed={revealedKeys} aspirational={aspirationalKeys} />
+          </div>
         )}
 
         <ReportMarkdown markdown={report.report_markdown} />
