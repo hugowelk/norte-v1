@@ -8,7 +8,9 @@ export interface ValueExplanation {
   definition: string;
   pattern: string;
   cost: string;
+  themes: string[];
 }
+
 
 export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
   achievement: {
