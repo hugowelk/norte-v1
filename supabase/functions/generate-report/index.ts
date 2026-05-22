@@ -93,7 +93,9 @@ Deno.serve(async (req) => {
       );
     }
 
-    const inputData = { ...assessmentResults, ...postPaywallAnswers };
+    // Strip name/email out of the report inputs — they live in report_contacts now.
+    const { name, email, ...answersWithoutContact } = postPaywallAnswers ?? {};
+    const inputData = { ...assessmentResults, ...answersWithoutContact };
 
     const report_markdown = await callLovableAI(inputData);
     const id = shortId();
@@ -119,6 +121,22 @@ Deno.serve(async (req) => {
         );
       }
       throw new Error(`DB insert failed: ${insert.error.message}`);
+    }
+
+    // Save the contact to the separate contacts table. Failures here must not
+    // block report delivery — log and continue.
+    if (name && email) {
+      const base = (typeof reportBaseUrl === "string" && reportBaseUrl) || SUPABASE_URL;
+      const report_url = `${base.replace(/\/$/, "")}/r/${insert.data.id}`;
+      const contactInsert = await supabase.from("report_contacts").insert({
+        name: String(name).trim().slice(0, 100),
+        email: String(email).trim().slice(0, 255),
+        report_id: insert.data.id,
+        report_url,
+      });
+      if (contactInsert.error) {
+        console.error("report_contacts insert failed:", contactInsert.error.message);
+      }
     }
 
     return new Response(
