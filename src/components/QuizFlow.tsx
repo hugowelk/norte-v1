@@ -56,6 +56,8 @@ export function QuizFlow() {
   const [pendingTransition, setPendingTransition] = useState<string | null>(null);
 
   const [tradeoffAnswers, setTradeoffAnswers] = useState<Answer[]>([]);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [result, setResult] = useState<ScoreResult>();
   const [core, setCore] = useState<CoreValuesResult>();
   const [alignmentScores, setAlignmentScores] = useState<AlignmentScores>({});
