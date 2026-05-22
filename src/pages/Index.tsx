@@ -128,7 +128,7 @@ const Index = () => {
       {/* Methodology footer */}
       <footer className="px-6 py-10 border-t border-border/60">
         <div className="max-w-3xl mx-auto text-center text-sm text-muted-foreground leading-relaxed">
-          Based on ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey. Developed by Hugo Welke.
+          Based on ACT (Acceptance and Commitment Therapy) and the Valued Living Questionnaire, and the Bull's Eye Values Survey. 2026©
         </div>
       </footer>
     </div>
