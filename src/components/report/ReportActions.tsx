@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { track } from '@/lib/analytics';
 
@@ -23,9 +24,28 @@ export function ReportActions({ reportId }: Props) {
     window.print();
   };
 
-  const handleUpsell = () => {
+  const handleShare = async () => {
     track('report_upsell_clicked', { report_id: reportId, cta_location: 'footer' });
-    navigate('/');
+    const shareUrl = `${window.location.origin}/`;
+    const shareData = {
+      title: 'Norte',
+      text: 'I just took Norte and discovered my values. Try it:',
+      url: shareUrl,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch {
+        // user cancelled — fall through to copy
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast('Norte link copied. Share it with your friends.', { duration: 2500 });
+    } catch {
+      navigate('/');
+    }
   };
 
   return (
@@ -36,8 +56,9 @@ export function ReportActions({ reportId }: Props) {
       <Button variant="outline" size="lg" className="min-h-12" onClick={handleCopy}>
         Copy share link
       </Button>
-      <Button size="lg" className="min-h-12" onClick={handleUpsell}>
-        Take Norte yourself ($8)
+      <Button size="lg" className="min-h-12 gap-2" onClick={handleShare}>
+        <Share2 size={16} />
+        Share Norte with your friends
       </Button>
     </div>
   );

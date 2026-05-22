@@ -63,9 +63,14 @@ const shiftsComponents: Components = {
 // Section 7: questions get more breathing room and a touch larger.
 const questionsComponents: Components = {
   ...baseComponents,
-  p: ({ node, ...props }) => (
-    <p className="font-sans text-[19px] md:text-[21px] leading-[1.7] text-foreground mt-8 first:mt-2 mb-0" {...props} />
-  ),
+  p: ({ node, children, ...props }) => {
+    // Detect italic labels like *Look back,* and render with a marker.
+    return (
+      <p className="font-sans text-[19px] md:text-[21px] leading-[1.7] text-foreground mt-8 first:mt-2 mb-0 pl-6 border-l-2 border-accent/50" {...props}>
+        {children}
+      </p>
+    );
+  },
 };
 
 function splitSections(markdown: string): { intro: string; sections: Section[] } {
@@ -134,23 +139,28 @@ export function ReportMarkdown({ markdown }: Props) {
               </ReactMarkdown>
             </div>
           )}
-          {sections.map((section, idx) => (
-            <section key={section.id} className="scroll-mt-24">
-              {idx > 0 && (
-                <hr className="my-10 md:my-14 border-0 border-t border-border/60" />
-              )}
-              <h2 className="font-display text-[28px] md:text-[32px] leading-[1.2] text-primary mt-2 mb-6">
-                {section.title}
-              </h2>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                rehypePlugins={[rehypeRaw]}
-                components={pickComponents(section.title)}
-              >
-                {section.body}
-              </ReactMarkdown>
-            </section>
-          ))}
+          {sections.map((section, idx) => {
+            const isOpening = section.title.trim().toLowerCase() === 'opening';
+            return (
+              <section key={section.id} className="scroll-mt-24">
+                {idx > 0 && (
+                  <hr className="my-10 md:my-14 border-0 border-t border-border/60" />
+                )}
+                {!isOpening && (
+                  <h2 className="font-display text-[28px] md:text-[32px] leading-[1.2] text-primary mt-2 mb-6">
+                    {section.title}
+                  </h2>
+                )}
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                  components={pickComponents(section.title)}
+                >
+                  {section.body}
+                </ReactMarkdown>
+              </section>
+            );
+          })}
         </div>
       </>
     );

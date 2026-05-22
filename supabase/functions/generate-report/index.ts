@@ -5,7 +5,7 @@ import { NORTE_REPORT_SYSTEM_PROMPT } from "./prompt.ts";
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const MODEL = "google/gemini-3-flash-preview";
+const MODEL = "google/gemini-3.1-flash-lite-preview";
 
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789";
 function shortId(len = 12) {
@@ -29,7 +29,7 @@ async function callLovableAI(inputData: unknown): Promise<string> {
       },
     ],
     temperature: 0.7,
-    max_tokens: 2500,
+    max_tokens: 2000,
   };
 
   const doFetch = () =>
