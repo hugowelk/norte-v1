@@ -20,6 +20,7 @@ export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
       "In your scenarios, this value showed up when there was tension between progress and rest, between finishing and connecting. When the choice was between momentum and stepping away, you stayed with the work.",
     cost:
       "When this value dominates without counterweight, it turns into producing through pain, treating bodies and relationships as variables to optimize around, and a quiet inability to enjoy what you've already built before you're already chasing the next thing. The toll on physical and mental health is real if there's no balancing value pulling the other way.",
+    themes: ["progress", "momentum", "follow-through"],
   },
   connection: {
     definition:
@@ -28,6 +29,7 @@ export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
       "In your scenarios, this value showed up when there was tension between efficiency and presence, between a thing that needed doing and a person who needed you. When the choice was between getting it done and being there, you were there.",
     cost:
       "When this value dominates without counterweight, it can turn into difficulty saying no, emotional load that quietly outpaces what you can carry, and a habit of postponing your own work because someone else's needs feel more urgent. The people in your life thrive. You might not.",
+    themes: ["presence", "relationships", "being there"],
   },
   aliveness: {
     definition:
@@ -36,6 +38,7 @@ export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
       "In your scenarios, this value showed up when something else (work, momentum, meaning, obligation) was asking you to override what your body was telling you. When the body said enough, you stopped. When others would have kept going for the reward at the end, you took care of yourself instead.",
     cost:
       "When this value dominates without counterweight, it can become an over-attunement to current bodily comfort that blocks productive discomfort. Training, hard projects, ambitious commitments all require periods of feeling worn out. If the body's \"no\" wins every time, the bigger things you'd want for your future health never get built either.",
+    themes: ["body", "rest", "recovery"],
   },
   enjoyment: {
     definition:
@@ -44,6 +47,7 @@ export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
       "In your scenarios, this value showed up when something good was available now and there was a sensible reason to wait. When the choice was between a moment that wouldn't repeat and a payoff that might come later, you took the moment.",
     cost:
       "When this value dominates, it becomes a habit of instant gratification. The small good feeling now wins over the bigger shift later. Saving feels like deprivation, training feels like punishment, and the life changes that would compound never get the runway they need.",
+    themes: ["the moment", "pleasure", "presence"],
   },
   meaning: {
     definition:
@@ -52,6 +56,7 @@ export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
       "In your scenarios, this value showed up when there was a pull toward something that mattered to you and a sensible reason to defer it (no time, no money, not the right moment). When the choice was between waiting for the right conditions and going in anyway, you went in.",
     cost:
       "When this value dominates without counterweight, ordinary days can start feeling like a betrayal. Rest, fun, and presence get dismissed as \"not the real stuff.\" You can also push past warning signs (in your body, in relationships, in finances) because the meaning of what you're doing seems too important to interrupt.",
+    themes: ["purpose", "depth", "what matters"],
   },
   contribution: {
     definition:
@@ -60,6 +65,7 @@ export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
       "In your scenarios, this value showed up when there was tension between your own forward motion and someone else's real need. When the choice was between protecting your trajectory and showing up for someone who was counting on you, you showed up.",
     cost:
       "When this value dominates without counterweight, your time gets quietly absorbed by other people's emergencies. You become the person who can be counted on, which is good, until \"can be counted on\" becomes the only role you know how to play. The work you'd do for yourself never quite gets the same priority.",
+    themes: ["helping", "showing up", "usefulness"],
   },
   stability: {
     definition:
@@ -68,6 +74,7 @@ export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
       "In your scenarios, this value showed up when something exciting required spending margin you hadn't yet recovered. When the choice was between forward motion and protecting the ground beneath you, you chose the ground. You protect what gives you better predictions of the future.",
     cost:
       "When this value dominates without counterweight, opportunities pass you by because the timing was never quite safe enough. Caution becomes the default, then the identity. The buffer you protected becomes a buffer you never spend, and the life you waited to start stays in waiting.",
+    themes: ["margin", "foundation", "predictability"],
   },
   autonomy: {
     definition:
@@ -76,6 +83,7 @@ export const VALUE_EXPLANATIONS: Record<ValueKey, ValueExplanation> = {
       "In your scenarios, this value showed up when external structures (relationships, obligations, comfortable arrangements) asked you to give up control of your time in exchange for something good. When the trade was real, you held onto the time.",
     cost:
       "When this value dominates without counterweight, it turns into resistance to any kind of structure, including the structures you'd actually benefit from. Commitments feel like cages before they've had a chance to feel like containers. You can end up isolated from real opportunities that ask for small commitments upfront, because the upfront feels like surrender.",
+    themes: ["control of time", "independence", "pace"],
   },
 };
 
