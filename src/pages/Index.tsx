@@ -6,13 +6,17 @@ import { useDocumentMeta } from '@/lib/useDocumentMeta';
 const Index = () => {
   const [started, setStarted] = useState(false);
 
-  useDocumentMeta([
-    { property: 'og:title', content: 'Take the Norte values exercise' },
-    { property: 'og:description', content: 'Answer 15 trade-off scenarios and uncover the life values your behaviour actually reveals.' },
-    { property: 'og:url', content: 'https://findmyvalues.app/app' },
-    { name: 'twitter:title', content: 'Take the Norte values exercise' },
-    { name: 'twitter:description', content: 'Answer 15 trade-off scenarios and uncover the life values your behaviour actually reveals.' },
-  ]);
+  useDocumentMeta(
+    [
+      { name: 'description', content: 'Answer 15 trade-off scenarios and uncover the life values your behaviour actually reveals. A 5-minute guided exercise from Norte.' },
+      { property: 'og:title', content: 'Take the Norte values exercise' },
+      { property: 'og:description', content: 'Answer 15 trade-off scenarios and uncover the life values your behaviour actually reveals.' },
+      { property: 'og:url', content: 'https://findmyvalues.app/app' },
+      { name: 'twitter:title', content: 'Take the Norte values exercise' },
+      { name: 'twitter:description', content: 'Answer 15 trade-off scenarios and uncover the life values your behaviour actually reveals.' },
+    ],
+    { title: 'Norte — Take the values exercise', canonical: 'https://findmyvalues.app/app' }
+  );
 
   if (started) return <QuizFlow />;
 

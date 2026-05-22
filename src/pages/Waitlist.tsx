@@ -12,10 +12,12 @@ const schema = z.object({
 });
 
 const Waitlist = () => {
-  useDocumentMeta([
-    { name: 'description', content: 'Norte reveals the values that guide your decisions. Join the waitlist for early access.' },
-  ]);
-  if (typeof document !== 'undefined') document.title = 'Norte — Join the waitlist';
+  useDocumentMeta(
+    [
+      { name: 'description', content: 'Norte reveals the values that guide your decisions through a guided behavioural exercise. Join the waitlist for early access.' },
+    ],
+    { title: 'Norte — Join the waitlist', canonical: 'https://findmyvalues.app/' }
+  );
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

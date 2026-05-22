@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ReportMarkdown } from "@/components/report/ReportMarkdown";
+import { useDocumentMeta } from "@/lib/useDocumentMeta";
 import { toast } from "sonner";
 
 interface Entry {
@@ -20,6 +21,10 @@ interface Entry {
 const PW_KEY = "norte_admin_pw";
 
 const AdminPage = () => {
+  useDocumentMeta(
+    [{ name: 'robots', content: 'noindex, nofollow' }],
+    { title: 'Norte — Admin', canonical: 'https://findmyvalues.app/admin' }
+  );
   const [password, setPassword] = useState(() => sessionStorage.getItem(PW_KEY) ?? "");
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(false);
