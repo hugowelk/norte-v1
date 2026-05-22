@@ -16,7 +16,7 @@ export function ChosenValuesHero({ chosen }: Props) {
   if (values.length === 0) return null;
 
   return (
-    <section className="no-print mb-14 md:mb-20">
+    <section className="mb-14 md:mb-20 print:mb-8">
       <p className="font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground mb-6">
         Your top 3 chosen values
       </p>
@@ -58,18 +58,16 @@ export function ChosenValuesHero({ chosen }: Props) {
                 </div>
                 <ChevronDown
                   size={20}
-                  className={`flex-shrink-0 text-muted-foreground transition-transform duration-200 ${
+                  className={`flex-shrink-0 text-muted-foreground transition-transform duration-200 no-print ${
                     isOpen ? 'rotate-180 text-accent' : ''
                   }`}
                 />
               </button>
-              {isOpen && (
-                <div className="px-5 md:px-6 pb-6 md:pb-7 pl-[88px] md:pl-[100px] animate-accordion-down">
-                  <p className="font-sans text-[16px] md:text-[17px] leading-[1.65] text-foreground">
-                    {v.longDescription}
-                  </p>
-                </div>
-              )}
+              <div className={`px-5 md:px-6 pb-6 md:pb-7 pl-[88px] md:pl-[100px] ${isOpen ? 'block animate-accordion-down' : 'hidden print:block'}`}>
+                <p className="font-sans text-[16px] md:text-[17px] leading-[1.65] text-foreground">
+                  {v.longDescription}
+                </p>
+              </div>
             </div>
           );
         })}

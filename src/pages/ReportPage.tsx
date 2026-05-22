@@ -113,8 +113,8 @@ export default function ReportPage() {
 
       <article className="report-content max-w-[680px] mx-auto px-5 md:px-6 pt-10 md:pt-14 pb-16">
         <div className="pdf-header">
-          <div className="pdf-header-title">NORTE. Your reading</div>
-          <div className="pdf-header-date">{formattedDate}</div>
+          <div className="pdf-header-title">Norte</div>
+          <div className="pdf-header-date">findmyvalues.app</div>
         </div>
 
         {/* Hero: chosen (aspirational) values — expandable */}
@@ -124,13 +124,11 @@ export default function ReportPage() {
 
         {/* Visual gap comparison */}
         {revealedKeys.length > 0 && aspirationalKeys.length > 0 && (
-          <div className="no-print">
-            <GapVisualization revealed={revealedKeys} aspirational={aspirationalKeys} />
-          </div>
+          <GapVisualization revealed={revealedKeys} aspirational={aspirationalKeys} />
         )}
 
         {/* Large visual divider into the written reading */}
-        <div className="no-print my-12 md:my-16 flex flex-col items-center text-center">
+        <div className="my-12 md:my-16 flex flex-col items-center text-center">
           <div className="flex items-center justify-center w-14 h-14 rounded-full bg-accent/15 text-accent mb-4">
             <Sparkles size={22} strokeWidth={1.5} />
           </div>
@@ -145,7 +143,7 @@ export default function ReportPage() {
         <ReportMarkdown markdown={report.report_markdown} />
 
         {/* Visual closing divider */}
-        <div className="no-print mt-16 mb-12 flex items-center gap-4">
+        <div className="mt-16 mb-12 flex items-center gap-4">
           <hr className="flex-1 border-0 border-t border-border" />
           <span className="font-display text-sm uppercase tracking-[0.22em] text-muted-foreground">
             Norte
