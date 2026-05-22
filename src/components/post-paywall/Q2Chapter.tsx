@@ -27,9 +27,14 @@ export function Q2Chapter() {
       <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
         What's the current chapter of your life right now?
       </h1>
-      <p className="text-base text-foreground/80">
-        In a few words, describe where you are in life right now. We often see people reevaluating their values during career transitions, breakups, moving to different countries, becoming parents, etc. The more specific you are, the sharper the report.
-      </p>
+      <div className="space-y-4">
+        <p className="text-base text-foreground/80">
+          We often see people reevaluating their values during career transitions, breakups, moving to different countries, becoming parents, etc.
+        </p>
+        <p className="text-base text-foreground/80">
+          In a few words, describe where you are in life right now. The more specific you are, the sharper the report.
+        </p>
+      </div>
 
       <div className="relative">
         <textarea
