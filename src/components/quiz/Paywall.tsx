@@ -64,7 +64,7 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
           Turn the gap into something you can actually move.
         </h1>
         <p className="text-base text-muted-foreground max-w-md mx-auto leading-relaxed">
-          You've seen what's been driving your week, and where you want it to be heading. The next step is designing the small shifts that close the distance.
+          You've seen what's been driving your week, and where you want it to be heading. The next step is understanding your gaps and making the small shifts that close the distance.
         </p>
       </div>
 
