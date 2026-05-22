@@ -42,6 +42,7 @@ const STORAGE_KEY = 'norte_post_paywall';
 const emptyState = (): PostPaywallState => ({
   paymentSessionId: '',
   name: '',
+  email: '',
   current_chapter: '',
   blocker_answer: null,
   blocker_custom_text: '',
