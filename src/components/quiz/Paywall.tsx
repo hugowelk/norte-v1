@@ -28,7 +28,7 @@ const SAMPLE_ACTIONS: Record<ValueKey, { title: string; body: string }> = {
   },
   meaning: {
     title: 'A small shift this week · toward Meaning',
-    body: 'At the end of each day this week, write one sentence: what did I do today that I would do again if I had the choice? Patterns surface in five days.',
+    body: 'At the end of each day this week, write one sentence: what did I do today that I would do again if I had the choice? This ',
   },
   contribution: {
     title: 'A small shift this week · toward Contribution',
