@@ -30,49 +30,37 @@ export default function Methodology() {
             <p className="text-foreground/85 leading-relaxed text-lg">
               Norte is built on three research foundations: ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey. Each contributes a different piece to how we understand and measure values.
             </p>
-            <p className="text-muted-foreground italic text-sm">
-              [Longer methodology content forthcoming.]
-            </p>
           </section>
 
           <section className="space-y-8">
             <h2 className="text-2xl font-display font-semibold text-foreground">The 8 values</h2>
-            <div className="space-y-10">
-              {VALUES.map((v) => (
-                <div key={v.key} className="space-y-3">
-                  <h3 className="text-xl font-display font-semibold text-foreground">{v.label}</h3>
-                  <p className="text-foreground/85 leading-relaxed">
-                    {VALUE_EXPLANATIONS[v.key].definition}
-                  </p>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {VALUES.map((v) => {
+                const Icon = v.icon;
+                return (
+                  <div
+                    key={v.key}
+                    className="rounded-2xl border border-border bg-card/40 p-5 space-y-3 hover:border-accent/40 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center justify-center w-11 h-11 rounded-xl bg-accent/15 text-accent shrink-0">
+                        <Icon size={22} strokeWidth={1.5} />
+                      </span>
+                      <h3 className="font-display font-semibold text-foreground text-lg">{v.label}</h3>
+                    </div>
+                    <p className="text-foreground/80 leading-relaxed text-sm">
+                      {VALUE_EXPLANATIONS[v.key].definition}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
-          </section>
-
-          <section className="space-y-5">
-            <h2 className="text-2xl font-display font-semibold text-foreground">How the algorithm works</h2>
-            <p className="text-foreground/85 leading-relaxed">
-              When you answer a scenario, the value behind your choice gets weighted. Early scenarios weigh 1.0, mid-difficulty scenarios weigh 1.5, hard scenarios weigh 2.0. One scenario (C12) splits its weight across two values per side.
-            </p>
-            <p className="text-foreground/85 leading-relaxed">
-              We sum the weights per value, normalize against the maximum possible for each value, and rank all 8. The top 3 are your revealed values.
-            </p>
-            <p className="text-foreground/85 leading-relaxed">
-              The math is fully deterministic. No AI inference, no fuzzy logic. You can audit any score back to your specific choices.
-            </p>
           </section>
 
           <section className="space-y-5">
             <h2 className="text-2xl font-display font-semibold text-foreground">Disclaimer</h2>
             <p className="text-foreground/85 leading-relaxed">
               Norte is a wellness product, not a clinical tool. It's designed to give you a useful frame for self-reflection, not a diagnostic assessment. If you're working with a therapist or coach, your results may be a productive conversation starter.
-            </p>
-          </section>
-
-          <section className="space-y-5">
-            <h2 className="text-2xl font-display font-semibold text-foreground">About</h2>
-            <p className="text-muted-foreground italic text-sm">
-              [Short bio from Hugo forthcoming.]
             </p>
           </section>
         </article>
