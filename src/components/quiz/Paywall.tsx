@@ -86,25 +86,6 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
         </ul>
       </div>
 
-      {/* Sample action card */}
-      <div className="rounded-2xl border border-border bg-card overflow-hidden">
-        <div className="px-5 pt-5 pb-3 flex items-center gap-2">
-          <ValueIcon value={key} size={16} />
-          <p className="text-[11px] font-display uppercase tracking-widest text-accent">
-            {sample.title}
-          </p>
-        </div>
-        <p className="px-5 pb-4 text-sm md:text-base text-foreground/90 leading-relaxed font-body">
-          {sample.body}
-        </p>
-        <div className="px-5 py-3 border-t border-border/60 bg-muted/30 flex items-center gap-2 text-xs text-muted-foreground font-display">
-          <Lock size={12} />
-          <span>Continue reading after unlock →</span>
-        </div>
-      </div>
-      <p className="text-center text-xs text-muted-foreground -mt-6">
-        One sample from your {getValueByKey(key).label} gap.
-      </p>
 
       <button
         onClick={onUnlock}
