@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { QuizFlow } from '@/components/QuizFlow';
+import heroIllustration from '@/assets/hero-forked-road.png';
+
 
 const Index = () => {
   const [started, setStarted] = useState(false);
@@ -20,13 +22,22 @@ const Index = () => {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="px-4 pt-24 pb-28 md:pt-32 md:pb-36">
+        <section className="px-4 pt-16 pb-20 md:pt-20 md:pb-28">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="max-w-3xl mx-auto text-center space-y-8"
           >
+            <div className="flex justify-center">
+              <img
+                src={heroIllustration}
+                alt="A person stands at a winding road with multiple forks and signposts ahead"
+                width={1024}
+                height={1024}
+                className="w-full max-w-xl h-auto mix-blend-multiply"
+              />
+            </div>
             <h1 className="text-4xl md:text-6xl font-display font-semibold text-foreground leading-[1.05] tracking-tight">
               Your real values aren't what you say. They're what you choose when something's at stake.
             </h1>
@@ -45,6 +56,7 @@ const Index = () => {
             </div>
           </motion.div>
         </section>
+
 
         {/* The problem */}
         <section className="px-4 py-20 md:py-24 bg-secondary/40 border-y border-border/60">
