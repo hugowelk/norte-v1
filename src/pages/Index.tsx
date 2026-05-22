@@ -102,27 +102,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* What you get */}
-        <section id="what" className="px-4 py-20 md:py-24 bg-card border-y border-border/60">
-          <div className="max-w-3xl mx-auto">
-            <p className="text-xs font-display uppercase tracking-widest text-accent mb-3">What you get</p>
-            <h2 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight mb-10">
-              Three things, in plain language.
-            </h2>
-            <ul className="space-y-6">
-              {[
-                'The 3 values that guide your decisions',
-                'The gap between what you live and what you want to live',
-                'A personalized action plan to close that gap',
-              ].map((item, i) => (
-                <li key={i} className="flex gap-5 items-start">
-                  <span className="text-sm font-display tracking-widest text-muted-foreground pt-1.5 w-6 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="text-lg md:text-xl font-display text-foreground leading-snug">{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
 
         {/* What the report looks like */}
         <section className="px-4 py-20 md:py-24">
