@@ -8,7 +8,6 @@ import Waitlist from "./pages/Waitlist";
 import Methodology from "./pages/Methodology";
 import NotFound from "./pages/NotFound";
 import { RequirePayment } from "./components/post-paywall/RequirePayment";
-import { Q1Name } from "./components/post-paywall/Q1Name";
 import { Q2Chapter } from "./components/post-paywall/Q2Chapter";
 import { Q3Blocker } from "./components/post-paywall/Q3Blocker";
 import { Q4WontGiveUp } from "./components/post-paywall/Q4WontGiveUp";
