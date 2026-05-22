@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Sparkles, Compass, Target, MessageCircle, Lock } from 'lucide-react';
+import { useState } from 'react';
+import { Sparkles, Compass, Target, MessageCircle, Lock, Check, Share2 } from 'lucide-react';
 import { type ValueKey, getValueByKey } from '@/lib/values';
 import { ValueIcon } from '../ValueIcon';
 
