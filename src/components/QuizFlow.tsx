@@ -184,6 +184,13 @@ export function QuizFlow() {
             {phase === 'tradeoffTransition' && pendingTransition && (
               <TradeoffTransition message={pendingTransition} onContinue={handleTransitionContinue} />
             )}
+            {phase === 'nameEmail' && (
+              <NameEmailCapture
+                initialName={name}
+                initialEmail={email}
+                onContinue={(n, e) => { setName(n); setEmail(e); setPhase('processing'); }}
+              />
+            )}
             {phase === 'processing' && (
               <ProcessingTransition onComplete={() => setPhase('results')} />
             )}
