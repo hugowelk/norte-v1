@@ -31,7 +31,7 @@ const App = () => (
           <Route path="/app" element={<Index />} />
           <Route path="/waitlist" element={<Waitlist />} />
           <Route path="/methodology" element={<Methodology />} />
-          <Route path="/post-paywall/q1" element={<RequirePayment><Q1Name /></RequirePayment>} />
+          <Route path="/post-paywall/q1" element={<Navigate to="/post-paywall/q2" replace />} />
           <Route path="/post-paywall/q2" element={<RequirePayment><Q2Chapter /></RequirePayment>} />
           <Route path="/post-paywall/q3" element={<RequirePayment><Q3Blocker /></RequirePayment>} />
           <Route path="/post-paywall/q4" element={<RequirePayment><Q4WontGiveUp /></RequirePayment>} />
