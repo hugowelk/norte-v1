@@ -41,7 +41,7 @@ export function Q3Blocker() {
   };
 
   return (
-    <PostPaywallLayout step={3} backTo="/post-paywall/q2">
+    <PostPaywallLayout step={2} backTo="/post-paywall/q2">
       <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
         {heading}
       </h1>
