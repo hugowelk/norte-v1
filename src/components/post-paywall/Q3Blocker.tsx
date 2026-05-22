@@ -24,9 +24,9 @@ export function Q3Blocker() {
 
   const heading = gap?.isFallback
     ? <>What's been making it harder to make your top one chosen value{' '}
-        <span className="font-semibold text-primary">{gapLabel}</span> part your routine?</>
-    : <>What's been making it hard to live more by{' '}
-        <span className="font-semibold text-primary">{gapLabel}</span>?</>;
+        <span className="font-semibold text-primary">{gapLabel}</span> part of your routine?</>
+    : <>What's been making it harder to make your top one chosen value{' '}
+        <span className="font-semibold text-primary">{gapLabel}</span> part of your routine?</>;
 
   const canContinue =
     selected !== null && (selected !== 'other' || custom.trim().length >= 3);
