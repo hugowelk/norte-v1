@@ -5,7 +5,7 @@ import { PostPaywallLayout } from './PostPaywallLayout';
 import { usePostPaywallStore, type BlockerAnswer } from '@/lib/postPaywallStore';
 
 const OPTIONS: { key: Exclude<BlockerAnswer, null>; label: string }[] = [
-  { key: 'not_tried', label: "I haven't really tried. It's been on the to-do list." },
+  { key: 'not_tried', label: "I haven't really tried. It's been on the to-do list" },
   { key: 'other_priorities_win', label: "I've tried, but other priorities keep winning" },
   { key: 'dont_know_what_it_looks_like', label: "I'm not sure what \u201Cliving by it\u201D would actually look like" },
   { key: 'hard_right_now', label: 'Something in my life makes it genuinely hard right now' },
@@ -23,8 +23,8 @@ export function Q3Blocker() {
   const gapLabel = gap?.label ?? 'this value';
 
   const heading = gap?.isFallback
-    ? <>What's been making it harder to deepen your relationship with{' '}
-        <span className="font-semibold text-primary">{gapLabel}</span>?</>
+    ? <>What's been making it harder to make your top one chosen value{' '}
+        <span className="font-semibold text-primary">{gapLabel}</span> part your routine?</>
     : <>What's been making it hard to live more by{' '}
         <span className="font-semibold text-primary">{gapLabel}</span>?</>;
 
