@@ -118,32 +118,9 @@ export default function ReportPage() {
           <div className="pdf-header-date">{formattedDate}</div>
         </div>
 
-        {/* Hero: revealed values with icons */}
-        {revealedValues.length > 0 && (
-          <section className="no-print mb-12 md:mb-16">
-            <p className="font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground mb-5">
-              Your revealed values
-            </p>
-            <div className="flex flex-wrap gap-3">
-              {revealedValues.map((v, i) => {
-                const Icon = v.icon;
-                return (
-                  <div
-                    key={v.key}
-                    className="flex items-center gap-3 rounded-full border border-accent/60 bg-card/50 pl-3 pr-6 py-2.5"
-                  >
-                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-accent/15 text-accent font-sans text-xs font-semibold">
-                      {i + 1}
-                    </span>
-                    <Icon size={18} className="text-accent" />
-                    <span className="font-display text-[18px] md:text-[20px] text-primary leading-none">
-                      {v.label}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
+        {/* Hero: chosen (aspirational) values — expandable */}
+        {aspirationalKeys.length > 0 && (
+          <ChosenValuesHero chosen={aspirationalKeys} />
         )}
 
         {/* Visual gap comparison */}
@@ -153,9 +130,29 @@ export default function ReportPage() {
           </div>
         )}
 
+        {/* Large visual divider into the written reading */}
+        <div className="no-print my-12 md:my-16 flex flex-col items-center text-center">
+          <div className="flex items-center justify-center w-14 h-14 rounded-full bg-accent/15 text-accent mb-4">
+            <Sparkles size={22} strokeWidth={1.5} />
+          </div>
+          <p className="font-sans text-[11px] uppercase tracking-[0.22em] text-muted-foreground mb-2">
+            Your reading
+          </p>
+          <p className="font-display text-[22px] md:text-[26px] leading-[1.3] text-primary max-w-md">
+            What your trade-offs revealed, and what to do about it.
+          </p>
+        </div>
+
         <ReportMarkdown markdown={report.report_markdown} />
 
-        <hr className="no-print mt-16 mb-12 border-0 border-t border-border" />
+        {/* Visual closing divider */}
+        <div className="no-print mt-16 mb-12 flex items-center gap-4">
+          <hr className="flex-1 border-0 border-t border-border" />
+          <span className="font-display text-sm uppercase tracking-[0.22em] text-muted-foreground">
+            Norte
+          </span>
+          <hr className="flex-1 border-0 border-t border-border" />
+        </div>
 
         <div className="no-print">
           <ReportActions reportId={report.id} />
