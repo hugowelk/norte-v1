@@ -54,8 +54,8 @@ const Index = () => {
         {/* The problem */}
         <section className="px-4 py-20 md:py-24 bg-secondary/40 border-y border-border/60">
           <div className="max-w-3xl mx-auto">
-            <p className="text-xs font-display uppercase tracking-widest text-accent mb-5">The problem</p>
-            <p className="text-2xl md:text-3xl font-display text-foreground leading-snug">
+            <p className="text-xs font-display uppercase tracking-widest text-accent mb-5 text-center">WHAT HAVE YOU BEEN PRIORITISING IN YOUR LIFE?</p>
+            <p className="text-2xl md:text-3xl font-display text-foreground leading-snug text-center">
               When someone asks you what matters, you answer with aspirations. But what actually matters shows up in your choices. Especially the small ones. Especially the hard ones.
             </p>
           </div>
@@ -63,10 +63,10 @@ const Index = () => {
 
         {/* How it works */}
         <section id="how" className="px-4 py-20 md:py-28">
-          <div className="max-w-5xl mx-auto">
-            <div className="max-w-2xl mb-14">
-              <p className="text-xs font-display uppercase tracking-widest text-accent mb-3">How it works</p>
-              <h2 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
+          <div className="max-w-5xl mx-auto text-left">
+            <div className="max-w-2xl mb-14 mx-auto">
+              <p className="text-xs font-display uppercase tracking-widest text-accent mb-3 text-center">How it works</p>
+              <h2 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight text-center">
                 Three ideas Norte is built on.
               </h2>
             </div>
@@ -107,11 +107,11 @@ const Index = () => {
         {/* Who it's for */}
         <section className="px-4 py-20 md:py-28">
           <div className="max-w-3xl mx-auto">
-            <p className="text-xs font-display uppercase tracking-widest text-accent mb-5">Who it's for</p>
-            <p className="text-2xl md:text-3xl font-display text-foreground leading-snug">
+            <p className="text-xs font-display uppercase tracking-widest text-accent mb-5 text-center">Who it's for</p>
+            <p className="text-2xl md:text-3xl font-display text-foreground leading-snug text-center">
               Norte is for people who sense a gap between the life they're building and the one they actually want. People who are doing fine on paper and quietly restless in practice. People who are done with vague self-awareness and want something concrete.
             </p>
-            <div className="pt-10">
+            <div className="pt-10 text-center">
               <motion.button
                 onClick={startQuiz}
                 className="px-10 py-4 bg-primary text-primary-foreground rounded-xl font-display font-semibold text-lg hover:opacity-90 transition-opacity shadow-md"
