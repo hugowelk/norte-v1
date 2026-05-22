@@ -86,7 +86,10 @@ export default function ReportPage() {
   const aspirationalKeys = Array.isArray((report.input_data as any)?.aspirational_top_3)
     ? ((report.input_data as any).aspirational_top_3 as string[]).slice(0, 3) as ValueKey[]
     : [];
-  // revealedValues kept for potential future use; rendered inside GapVisualization for now.
+  const revealedFullRanking = Array.isArray((report.input_data as any)?.revealed_full_ranking)
+    ? ((report.input_data as any).revealed_full_ranking as string[]) as ValueKey[]
+    : [];
+
 
   const handlePrint = () => {
     track('report_pdf_downloaded', { report_id: report.id });
