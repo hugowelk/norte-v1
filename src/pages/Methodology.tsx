@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { VALUES } from '@/lib/values';
 import { VALUE_EXPLANATIONS } from '@/lib/valueExplanations';
+import { useDocumentMeta } from '@/lib/useDocumentMeta';
 
 const ARTICLE_JSON_LD = {
   "@context": "https://schema.org",
@@ -14,6 +15,14 @@ const ARTICLE_JSON_LD = {
 };
 
 export default function Methodology() {
+  useDocumentMeta([
+    { property: 'og:title', content: 'How Norte reads your values — Methodology' },
+    { property: 'og:description', content: 'The research behind Norte: ACT, the Valued Living Questionnaire, and the Bull\u2019s Eye Values Survey, and how they shape the 8-value scoring algorithm.' },
+    { property: 'og:url', content: 'https://findmyvalues.app/methodology' },
+    { name: 'twitter:title', content: 'How Norte reads your values — Methodology' },
+    { name: 'twitter:description', content: 'The research behind Norte: ACT, the Valued Living Questionnaire, and the Bull\u2019s Eye Values Survey, and how they shape the 8-value scoring algorithm.' },
+  ]);
+
   useEffect(() => {
     const script = document.createElement('script');
     script.type = 'application/ld+json';
