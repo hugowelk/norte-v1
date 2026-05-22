@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { paymentSessionId, assessmentResults, postPaywallAnswers } = body ?? {};
+    const { paymentSessionId, assessmentResults, postPaywallAnswers, reportBaseUrl } = body ?? {};
 
     if (!paymentSessionId || typeof paymentSessionId !== "string") {
       return new Response(
