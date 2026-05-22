@@ -258,8 +258,8 @@ export function QuizFlow() {
                   };
                   writePostPaywall({
                     paymentSessionId: genPaymentSessionId(),
-                    name: '',
-                    email: '',
+                    name,
+                    email,
                     current_chapter: '',
                     blocker_answer: null,
                     blocker_custom_text: '',
@@ -267,7 +267,7 @@ export function QuizFlow() {
                     loudest_gap: loudest,
                     assessment: snapshot,
                   });
-                  navigate('/post-paywall/q1');
+                  navigate('/post-paywall/q2');
                 }}
               />
             )}
