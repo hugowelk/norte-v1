@@ -36,42 +36,44 @@ export function Q2Chapter() {
         </p>
       </div>
 
-      <div className="relative">
-        <textarea
-          rows={4}
-          maxLength={MAX}
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg border-2 border-border bg-card focus:border-primary focus:outline-none font-body text-base text-foreground resize-none"
-        />
-        {value.length > 0 && (
-          <span className="absolute bottom-2 right-3 text-xs text-muted-foreground">
-            {value.length} / {MAX}
-          </span>
-        )}
-      </div>
-
-      <div>
-        <button
-          type="button"
-          onClick={() => setShowExamples(v => !v)}
-          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <span>See examples</span>
-          <ChevronDown
-            size={14}
-            className={`transition-transform ${showExamples ? 'rotate-180' : ''}`}
+      <div className="space-y-2">
+        <div className="relative">
+          <textarea
+            rows={4}
+            maxLength={MAX}
+            value={value}
+            onChange={e => setValue(e.target.value)}
+            className="w-full px-4 py-3 rounded-lg border-2 border-border bg-card focus:border-primary focus:outline-none font-body text-base text-foreground resize-none"
           />
-        </button>
-        {showExamples && (
-          <ul className="mt-2 space-y-1.5 text-sm italic text-muted-foreground animate-accordion-down">
-            <li>"Just left my job, figuring out what's next."</li>
-            <li>"New parent, lost my edges."</li>
-            <li>"Stuck. Last few years feel like autopilot."</li>
-            <li>"Moved countries six months ago, still rebuilding."</li>
-            <li>"Ended a long relationship, reassessing everything."</li>
-          </ul>
-        )}
+          {value.length > 0 && (
+            <span className="absolute bottom-2 right-3 text-xs text-muted-foreground">
+              {value.length} / {MAX}
+            </span>
+          )}
+        </div>
+
+        <div>
+          <button
+            type="button"
+            onClick={() => setShowExamples(v => !v)}
+            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span>See examples</span>
+            <ChevronDown
+              size={14}
+              className={`transition-transform ${showExamples ? 'rotate-180' : ''}`}
+            />
+          </button>
+          {showExamples && (
+            <ul className="mt-2 space-y-1.5 text-sm italic text-muted-foreground animate-accordion-down">
+              <li>"Just left my job, figuring out what's next."</li>
+              <li>"New parent, lost my edges."</li>
+              <li>"Stuck. Last few years feel like autopilot."</li>
+              <li>"Moved countries six months ago, still rebuilding."</li>
+              <li>"Ended a long relationship, reassessing everything."</li>
+            </ul>
+          )}
+        </div>
       </div>
 
       <button
