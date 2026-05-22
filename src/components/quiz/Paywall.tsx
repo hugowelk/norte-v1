@@ -110,7 +110,7 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
         onClick={onUnlock}
         className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-semibold text-base hover:opacity-90 transition-opacity shadow-md"
       >
-        Get my plan ($7) →
+        Get my FREE Full Values Report →
       </button>
       <button
         onClick={onBack}
