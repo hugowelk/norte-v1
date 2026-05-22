@@ -156,9 +156,12 @@ export default function ReportPage() {
           <ReportActions reportId={report.id} />
         </div>
 
-        <p className="no-print mt-16 text-center text-sm text-muted-foreground italic">
-          Norte · Anyone with this link can read this report.
-        </p>
+        <div className="no-print mt-16 flex flex-col items-center gap-3 text-center">
+          <ReviewDialog reportId={report.id} />
+          <p className="text-sm text-muted-foreground italic">
+            Norte · Anyone with this link can read this report.
+          </p>
+        </div>
       </article>
     </div>
   );
