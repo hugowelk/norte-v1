@@ -113,12 +113,26 @@ export function Paywall({ onBack, onUnlock, sampleValue }: Props) {
       >
         Get my FREE Full Values Report →
       </button>
-      <button
-        onClick={onBack}
-        className="w-full text-center text-sm font-display text-muted-foreground hover:text-foreground transition-colors"
-      >
-        Maybe later
-      </button>
+      <div className="flex items-center justify-center gap-6 text-sm font-display">
+        <button
+          onClick={onBack}
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Maybe later
+        </button>
+        <span className="text-border">·</span>
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText('findyourvalues.app');
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          }}
+          className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
+        >
+          {copied ? <Check size={14} /> : <Share2 size={14} />}
+          {copied ? 'Link copied' : 'Share Norte with a friend'}
+        </button>
+      </div>
     </div>
   );
 }
