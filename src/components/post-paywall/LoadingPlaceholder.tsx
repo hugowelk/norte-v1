@@ -38,6 +38,7 @@ function buildRequestBody() {
 
   return {
     paymentSessionId: state.paymentSessionId,
+    reportBaseUrl: typeof window !== 'undefined' ? window.location.origin : undefined,
     assessmentResults: {
       revealed_top_3: a.revealed_top_3,
       revealed_full_ranking: a.revealed_full_ranking,
