@@ -1,0 +1,11 @@
+# Norte
+
+> Discover the life values your behaviour reveals. A guided exercise grounded in ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey.
+
+Norte is a wellness web app that uncovers your values through 15 trade-off scenarios, then helps you close the gap between revealed and aspirational values with a personalized AI-generated action plan.
+
+## Pages
+
+- [Home](/): Landing page introducing Norte and the values exercise.
+- [Take the exercise](/app): The 15-scenario behaviour quiz that reveals your top values.
+- [Methodology](/methodology): How the scoring algorithm works, the 8 values, and the research behind it.
