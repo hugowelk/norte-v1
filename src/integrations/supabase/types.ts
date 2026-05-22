@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      report_contacts: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          report_id: string
+          report_url: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          report_id: string
+          report_url: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          report_id?: string
+          report_url?: string
+        }
+        Relationships: []
+      }
       report_reviews: {
         Row: {
           created_at: string
