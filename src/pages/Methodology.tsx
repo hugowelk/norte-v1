@@ -1,8 +1,28 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { VALUES } from '@/lib/values';
 import { VALUE_EXPLANATIONS } from '@/lib/valueExplanations';
 
+const ARTICLE_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How Norte reads your values",
+  "description": "The research foundations behind Norte: ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey, and how they shape the 8-value scoring algorithm.",
+  "author": { "@type": "Organization", "name": "Norte" },
+  "publisher": { "@type": "Organization", "name": "Norte" },
+  "mainEntityOfPage": "https://findmyvalues.app/methodology"
+};
+
 export default function Methodology() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(ARTICLE_JSON_LD);
+    script.dataset.jsonldArticle = 'methodology';
+    document.head.appendChild(script);
+    return () => { script.remove(); };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="px-6 py-5 border-b border-border/60">
