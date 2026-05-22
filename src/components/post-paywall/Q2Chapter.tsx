@@ -11,6 +11,8 @@ export function Q2Chapter() {
   const navigate = useNavigate();
   const { state, update } = usePostPaywallStore();
   const [value, setValue] = useState(state.current_chapter);
+  const [showExamples, setShowExamples] = useState(false);
+
 
   const canContinue = value.trim().length >= MIN;
 
