@@ -127,7 +127,7 @@ export default function ReportPage() {
 
         {/* Visual gap comparison */}
         {revealedKeys.length > 0 && aspirationalKeys.length > 0 && (
-          <GapVisualization revealed={revealedKeys} aspirational={aspirationalKeys} />
+          <GapVisualization revealedFull={revealedFullRanking} aspirational={aspirationalKeys} />
         )}
 
         {/* Large visual divider into the written reading */}
