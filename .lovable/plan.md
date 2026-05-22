@@ -1,5 +1,5 @@
-# Remove "What you get" section from /app
+# Remove "What the report looks like" section from /app
 
-Delete the `#what` section (lines 105–125) in `src/pages/Index.tsx` — the "Three things, in plain language" block with the numbered list of three items.
+Delete the section in `src/pages/Index.tsx` containing the headline "A reading of your behaviour, not a personality type." along with the preview card and the "900–1100 words…" footnote.
 
-No other changes. Surrounding sections ("What the report looks like" and "Who it's for") stay as-is.
+No other changes.
