@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import { PostPaywallLayout } from './PostPaywallLayout';
 import { usePostPaywallStore } from '@/lib/postPaywallStore';
 
@@ -10,6 +11,8 @@ export function Q2Chapter() {
   const navigate = useNavigate();
   const { state, update } = usePostPaywallStore();
   const [value, setValue] = useState(state.current_chapter);
+  const [showExamples, setShowExamples] = useState(false);
+
 
   const canContinue = value.trim().length >= MIN;
 
@@ -25,12 +28,12 @@ export function Q2Chapter() {
         What's the current chapter of your life right now?
       </h1>
       <p className="text-base text-foreground/80">
-        One or two sentences. The more specific you are, the sharper the report.
+        In a few words, describe where you are in life right now. We often see people reevaluating their values during career transitions, breakups, moving to different countries, becoming parents, etc. The more specific you are, the sharper the report.
       </p>
 
       <div className="relative">
         <textarea
-          rows={3}
+          rows={4}
           maxLength={MAX}
           value={value}
           onChange={e => setValue(e.target.value)}
@@ -43,11 +46,28 @@ export function Q2Chapter() {
         )}
       </div>
 
-      <ul className="space-y-1.5 text-sm italic text-muted-foreground">
-        <li>"Just left my job, figuring out what's next."</li>
-        <li>"New parent, lost my edges."</li>
-        <li>"Stuck. Last few years feel like autopilot."</li>
-      </ul>
+      <div className="rounded-lg border border-border bg-card/50 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setShowExamples(v => !v)}
+          className="w-full flex items-center justify-between px-4 py-3 text-sm font-display text-foreground hover:bg-muted/40 transition-colors"
+        >
+          <span>See examples</span>
+          <ChevronDown
+            size={16}
+            className={`transition-transform ${showExamples ? 'rotate-180' : ''}`}
+          />
+        </button>
+        {showExamples && (
+          <ul className="px-4 pb-4 space-y-1.5 text-sm italic text-muted-foreground animate-accordion-down">
+            <li>"Just left my job, figuring out what's next."</li>
+            <li>"New parent, lost my edges."</li>
+            <li>"Stuck. Last few years feel like autopilot."</li>
+            <li>"Moved countries six months ago, still rebuilding."</li>
+            <li>"Ended a long relationship, reassessing everything."</li>
+          </ul>
+        )}
+      </div>
 
       <button
         onClick={submit}
