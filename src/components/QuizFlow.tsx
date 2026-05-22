@@ -28,12 +28,14 @@ import { CoreValuesSelection, type CoreValuesResult } from './quiz/CoreValuesSel
 import { AlignmentReflection, type AlignmentScores } from './quiz/AlignmentReflection';
 import { ValueCompass } from './quiz/ValueCompass';
 import { Paywall } from './quiz/Paywall';
+import { NameEmailCapture } from './quiz/NameEmailCapture';
 
 type Phase =
   | 'tradeoffIntro'
   | 'howItWorks'
   | 'tradeoffs'
   | 'tradeoffTransition'
+  | 'nameEmail'
   | 'processing'
   | 'results'
   | 'coreValues'
