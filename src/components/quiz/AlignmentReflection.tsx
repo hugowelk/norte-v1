@@ -69,10 +69,13 @@ function SliderRow({
   const suggestedPct = (suggested / 10) * 100;
   return (
     <div className="space-y-3 p-5 rounded-xl bg-card border border-border">
-      <div className="flex items-center gap-3">
+      <div className="flex items-start gap-3">
         <ValueIcon value={valueKey} size={20} />
-        <p className="font-display font-medium text-foreground">{getValueByKey(valueKey).label}</p>
-        <span className="ml-auto font-display text-lg font-semibold text-accent tabular-nums">{score}/10</span>
+        <div className="flex-1 min-w-0">
+          <p className="font-display font-medium text-foreground">{getValueByKey(valueKey).label}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{getValueByKey(valueKey).description}</p>
+        </div>
+        <span className="font-display text-lg font-semibold text-accent tabular-nums">{score}/10</span>
       </div>
       <div className="relative py-2">
         <Slider
