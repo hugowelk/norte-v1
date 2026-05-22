@@ -13,6 +13,7 @@ import { Q3Blocker } from "./components/post-paywall/Q3Blocker";
 import { Q4WontGiveUp } from "./components/post-paywall/Q4WontGiveUp";
 import { LoadingPlaceholder } from "./components/post-paywall/LoadingPlaceholder";
 import ReportPage from "./pages/ReportPage";
+import AdminPage from "./pages/Admin";
 import { SessionRecovery } from "./components/SessionRecovery";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/post-paywall/q4" element={<RequirePayment><Q4WontGiveUp /></RequirePayment>} />
           <Route path="/post-paywall/loading" element={<RequirePayment><LoadingPlaceholder /></RequirePayment>} />
           <Route path="/r/:reportId" element={<ReportPage />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
