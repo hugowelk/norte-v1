@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 interface Props {
-  step: 1 | 2 | 3 | 4;
+  step: 1 | 2 | 3;
   backTo?: string;
   children: React.ReactNode;
 }
