@@ -15,7 +15,7 @@ const Index = () => {
       { name: 'twitter:title', content: 'Take the Norte values exercise' },
       { name: 'twitter:description', content: 'Answer 15 trade-off scenarios and uncover the life values your behaviour actually reveals.' },
     ],
-    { title: 'Norte — Take the values exercise', canonical: 'https://findmyvalues.app/app' }
+    { title: 'Norte — Take the values exercise', canonical: 'https://findmyvalues.app/' }
   );
 
   if (started) return <QuizFlow />;
