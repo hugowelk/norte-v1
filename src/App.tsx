@@ -28,9 +28,9 @@ const App = () => (
         <ScrollToTop />
         <SessionRecovery />
         <Routes>
-          <Route path="/" element={<Waitlist />} />
-          <Route path="/app" element={<Index />} />
-          <Route path="/waitlist" element={<Waitlist />} />
+          <Route path="/" element={<Index />} />
+          <Route path="/app" element={<Navigate to="/" replace />} />
+          <Route path="/waitlist" element={<Navigate to="/" replace />} />
           <Route path="/methodology" element={<Methodology />} />
           <Route path="/post-paywall/q1" element={<Navigate to="/post-paywall/q2" replace />} />
           <Route path="/post-paywall/q2" element={<RequirePayment><Q2Chapter /></RequirePayment>} />
