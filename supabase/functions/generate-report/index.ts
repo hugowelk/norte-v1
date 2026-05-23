@@ -93,9 +93,12 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Strip name/email out of the report inputs — they live in report_contacts now.
-    const { name, email, ...answersWithoutContact } = postPaywallAnswers ?? {};
-    const inputData = { ...assessmentResults, ...answersWithoutContact };
+    // Strip email out of the report inputs (PII lives in report_contacts).
+    // Keep `name` in the payload — the prompt uses it to address the user;
+    // without it the model hallucinates a name.
+    const { email, ...answersWithoutEmail } = postPaywallAnswers ?? {};
+    const name = answersWithoutEmail.name;
+    const inputData = { ...assessmentResults, ...answersWithoutEmail };
 
     const report_markdown = await callLovableAI(inputData);
     const id = shortId();
