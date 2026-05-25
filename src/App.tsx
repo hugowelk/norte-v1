@@ -18,6 +18,7 @@ import AdminPage from "./pages/Admin";
 import { SessionRecovery } from "./components/SessionRecovery";
 import ScrollToTop from "./components/ScrollToTop";
 import { SiteFooter } from "./components/SiteFooter";
+import { AVAILABLE_LANGS } from "./i18n";
 
 const queryClient = new QueryClient();
 
@@ -27,12 +28,16 @@ const QUIZ_PATH_PREFIXES = ["/post-paywall"];
 function HtmlLangSync() {
   const { i18n } = useTranslation();
   useEffect(() => {
-    const lang = i18n.language?.startsWith("pt") ? "pt-BR" : "en";
-    document.documentElement.lang = lang;
-    // Replace any existing alternate links
+    const current = i18n.language ?? "en";
+    const exact = AVAILABLE_LANGS.find((l) => l.toLowerCase() === current.toLowerCase());
+    const prefix = current.toLowerCase().split("-")[0];
+    const prefixMatch = AVAILABLE_LANGS.find((l) => l.toLowerCase().split("-")[0] === prefix);
+    const resolved = exact ?? prefixMatch ?? "en";
+    document.documentElement.lang = resolved;
+
     document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach((n) => n.remove());
     const base = "https://findmyvalues.app" + window.location.pathname;
-    (["en", "pt-BR", "x-default"] as const).forEach((code) => {
+    [...AVAILABLE_LANGS, "x-default"].forEach((code) => {
       const link = document.createElement("link");
       link.setAttribute("rel", "alternate");
       link.setAttribute("hreflang", code);
@@ -43,6 +48,7 @@ function HtmlLangSync() {
   }, [i18n.language]);
   return null;
 }
+
 
 function FooterGate() {
   const location = useLocation();
