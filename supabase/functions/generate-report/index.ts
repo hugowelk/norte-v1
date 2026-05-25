@@ -70,7 +70,8 @@ Deno.serve(async (req) => {
   try {
     const body = await req.json();
     const { paymentSessionId, assessmentResults, postPaywallAnswers, reportBaseUrl, language } = body ?? {};
-    const lang = normalizeLang(language);
+    const lang = resolveLanguage(typeof language === "string" ? language : undefined);
+
 
     if (!paymentSessionId || typeof paymentSessionId !== "string") {
       return new Response(
