@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LANG_LABELS, SUPPORTED_LANGS, setLang } from '@/i18n';
+import { AVAILABLE_LOCALES, LANG_LABELS, setLang } from '@/i18n';
 import { useLang } from '@/i18n/useLang';
 
 interface Props {
@@ -14,6 +14,9 @@ interface Props {
 
 export function LanguagePicker({ variant = 'footer' }: Props) {
   const { lang } = useLang();
+
+  // Hide the picker entirely if only one language is shipped & complete.
+  if (AVAILABLE_LOCALES.length < 2) return null;
 
   return (
     <DropdownMenu>
@@ -26,16 +29,16 @@ export function LanguagePicker({ variant = 'footer' }: Props) {
         aria-label="Language"
       >
         <Globe size={14} strokeWidth={1.75} />
-        <span>{LANG_LABELS[lang]}</span>
+        <span>{LANG_LABELS[lang] ?? lang}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[160px]">
-        {SUPPORTED_LANGS.map((code) => (
+        {AVAILABLE_LOCALES.map((locale) => (
           <DropdownMenuItem
-            key={code}
-            onClick={() => setLang(code)}
-            className={code === lang ? 'font-medium text-foreground' : ''}
+            key={locale.code}
+            onClick={() => setLang(locale.code)}
+            className={locale.code === lang ? 'font-medium text-foreground' : ''}
           >
-            {LANG_LABELS[code]}
+            {locale.nativeLabel}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
