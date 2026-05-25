@@ -139,3 +139,18 @@ export function currentLang(): SupportedLang {
 }
 
 export default i18n;
+
+// TEMP DEBUG
+if (typeof window !== 'undefined') {
+  setTimeout(() => {
+    // eslint-disable-next-line no-console
+    console.log('[i18n-debug]', {
+      language: i18n.language,
+      languages: i18n.languages,
+      resolved: i18n.getDataByLanguage(i18n.language) ? Object.keys(i18n.getDataByLanguage(i18n.language)!) : 'none',
+      heroTitle: i18n.t('pages.index.heroTitle'),
+      available: AVAILABLE_LANGS,
+      storage: localStorage.getItem(STORAGE_KEY),
+    });
+  }, 500);
+}
