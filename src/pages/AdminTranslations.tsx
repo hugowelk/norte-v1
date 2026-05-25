@@ -293,6 +293,41 @@ const AdminTranslationsPage = () => {
             );
           })}
         </div>
+        <div className="max-w-6xl mx-auto px-4 pb-4 flex flex-wrap gap-2 items-center">
+          <span className="text-xs uppercase tracking-wide text-muted-foreground mr-1">Replace in pt-BR:</span>
+          <Input
+            placeholder="Find…"
+            value={findText}
+            onChange={(e) => setFindText(e.target.value)}
+            className="max-w-[200px]"
+          />
+          <Input
+            placeholder="Replace with…"
+            value={replaceText}
+            onChange={(e) => setReplaceText(e.target.value)}
+            className="max-w-[200px]"
+          />
+          <label className="text-xs text-muted-foreground flex items-center gap-1 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={caseSensitive}
+              onChange={(e) => setCaseSensitive(e.target.checked)}
+            />
+            Case sensitive
+          </label>
+          <Button
+            size="sm"
+            onClick={applyReplace}
+            disabled={!findText || replaceMatches.count === 0}
+          >
+            Replace all
+          </Button>
+          {findText && (
+            <span className="text-xs text-muted-foreground">
+              {replaceMatches.count} match{replaceMatches.count === 1 ? "" : "es"} in {replaceMatches.keys} key{replaceMatches.keys === 1 ? "" : "s"}
+            </span>
+          )}
+        </div>
       </div>
 
       <main className="max-w-6xl mx-auto p-4 space-y-8">
