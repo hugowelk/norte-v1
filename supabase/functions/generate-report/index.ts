@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
-import { getSystemPrompt } from "./prompt.ts";
+import { getSystemPrompt, getUserPrefix, resolveLanguage } from "./prompt.index.ts";
 
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -16,28 +16,20 @@ function shortId(len = 12) {
   return out;
 }
 
-function normalizeLang(input: unknown): "en" | "pt-BR" {
-  if (typeof input === "string" && input.toLowerCase().startsWith("pt")) return "pt-BR";
-  return "en";
-}
-
-async function callLovableAI(inputData: unknown, language: "en" | "pt-BR"): Promise<string> {
+async function callLovableAI(inputData: unknown, language: string): Promise<string> {
   const body = {
     model: MODEL,
     messages: [
       { role: "system", content: getSystemPrompt(language) },
       {
         role: "user",
-        content:
-          (language === "pt-BR"
-            ? "Gere o relatório para este usuário, em português brasileiro:\n\n"
-            : "Generate the report for this user:\n\n") +
-          JSON.stringify(inputData, null, 2),
+        content: getUserPrefix(language) + JSON.stringify(inputData, null, 2),
       },
     ],
     temperature: 0.7,
     max_tokens: 2000,
   };
+
 
   const doFetch = () =>
     fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
