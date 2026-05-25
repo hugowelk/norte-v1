@@ -89,6 +89,7 @@ const AdminPage = () => {
         <div className="p-4 border-b border-border">
           <h2 className="font-display text-lg text-primary">Reports</h2>
           <p className="text-xs text-muted-foreground">{entries.length} total</p>
+          <a href="/admin/translations" className="text-xs text-accent underline mt-2 inline-block">Edit pt-BR translations →</a>
         </div>
         <ScrollArea className="flex-1">
           <ul>
