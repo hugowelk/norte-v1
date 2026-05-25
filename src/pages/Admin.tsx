@@ -84,13 +84,36 @@ const AdminPage = () => {
 
   const selected = entries.find((e) => e.id === selectedId) ?? null;
 
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this report and its contact/reviews? This cannot be undone.")) return;
+    const pw = sessionStorage.getItem(PW_KEY) ?? "";
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-delete-report", {
+        headers: { "x-admin-password": pw },
+        body: { id },
+      });
+      if (error || (data as any)?.error) {
+        toast.error("Delete failed");
+        return;
+      }
+      toast.success("Report deleted");
+      setEntries((prev) => {
+        const next = prev.filter((e) => e.id !== id);
+        if (selectedId === id) setSelectedId(next[0]?.id ?? null);
+        return next;
+      });
+    } catch {
+      toast.error("Delete failed");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <AdminNav />
-      <div className="px-6 py-4 border-b border-border">
+      <div className="max-w-6xl w-full mx-auto px-6 py-4 border-b border-border">
         <ReportsChart createdAts={entries.map((e) => e.created_at)} />
       </div>
-      <div className="flex-1 flex min-h-0">
+      <div className="flex-1 flex min-h-0 max-w-6xl w-full mx-auto border-x border-border">
       {/* List */}
       <aside className="w-80 border-r border-border flex flex-col">
         <div className="p-4 border-b border-border">
@@ -135,24 +158,29 @@ const AdminPage = () => {
         {!selected ? (
           <div className="p-8 text-muted-foreground">Select an entry</div>
         ) : (
-          <div className="max-w-4xl mx-auto p-8 space-y-8">
-            <section>
-              <h3 className="font-display text-xs uppercase tracking-wide text-muted-foreground mb-2">Contact</h3>
-              <div className="text-sm space-y-1">
-                <div><strong>Name:</strong> {selected.contact?.name ?? "—"}</div>
-                <div><strong>Email:</strong> {selected.contact?.email ?? "—"}</div>
-                <div><strong>Report ID:</strong> {selected.id}</div>
-                <div><strong>Created:</strong> {new Date(selected.created_at).toLocaleString()}</div>
-                <div><strong>Views:</strong> {selected.view_count}</div>
-                {selected.contact?.report_url && (
-                  <div>
-                    <strong>URL:</strong>{" "}
-                    <a href={selected.contact.report_url} target="_blank" rel="noreferrer" className="text-accent underline">
-                      {selected.contact.report_url}
-                    </a>
-                  </div>
-                )}
+          <div className="max-w-3xl mx-auto p-8 space-y-8">
+            <section className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <h3 className="font-display text-xs uppercase tracking-wide text-muted-foreground mb-2">Contact</h3>
+                <div className="text-sm space-y-1">
+                  <div><strong>Name:</strong> {selected.contact?.name ?? "—"}</div>
+                  <div><strong>Email:</strong> {selected.contact?.email ?? "—"}</div>
+                  <div><strong>Report ID:</strong> {selected.id}</div>
+                  <div><strong>Created:</strong> {new Date(selected.created_at).toLocaleString()}</div>
+                  <div><strong>Views:</strong> {selected.view_count}</div>
+                  {selected.contact?.report_url && (
+                    <div>
+                      <strong>URL:</strong>{" "}
+                      <a href={selected.contact.report_url} target="_blank" rel="noreferrer" className="text-accent underline">
+                        {selected.contact.report_url}
+                      </a>
+                    </div>
+                  )}
+                </div>
               </div>
+              <Button variant="destructive" size="sm" onClick={() => handleDelete(selected.id)}>
+                Delete
+              </Button>
             </section>
 
             <section>
