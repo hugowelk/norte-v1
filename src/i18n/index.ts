@@ -108,8 +108,6 @@ i18n
     resources,
     fallbackLng: SOURCE_LANG,
     supportedLngs: AVAILABLE_LANGS,
-    nonExplicitSupportedLngs: true,
-    load: 'currentOnly',
     interpolation: { escapeValue: false },
     detection: {
       order: ['querystring', 'localStorage', 'navigator'],
@@ -119,6 +117,7 @@ i18n
       convertDetectedLanguage: (lng) => normalize(lng),
     },
   });
+
 
 if (i18n.language) {
   const norm = normalize(i18n.language);
