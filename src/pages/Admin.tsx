@@ -7,6 +7,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { ReportMarkdown } from "@/components/report/ReportMarkdown";
 import { useDocumentMeta } from "@/lib/useDocumentMeta";
 import { toast } from "sonner";
+import { AdminNav } from "@/components/admin/AdminNav";
+import { ReportsChart } from "@/components/admin/ReportsChart";
 
 interface Entry {
   id: string;
@@ -83,13 +85,17 @@ const AdminPage = () => {
   const selected = entries.find((e) => e.id === selectedId) ?? null;
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex flex-col">
+      <AdminNav />
+      <div className="px-6 py-4 border-b border-border">
+        <ReportsChart createdAts={entries.map((e) => e.created_at)} />
+      </div>
+      <div className="flex-1 flex min-h-0">
       {/* List */}
       <aside className="w-80 border-r border-border flex flex-col">
         <div className="p-4 border-b border-border">
           <h2 className="font-display text-lg text-primary">Reports</h2>
           <p className="text-xs text-muted-foreground">{entries.length} total</p>
-          <a href="/admin/translations" className="text-xs text-accent underline mt-2 inline-block">Edit pt-BR translations →</a>
         </div>
         <ScrollArea className="flex-1">
           <ul>
@@ -193,6 +199,7 @@ const AdminPage = () => {
           </div>
         )}
       </main>
+      </div>
     </div>
   );
 };
