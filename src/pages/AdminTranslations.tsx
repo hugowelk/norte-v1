@@ -54,7 +54,29 @@ function unflatten(flat: Flat): Record<string, unknown> {
   return root;
 }
 
+type Group = { id: string; label: string; url: string };
+
+const GROUPS: Group[] = [
+  { id: "pages.index", label: "Home", url: "/" },
+  { id: "pages.methodology", label: "Methodology", url: "/methodology" },
+  { id: "pages.notFound", label: "404", url: "/*" },
+  { id: "quiz", label: "Quiz flow", url: "/ (quiz)" },
+  { id: "postPaywall", label: "Post-paywall", url: "/report/:id" },
+  { id: "report", label: "Report", url: "/report/:id" },
+  { id: "values", label: "Values (shared)", url: "—" },
+  { id: "common", label: "Common (shared)", url: "—" },
+  { id: "ordinals", label: "Ordinals (shared)", url: "—" },
+];
+
+function groupOf(key: string): Group {
+  for (const g of GROUPS) {
+    if (key === g.id || key.startsWith(g.id + ".")) return g;
+  }
+  return { id: "_other", label: "Other", url: "—" };
+}
+
 const AdminTranslationsPage = () => {
+
   useDocumentMeta(
     [{ name: "robots", content: "noindex, nofollow" }],
     { title: "Norte — Translations", canonical: "https://findmyvalues.app/admin/translations" }
@@ -75,6 +97,7 @@ const AdminTranslationsPage = () => {
 
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "missing" | "modified">("all");
+  const [groupFilter, setGroupFilter] = useState<string>("all");
 
   useEffect(() => {
     // Save only diffs vs original
@@ -102,10 +125,37 @@ const AdminTranslationsPage = () => {
     const ptv = pt[k] ?? "";
     if (filter === "missing" && ptv.trim() !== "") return false;
     if (filter === "modified" && ptv === (ptFlatOriginal[k] ?? "")) return false;
+    if (groupFilter !== "all" && groupOf(k).id !== groupFilter) return false;
     if (!query) return true;
     const q = query.toLowerCase();
     return k.toLowerCase().includes(q) || en.toLowerCase().includes(q) || ptv.toLowerCase().includes(q);
   });
+
+  // Group counts (respect filter + query, ignore groupFilter so user can switch groups)
+  const groupCounts = new Map<string, number>();
+  for (const k of keys) {
+    const en = enFlat[k] ?? "";
+    const ptv = pt[k] ?? "";
+    if (filter === "missing" && ptv.trim() !== "") continue;
+    if (filter === "modified" && ptv === (ptFlatOriginal[k] ?? "")) continue;
+    if (query) {
+      const q = query.toLowerCase();
+      if (!k.toLowerCase().includes(q) && !en.toLowerCase().includes(q) && !ptv.toLowerCase().includes(q)) continue;
+    }
+    const id = groupOf(k).id;
+    groupCounts.set(id, (groupCounts.get(id) ?? 0) + 1);
+  }
+
+  // Group visibleKeys by group id, preserving order
+  const groupedMap = new Map<string, { group: Group; keys: string[] }>();
+  for (const k of visibleKeys) {
+    const g = groupOf(k);
+    if (!groupedMap.has(g.id)) groupedMap.set(g.id, { group: g, keys: [] });
+    groupedMap.get(g.id)!.keys.push(k);
+  }
+  const grouped = Array.from(groupedMap.values());
+
+
 
   const missingCount = keys.filter((k) => (pt[k] ?? "").trim() === "").length;
   const modifiedCount = keys.filter((k) => (pt[k] ?? "") !== (ptFlatOriginal[k] ?? "")).length;
@@ -171,47 +221,82 @@ const AdminTranslationsPage = () => {
             Showing {visibleKeys.length}. Edits autosave locally; download to ship.
           </span>
         </div>
+        <div className="max-w-6xl mx-auto px-4 pb-4 flex flex-wrap gap-2 items-center">
+          <span className="text-xs uppercase tracking-wide text-muted-foreground mr-1">Page:</span>
+          <Button
+            variant={groupFilter === "all" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setGroupFilter("all")}
+          >
+            All ({visibleKeys.length})
+          </Button>
+          {GROUPS.map((g) => {
+            const count = groupCounts.get(g.id) ?? 0;
+            if (count === 0 && groupFilter !== g.id) return null;
+            return (
+              <Button
+                key={g.id}
+                variant={groupFilter === g.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setGroupFilter(g.id)}
+                title={g.url}
+              >
+                {g.label} ({count})
+              </Button>
+            );
+          })}
+        </div>
       </div>
 
-      <main className="max-w-6xl mx-auto p-4 space-y-3">
-        {visibleKeys.map((k) => {
-          const en = enFlat[k] ?? "";
-          const ptv = pt[k] ?? "";
-          const modified = ptv !== (ptFlatOriginal[k] ?? "");
-          const missing = ptv.trim() === "";
-          const isMultiline = en.length > 80 || en.includes("\n");
-          return (
-            <Card key={k} className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <code className="text-xs text-muted-foreground break-all">{k}</code>
-                {missing && <span className="text-[10px] uppercase tracking-wide text-destructive">missing</span>}
-                {modified && !missing && <span className="text-[10px] uppercase tracking-wide text-accent">modified</span>}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="text-sm whitespace-pre-wrap text-muted-foreground bg-muted/40 rounded p-3">
-                  {en || <em className="opacity-60">(empty)</em>}
-                </div>
-                {isMultiline ? (
-                  <textarea
-                    value={ptv}
-                    onChange={(e) => setPt((p) => ({ ...p, [k]: e.target.value }))}
-                    rows={Math.max(3, Math.min(12, ptv.split("\n").length + 1))}
-                    className="text-sm rounded border border-input bg-background p-3 font-sans"
-                  />
-                ) : (
-                  <Input
-                    value={ptv}
-                    onChange={(e) => setPt((p) => ({ ...p, [k]: e.target.value }))}
-                  />
-                )}
-              </div>
-            </Card>
-          );
-        })}
+      <main className="max-w-6xl mx-auto p-4 space-y-8">
+        {grouped.map(({ group, keys: gKeys }) => (
+          <section key={group.id} className="space-y-3">
+            <div className="flex items-baseline gap-3 border-b border-border pb-2">
+              <h2 className="font-display text-lg text-primary">{group.label}</h2>
+              <code className="text-xs text-muted-foreground">{group.url}</code>
+              <span className="text-xs text-muted-foreground ml-auto">{gKeys.length} keys</span>
+            </div>
+            {gKeys.map((k) => {
+              const en = enFlat[k] ?? "";
+              const ptv = pt[k] ?? "";
+              const modified = ptv !== (ptFlatOriginal[k] ?? "");
+              const missing = ptv.trim() === "";
+              const isMultiline = en.length > 80 || en.includes("\n");
+              return (
+                <Card key={k} className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <code className="text-xs text-muted-foreground break-all">{k}</code>
+                    {missing && <span className="text-[10px] uppercase tracking-wide text-destructive">missing</span>}
+                    {modified && !missing && <span className="text-[10px] uppercase tracking-wide text-accent">modified</span>}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="text-sm whitespace-pre-wrap text-muted-foreground bg-muted/40 rounded p-3">
+                      {en || <em className="opacity-60">(empty)</em>}
+                    </div>
+                    {isMultiline ? (
+                      <textarea
+                        value={ptv}
+                        onChange={(e) => setPt((p) => ({ ...p, [k]: e.target.value }))}
+                        rows={Math.max(3, Math.min(12, ptv.split("\n").length + 1))}
+                        className="text-sm rounded border border-input bg-background p-3 font-sans"
+                      />
+                    ) : (
+                      <Input
+                        value={ptv}
+                        onChange={(e) => setPt((p) => ({ ...p, [k]: e.target.value }))}
+                      />
+                    )}
+                  </div>
+                </Card>
+              );
+            })}
+          </section>
+        ))}
         {visibleKeys.length === 0 && (
           <div className="text-center text-muted-foreground py-12">No keys match.</div>
         )}
       </main>
+
     </div>
   );
 };
