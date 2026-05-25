@@ -1,18 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { readPostPaywall, clearPostPaywall } from '@/lib/postPaywallStore';
 import { markOwnedReport } from '@/lib/reportOwnership';
 import { Button } from '@/components/ui/button';
 import { setPendingSession, clearPendingSession } from '@/lib/pendingSession';
 import { track } from '@/lib/analytics';
-
-const STATUS_LINES = [
-  'Reading your trade-offs…',
-  'Connecting the pattern to what you said about your life…',
-  'Writing your report. This usually takes about 30 seconds.',
-];
+import i18n from '@/i18n';
 
 const LINE_DURATION_MS = 8000;
 const MAX_RETRIES = 3;
@@ -36,8 +32,11 @@ function buildRequestBody() {
     revealed_rank: g.rank,
   }));
 
+  const language = i18n.language?.startsWith('pt') ? 'pt-BR' : 'en';
+
   return {
     paymentSessionId: state.paymentSessionId,
+    language,
     reportBaseUrl: typeof window !== 'undefined' ? window.location.origin : undefined,
     assessmentResults: {
       revealed_top_3: a.revealed_top_3,
@@ -58,6 +57,8 @@ function buildRequestBody() {
 }
 
 export function LoadingPlaceholder() {
+  const { t } = useTranslation();
+  const statusLines = t('postPaywall.loading.statusLines', { returnObjects: true }) as string[];
   const navigate = useNavigate();
   const [lineIdx, setLineIdx] = useState(0);
   const [status, setStatus] = useState<'loading' | 'error' | 'final-error'>('loading');
@@ -107,27 +108,23 @@ export function LoadingPlaceholder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Rotate status lines while loading
   useEffect(() => {
     if (status !== 'loading') return;
-    const t = setInterval(() => {
-      setLineIdx(i => (i < STATUS_LINES.length - 1 ? i + 1 : i));
+    const tt = setInterval(() => {
+      setLineIdx(i => (i < statusLines.length - 1 ? i + 1 : i));
     }, LINE_DURATION_MS);
-    return () => clearInterval(t);
-  }, [status]);
+    return () => clearInterval(tt);
+  }, [status, statusLines.length]);
 
   if (status === 'final-error') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
         <div className="max-w-md text-center space-y-4">
-          <p className="text-lg font-display text-foreground">
-            We're having trouble generating your report right now.
-          </p>
+          <p className="text-lg font-display text-foreground">{t('postPaywall.loading.finalError')}</p>
           <p className="text-base text-muted-foreground">
-            Please contact{' '}
-            <a href="mailto:support@norte.app" className="underline">
-              support@norte.app
-            </a>. Your payment is safe and we'll get this to you.
+            {t('postPaywall.loading.supportPrefix')}
+            <a href="mailto:support@norte.app" className="underline">support@norte.app</a>
+            {t('postPaywall.loading.supportSuffix')}
           </p>
         </div>
       </div>
@@ -139,14 +136,10 @@ export function LoadingPlaceholder() {
       <div className="min-h-screen bg-background flex items-center justify-center px-6">
         <div className="max-w-md text-center space-y-6">
           <div className="space-y-2">
-            <p className="text-lg font-display text-foreground">
-              Something interrupted the generation.
-            </p>
-            <p className="text-base text-muted-foreground">
-              We've saved your answers. Try again?
-            </p>
+            <p className="text-lg font-display text-foreground">{t('postPaywall.loading.errorTitle')}</p>
+            <p className="text-base text-muted-foreground">{t('postPaywall.loading.errorBody')}</p>
           </div>
-          <Button onClick={run} size="lg">Retry →</Button>
+          <Button onClick={run} size="lg">{t('common.actions.retry')}</Button>
         </div>
       </div>
     );
@@ -154,22 +147,11 @@ export function LoadingPlaceholder() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
-      <motion.div
-        className="w-12 h-12 rounded-full border-2 border-accent"
-        animate={{ opacity: [0.4, 1, 0.4] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-      />
+      <motion.div className="w-12 h-12 rounded-full border-2 border-accent" animate={{ opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
       <div className="mt-8 h-6 relative w-full max-w-md text-center">
         <AnimatePresence mode="wait">
-          <motion.p
-            key={lineIdx}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="absolute inset-0 text-base text-foreground font-sans"
-          >
-            {STATUS_LINES[lineIdx]}
+          <motion.p key={lineIdx} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="absolute inset-0 text-base text-foreground font-sans">
+            {statusLines[lineIdx]}
           </motion.p>
         </AnimatePresence>
       </div>

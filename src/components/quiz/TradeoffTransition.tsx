@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   message: string;
@@ -6,6 +7,7 @@ interface Props {
 }
 
 export function TradeoffTransition({ message, onContinue }: Props) {
+  const { t } = useTranslation();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -20,7 +22,7 @@ export function TradeoffTransition({ message, onContinue }: Props) {
         onClick={onContinue}
         className="px-8 py-3 rounded-xl bg-primary text-primary-foreground font-display font-medium hover:opacity-90 transition-opacity"
       >
-        Continue
+        {t('common.actions.continue')}
       </button>
     </motion.div>
   );

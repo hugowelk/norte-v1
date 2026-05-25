@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
-import { VALUES, getValueByKey, type ValueKey } from '@/lib/values';
+import { VALUES, type ValueKey } from '@/lib/values';
+import { useTranslation, Trans } from 'react-i18next';
+import { tValueLabel, tValueDescription } from '@/lib/i18nHelpers';
 import { ValueIcon } from '../ValueIcon';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -7,7 +9,7 @@ import { useState } from 'react';
 export type SelectableValue = { kind: 'core'; key: ValueKey };
 
 export interface CoreValuesResult {
-  slots: SelectableValue[];      // length 3, in pick order
+  slots: SelectableValue[];
 }
 
 interface Props {
@@ -18,6 +20,7 @@ interface Props {
 const TOTAL = 3;
 
 export function CoreValuesSelection({ revealedTop3, onComplete }: Props) {
+  const { t } = useTranslation();
   const [picked, setPicked] = useState<ValueKey[]>([]);
 
   const toggle = (key: ValueKey) => {
@@ -34,24 +37,26 @@ export function CoreValuesSelection({ revealedTop3, onComplete }: Props) {
   };
 
   const remaining = TOTAL - picked.length;
-  const revealedLabels = revealedTop3?.map(k => getValueByKey(k).label) ?? [];
+  const revealedLabels = revealedTop3?.map(k => tValueLabel(t, k)) ?? [];
 
   return (
     <div className="space-y-8 pb-12">
       <div className="space-y-3 text-center">
-        <p className="text-xs font-display uppercase tracking-widest text-accent">Your Aspiration</p>
+        <p className="text-xs font-display uppercase tracking-widest text-accent">{t('quiz.core.eyebrow')}</p>
         <h2 className="text-2xl md:text-3xl font-display font-semibold text-foreground leading-tight">
-          Now. Pick the 3 values you want at the centre of your life.
+          {t('quiz.core.title')}
         </h2>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          Not what came up. What you'd choose if you were choosing on purpose. The order you tap them is the order you're prioritising them.
-        </p>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto">{t('quiz.core.body')}</p>
       </div>
 
       {revealedLabels.length === 3 && (
         <div className="rounded-xl bg-accent/10 px-5 py-4">
           <p className="text-sm md:text-base text-foreground/85 leading-relaxed italic font-body">
-            Your revealed top 3 were <span className="not-italic font-medium text-foreground">{revealedLabels[0]}</span>, <span className="not-italic font-medium text-foreground">{revealedLabels[1]}</span>, and <span className="not-italic font-medium text-foreground">{revealedLabels[2]}</span>. The interesting question is which of these you want to keep at the centre, and what else you want to bring in.
+            <Trans
+              i18nKey="quiz.core.revealedNote"
+              values={{ a: revealedLabels[0], b: revealedLabels[1], c: revealedLabels[2] }}
+              components={{ strong: <span className="not-italic font-medium text-foreground" /> }}
+            />
           </p>
         </div>
       )}
@@ -86,9 +91,9 @@ export function CoreValuesSelection({ revealedTop3, onComplete }: Props) {
                 </motion.span>
               )}
               <ValueIcon value={v.key} size={22} />
-              <p className="font-display font-medium text-foreground">{v.label}</p>
+              <p className="font-display font-medium text-foreground">{tValueLabel(t, v.key)}</p>
               <p className="text-xs text-muted-foreground leading-snug font-body">
-                {v.description}
+                {tValueDescription(t, v.key)}
               </p>
             </button>
           );
@@ -97,7 +102,7 @@ export function CoreValuesSelection({ revealedTop3, onComplete }: Props) {
 
       {picked.length > 0 && picked.length < TOTAL && (
         <p className="text-center text-xs text-muted-foreground font-body">
-          Tap a selected card to deselect it.
+          {t('quiz.core.deselectHint')}
         </p>
       )}
 
@@ -112,10 +117,10 @@ export function CoreValuesSelection({ revealedTop3, onComplete }: Props) {
         )}
       >
         {picked.length === 0
-          ? 'Pick 3 to continue'
+          ? t('quiz.core.pickThree')
           : picked.length === TOTAL
-            ? 'Continue →'
-            : `Pick ${remaining} more`}
+            ? t('quiz.core.continue')
+            : t('quiz.core.pickMore', { count: remaining })}
       </button>
     </div>
   );
