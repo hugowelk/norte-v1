@@ -54,7 +54,29 @@ function unflatten(flat: Flat): Record<string, unknown> {
   return root;
 }
 
+type Group = { id: string; label: string; url: string };
+
+const GROUPS: Group[] = [
+  { id: "pages.index", label: "Home", url: "/" },
+  { id: "pages.methodology", label: "Methodology", url: "/methodology" },
+  { id: "pages.notFound", label: "404", url: "/*" },
+  { id: "quiz", label: "Quiz flow", url: "/ (quiz)" },
+  { id: "postPaywall", label: "Post-paywall", url: "/report/:id" },
+  { id: "report", label: "Report", url: "/report/:id" },
+  { id: "values", label: "Values (shared)", url: "—" },
+  { id: "common", label: "Common (shared)", url: "—" },
+  { id: "ordinals", label: "Ordinals (shared)", url: "—" },
+];
+
+function groupOf(key: string): Group {
+  for (const g of GROUPS) {
+    if (key === g.id || key.startsWith(g.id + ".")) return g;
+  }
+  return { id: "_other", label: "Other", url: "—" };
+}
+
 const AdminTranslationsPage = () => {
+
   useDocumentMeta(
     [{ name: "robots", content: "noindex, nofollow" }],
     { title: "Norte — Translations", canonical: "https://findmyvalues.app/admin/translations" }
