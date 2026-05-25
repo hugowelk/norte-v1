@@ -7,6 +7,7 @@ import { useDocumentMeta } from "@/lib/useDocumentMeta";
 import { toast } from "sonner";
 import enCommon from "@/i18n/locales/en/common.json";
 import ptCommon from "@/i18n/locales/pt-BR/common.json";
+import { AdminNav } from "@/components/admin/AdminNav";
 
 const PW_KEY = "norte_admin_pw";
 const DRAFT_KEY = "norte_admin_pt_draft_v1";
@@ -136,9 +137,9 @@ const AdminTranslationsPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border sticky top-0 bg-background z-10">
+      <AdminNav />
+      <div className="border-b border-border bg-background sticky top-14 z-10">
         <div className="max-w-6xl mx-auto p-4 flex flex-wrap gap-3 items-center">
-          <Link to="/admin" className="text-sm text-muted-foreground hover:text-foreground">← Admin</Link>
           <h1 className="font-display text-xl text-primary">pt-BR translations</h1>
           <span className="text-xs text-muted-foreground">
             {keys.length} keys · {missingCount} missing · {modifiedCount} modified
@@ -170,7 +171,7 @@ const AdminTranslationsPage = () => {
             Showing {visibleKeys.length}. Edits autosave locally; download to ship.
           </span>
         </div>
-      </header>
+      </div>
 
       <main className="max-w-6xl mx-auto p-4 space-y-3">
         {visibleKeys.map((k) => {
