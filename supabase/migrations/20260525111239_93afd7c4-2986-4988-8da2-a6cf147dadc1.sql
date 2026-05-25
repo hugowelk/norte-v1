@@ -1,0 +1,1 @@
+REVOKE SELECT (payment_session_id) ON public.reports FROM anon, authenticated;
