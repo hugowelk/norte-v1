@@ -132,33 +132,29 @@ const AdminTranslationsPage = () => {
   });
 
   // Group counts (respect filter + query, ignore groupFilter so user can switch groups)
-  const groupCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const k of keys) {
-      const en = enFlat[k] ?? "";
-      const ptv = pt[k] ?? "";
-      if (filter === "missing" && ptv.trim() !== "") continue;
-      if (filter === "modified" && ptv === (ptFlatOriginal[k] ?? "")) continue;
-      if (query) {
-        const q = query.toLowerCase();
-        if (!k.toLowerCase().includes(q) && !en.toLowerCase().includes(q) && !ptv.toLowerCase().includes(q)) continue;
-      }
-      const id = groupOf(k).id;
-      counts.set(id, (counts.get(id) ?? 0) + 1);
+  const groupCounts = new Map<string, number>();
+  for (const k of keys) {
+    const en = enFlat[k] ?? "";
+    const ptv = pt[k] ?? "";
+    if (filter === "missing" && ptv.trim() !== "") continue;
+    if (filter === "modified" && ptv === (ptFlatOriginal[k] ?? "")) continue;
+    if (query) {
+      const q = query.toLowerCase();
+      if (!k.toLowerCase().includes(q) && !en.toLowerCase().includes(q) && !ptv.toLowerCase().includes(q)) continue;
     }
-    return counts;
-  }, [keys, enFlat, pt, ptFlatOriginal, filter, query]);
+    const id = groupOf(k).id;
+    groupCounts.set(id, (groupCounts.get(id) ?? 0) + 1);
+  }
 
   // Group visibleKeys by group id, preserving order
-  const grouped = useMemo(() => {
-    const map = new Map<string, { group: Group; keys: string[] }>();
-    for (const k of visibleKeys) {
-      const g = groupOf(k);
-      if (!map.has(g.id)) map.set(g.id, { group: g, keys: [] });
-      map.get(g.id)!.keys.push(k);
-    }
-    return Array.from(map.values());
-  }, [visibleKeys]);
+  const groupedMap = new Map<string, { group: Group; keys: string[] }>();
+  for (const k of visibleKeys) {
+    const g = groupOf(k);
+    if (!groupedMap.has(g.id)) groupedMap.set(g.id, { group: g, keys: [] });
+    groupedMap.get(g.id)!.keys.push(k);
+  }
+  const grouped = Array.from(groupedMap.values());
+
 
 
   const missingCount = keys.filter((k) => (pt[k] ?? "").trim() === "").length;
