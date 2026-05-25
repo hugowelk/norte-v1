@@ -81,6 +81,7 @@ const App = () => (
               <Route path="/post-paywall/loading" element={<RequirePayment><LoadingPlaceholder /></RequirePayment>} />
               <Route path="/r/:reportId" element={<ReportPage />} />
               <Route path="/admin" element={<AdminPage />} />
+              <Route path="/admin/translations" element={<AdminTranslationsPage />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
