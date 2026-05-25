@@ -97,6 +97,7 @@ const AdminTranslationsPage = () => {
 
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "missing" | "modified">("all");
+  const [groupFilter, setGroupFilter] = useState<string>("all");
 
   useEffect(() => {
     // Save only diffs vs original
@@ -124,10 +125,41 @@ const AdminTranslationsPage = () => {
     const ptv = pt[k] ?? "";
     if (filter === "missing" && ptv.trim() !== "") return false;
     if (filter === "modified" && ptv === (ptFlatOriginal[k] ?? "")) return false;
+    if (groupFilter !== "all" && groupOf(k).id !== groupFilter) return false;
     if (!query) return true;
     const q = query.toLowerCase();
     return k.toLowerCase().includes(q) || en.toLowerCase().includes(q) || ptv.toLowerCase().includes(q);
   });
+
+  // Group counts (respect filter + query, ignore groupFilter so user can switch groups)
+  const groupCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const k of keys) {
+      const en = enFlat[k] ?? "";
+      const ptv = pt[k] ?? "";
+      if (filter === "missing" && ptv.trim() !== "") continue;
+      if (filter === "modified" && ptv === (ptFlatOriginal[k] ?? "")) continue;
+      if (query) {
+        const q = query.toLowerCase();
+        if (!k.toLowerCase().includes(q) && !en.toLowerCase().includes(q) && !ptv.toLowerCase().includes(q)) continue;
+      }
+      const id = groupOf(k).id;
+      counts.set(id, (counts.get(id) ?? 0) + 1);
+    }
+    return counts;
+  }, [keys, enFlat, pt, ptFlatOriginal, filter, query]);
+
+  // Group visibleKeys by group id, preserving order
+  const grouped = useMemo(() => {
+    const map = new Map<string, { group: Group; keys: string[] }>();
+    for (const k of visibleKeys) {
+      const g = groupOf(k);
+      if (!map.has(g.id)) map.set(g.id, { group: g, keys: [] });
+      map.get(g.id)!.keys.push(k);
+    }
+    return Array.from(map.values());
+  }, [visibleKeys]);
+
 
   const missingCount = keys.filter((k) => (pt[k] ?? "").trim() === "").length;
   const modifiedCount = keys.filter((k) => (pt[k] ?? "") !== (ptFlatOriginal[k] ?? "")).length;
