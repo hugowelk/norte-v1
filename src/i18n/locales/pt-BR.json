@@ -1,0 +1,518 @@
+{
+  "common": {
+    "actions": {
+      "begin": "Começar",
+      "beginArrow": "Começar →",
+      "continue": "Continuar",
+      "continueArrow": "Continuar →",
+      "back": "← Voltar",
+      "next": "Próximo",
+      "start": "Começar",
+      "retry": "Tentar de novo →",
+      "submit": "Enviar feedback",
+      "cancel": "Cancelar",
+      "gotIt": "Entendi",
+      "downloadPdf": "Baixar em PDF",
+      "copyLink": "Copiar link",
+      "shareWithFriends": "Compartilhar o Norte com seus amigos",
+      "maybeLater": "Talvez depois",
+      "shareWithFriend": "Compartilhar o Norte com um amigo",
+      "linkCopied": "Link copiado"
+    },
+    "footer": {
+      "methodology": "Metodologia",
+      "copyright": "Norte · 2026 ©",
+      "basedOn": "Baseado em ACT (Terapia de Aceitação e Compromisso), no Valued Living Questionnaire e no Bull's Eye Values Survey. 2026©"
+    },
+    "toasts": {
+      "shareLinkCopied": "Link copiado. Qualquer pessoa com ele pode ler seu relatório.",
+      "couldNotCopy": "Não foi possível copiar o link.",
+      "shareNorteCopied": "Link do Norte copiado. Compartilhe com seus amigos."
+    }
+  },
+  "pages": {
+    "index": {
+      "meta": {
+        "title": "Norte — Descubra seus valores",
+        "description": "Responda 15 cenários de troca e descubra os valores que seu comportamento revela. Um exercício guiado de 5 minutos do Norte.",
+        "ogTitle": "Faça o exercício de valores do Norte",
+        "ogDescription": "Responda 15 cenários de troca e descubra os valores que seu comportamento revela."
+      },
+      "heroTitle": "Seus valores reais não são o que você diz. São o que você escolhe quando há algo em jogo.",
+      "heroBody": "O Norte usa 15 cenários de troca para revelar os valores que guiam suas decisões. Metodologia baseada em ACT (Terapia de Aceitação e Compromisso).",
+      "problemEyebrow": "O QUE VOCÊ TEM PRIORIZADO NA SUA VIDA?",
+      "problemBody": "Quando alguém pergunta o que importa, você responde com aspirações. Mas o que realmente importa aparece nas suas escolhas. Especialmente nas pequenas. Especialmente nas difíceis.",
+      "howEyebrow": "Como funciona",
+      "howTitle": "Três ideias por trás do Norte.",
+      "howSteps": [
+        {
+          "title": "Escolhas revelam valores",
+          "body": "Pesquisas em psicologia comportamental mostram que valores aspiracionais (o que dizemos importar) muitas vezes divergem dos valores revelados (o que nossas escolhas mostram importar). O Norte trabalha com os dois."
+        },
+        {
+          "title": "Trocas, não preferências",
+          "body": "Cada cenário coloca dois valores em tensão real. Não há resposta certa. Sua escolha revela qual valor pesa mais quando você precisa decidir."
+        },
+        {
+          "title": "Um plano de ação, não um relatório",
+          "body": "No final, você recebe um plano personalizado para fechar a distância entre o que você vive e o que quer viver."
+        }
+      ],
+      "whoEyebrow": "Para quem é",
+      "whoBody": "O Norte é para quem sente uma distância entre a vida que está construindo e a que realmente quer. Pessoas que estão bem no papel e silenciosamente inquietas na prática. Pessoas cansadas de autoconhecimento vago e que querem algo concreto."
+    },
+    "methodology": {
+      "meta": {
+        "title": "Norte — Metodologia",
+        "description": "A pesquisa por trás do Norte: ACT, o Valued Living Questionnaire e o Bull's Eye Values Survey, e como moldam o algoritmo de pontuação dos 8 valores.",
+        "ogTitle": "Como o Norte lê seus valores — Metodologia"
+      },
+      "eyebrow": "Metodologia",
+      "title": "Como o Norte lê seus valores.",
+      "methodologyHeading": "A metodologia",
+      "methodologyBody": "O Norte se apoia em três fundamentos de pesquisa: ACT (Terapia de Aceitação e Compromisso), o Valued Living Questionnaire e o Bull's Eye Values Survey. Cada um contribui com uma peça diferente de como entendemos e medimos valores.",
+      "valuesHeading": "Os 8 valores",
+      "disclaimerHeading": "Aviso",
+      "disclaimerBody": "O Norte é um produto de bem-estar, não uma ferramenta clínica. Foi feito para dar uma lente útil para reflexão, não para diagnóstico. Se você trabalha com terapeuta ou coach, seus resultados podem ser um bom ponto de partida.",
+      "backToNorte": "← Voltar ao Norte"
+    },
+    "notFound": {
+      "title": "404",
+      "body": "Página não encontrada",
+      "home": "Voltar para o início"
+    }
+  },
+  "quiz": {
+    "intro": {
+      "eyebrow": "Parte 1",
+      "title": "As próximas perguntas vão te dar uma imagem clara dos valores que você tem vivido nos últimos meses",
+      "body1": "Você verá 15 situações do dia a dia. Em cada uma, escolha a opção mais próxima do que você <em>realmente</em> faria, não do que GOSTARIA de fazer. Pense no seu comportamento dos últimos 3 meses.",
+      "body2": "A primeira resposta costuma ser a mais verdadeira."
+    },
+    "howItWorks": {
+      "eyebrow": "Antes de começar",
+      "title": "Como isso funciona",
+      "points": [
+        "Você vai responder 15 cenários. Cada um apresenta duas situações em conflito. Escolha o que você realmente faria.",
+        "Não pense demais. Não há certo ou errado. O que conta é o que você faria, não o que gostaria de fazer.",
+        "No final, mostramos os 3 valores que mais pesam nas suas decisões e onde estão as distâncias entre comportamento e aspiração."
+      ],
+      "methodology": "Metodologia baseada em ACT (Terapia de Aceitação e Compromisso), no Valued Living Questionnaire e no Bull's Eye Values Survey."
+    },
+    "scenario": {
+      "counter": "{{n}} de 15",
+      "biggerOne": "Essa é mais pesada"
+    },
+    "processing": {
+      "eyebrow": "Processando",
+      "stages": [
+        "Lendo suas trocas.",
+        "Pesando o que apareceu contra o que ficou em silêncio.",
+        "Ordenando os oito valores.",
+        "Trazendo seu top três para a frente."
+      ]
+    },
+    "nameEmail": {
+      "title": "Antes de lermos suas trocas, como devemos te chamar?",
+      "subtitle": "Seu primeiro nome e e-mail para enviarmos o relatório.",
+      "namePlaceholder": "Primeiro nome",
+      "emailPlaceholder": "E-mail",
+      "errors": {
+        "name": "Por favor, diga seu nome.",
+        "email": "Digite um e-mail válido."
+      }
+    },
+    "results": {
+      "eyebrow": "Seus Resultados",
+      "title": "Aqui está o que apareceu.",
+      "body": "Entre as 15 trocas que você acabou de fazer, esses são os três valores que mais apareceram.",
+      "topThreeLabel": "Seu top 3 revelado",
+      "otherValuesLabel": "Outros valores que apareceram",
+      "costLabel": "O custo quando esse valor domina",
+      "whyToggle": "Por que esse valor?",
+      "receiptsTextOne": "Entre as 15 trocas, você fez <strong>{{count}}</strong> escolha que indica que valoriza {{themes}} — sinalizando uma tendência clara de priorizar {{label}}.",
+      "receiptsTextOther": "Entre as 15 trocas, você fez <strong>{{count}}</strong> escolhas que indicam que valoriza {{themes}} — sinalizando uma tendência clara de priorizar {{label}}.",
+      "themesSeparator": ", ",
+      "themesLast": " e ",
+      "disclaimer": "Esses resultados vêm de um algoritmo determinístico baseado em ACT, no Valued Living Questionnaire e no Bull's Eye Values Survey. Sem chute de IA.",
+      "readMethodology": "Ler a metodologia →",
+      "continue": "Próximo: escolha os valores que quer no centro →"
+    },
+    "core": {
+      "eyebrow": "Sua Aspiração",
+      "title": "Agora. Escolha os 3 valores que você quer no centro da sua vida.",
+      "body": "Não o que apareceu. O que você escolheria se estivesse escolhendo de propósito. A ordem que você tocar é a ordem em que está priorizando.",
+      "revealedNote": "Seu top 3 revelado foi <strong>{{a}}</strong>, <strong>{{b}}</strong> e <strong>{{c}}</strong>. A pergunta interessante é qual desses você quer manter no centro e o que mais quer trazer para perto.",
+      "deselectHint": "Toque num cartão selecionado para tirá-lo.",
+      "pickThree": "Escolha 3 para continuar",
+      "pickMore": "Escolha mais {{count}}",
+      "continue": "Continuar →"
+    },
+    "alignment": {
+      "eyebrow": "Uma checagem rápida",
+      "title": "O quanto esses valores estão presentes na sua vida hoje?",
+      "body": "Mova cada barra para onde realmente parece estar.\nA marca pontilhada mostra onde suas trocas te colocaram.",
+      "barely": "Quase ausente",
+      "lived": "Vivido todo dia",
+      "tradeoffs": "Suas trocas: {{n}}",
+      "continue": "Ver minha bússola →"
+    },
+    "compass": {
+      "eyebrow": "A Distância",
+      "title": "Aqui é onde o revelado e o aspiracional se encontram.",
+      "body": "Para cada valor, a barra de cima é a frequência com que apareceu nas suas trocas. A de baixo é o quanto ele realmente está presente na sua vida.",
+      "legendRevealed": "Revelado",
+      "legendFelt": "Sentido",
+      "chosenLabel": "Seus 3 escolhidos",
+      "restLabel": "O restante",
+      "missingNote": "dos valores que você quer no centro <strong>não</strong> aparecem no seu top 3 revelado.",
+      "topNote": "<strong>{{label}}</strong> é o seu valor escolhido em primeiro lugar, mas suas trocas o colocam em <strong>{{ordinal}}</strong>.",
+      "fullOverlap1": "Os valores que você quer no centro e os que tem vivido são os mesmos.",
+      "fullOverlap2": "Isso não é pouca coisa. Significa que a história que você conta sobre sua vida bate com o que sua semana faz. O trabalho, se houver, é em quanto cada um está presente.",
+      "noteEyebrow": "Uma nota",
+      "gapNote1": "Isso não é um veredicto. É a distância entre a vida que você tem vivido e a que tem tentado alcançar.",
+      "gapNote2": "A pergunta não é se a distância está errada. É se você quer fechá-la.",
+      "continue": "Me mostre como →"
+    },
+    "paywall": {
+      "eyebrow": "O que vem agora",
+      "title": "Transforme a distância em algo que você pode mover.",
+      "body": "Você viu o que tem guiado sua semana e para onde quer ir. O próximo passo é entender suas distâncias e fazer as pequenas mudanças que diminuem o trajeto.",
+      "cardTitle": "Seu Relatório Completo de Valores",
+      "free": "Grátis",
+      "bullets": {
+        "nextSteps": {
+          "title": "Os próximos passos",
+          "body": "O Norte pode te guiar pela sua bússola. Receba 3 ações concretas para começar essa semana, ajudando você a desenhar a vida que realmente quer."
+        },
+        "conversation": {
+          "title": "Uma conversa de verdade, não uma checklist",
+          "body": "O guia de IA do Norte trabalha sua bússola com você, fazendo as perguntas que um amigo atento faria e ajudando a desenhar mudanças que cabem na vida que você tem."
+        },
+        "yours": {
+          "title": "É seu, para guardar",
+          "body": "Exporte seu plano, revisite quando quiser, compartilhe com alguém que te conhece."
+        }
+      },
+      "cta": "Quero meu Relatório Completo GRÁTIS →",
+      "sample": {
+        "aliveness": {
+          "title": "Uma pequena mudança esta semana · em direção à Vitalidade",
+          "body": "Mude sua decisão diária sobre exercício da manhã para a noite anterior. Decida hoje à noite como o amanhã será, não de manhã, quando seu cérebro cansado vai negociar isso."
+        },
+        "achievement": {
+          "title": "Uma pequena mudança esta semana · em direção à Realização",
+          "body": "Escolha o projeto que, se andasse, mudaria o resto da semana. Bloqueie 90 minutos para ele amanhã de manhã, antes do e-mail, antes de qualquer coisa."
+        },
+        "connection": {
+          "title": "Uma pequena mudança esta semana · em direção à Conexão",
+          "body": "Mande mensagem para uma pessoa que você vinha pensando em ligar. Não para marcar nada. Só para dizer o que diria se ela estivesse na sala."
+        },
+        "enjoyment": {
+          "title": "Uma pequena mudança esta semana · em direção ao Prazer",
+          "body": "Coloque uma coisa na agenda esta semana que não tenha outro propósito além de ser boa. Trate como inegociável, como uma reunião."
+        },
+        "meaning": {
+          "title": "Uma pequena mudança esta semana · em direção ao Sentido",
+          "body": "Ao fim de cada dia desta semana, escreva uma frase: o que fiz hoje que faria de novo se pudesse escolher?"
+        },
+        "contribution": {
+          "title": "Uma pequena mudança esta semana · em direção à Contribuição",
+          "body": "Encontre uma forma pequena de ajudar alguém de quem você não pode receber nada em troca. Quinze minutos. O tamanho do ato não importa. O que importa é que é unilateral."
+        },
+        "stability": {
+          "title": "Uma pequena mudança esta semana · em direção à Estabilidade",
+          "body": "Escolha a única coisa financeira ou prática que você vem evitando porque parece mais pesada do que é. Gaste 20 minutos com ela amanhã. O alívio costuma ser desproporcional."
+        },
+        "autonomy": {
+          "title": "Uma pequena mudança esta semana · em direção à Autonomia",
+          "body": "Encontre um compromisso recorrente que você aceitou por hábito. Esta semana, renegocie ou solte, mesmo que pequeno. O músculo está em escolher."
+        }
+      }
+    },
+    "scenarios": {
+      "C1": {
+        "prompt": "É sexta-feira à noite. Você está esgotado da semana. Um amigo manda mensagem perguntando se você quer ir na casa dele para jantar e beber alguma coisa.",
+        "optionA": "Eu fico em casa. Sono hoje, energia amanhã.",
+        "optionB": "Eu vou. Descanso pode esperar, essa noite não."
+      },
+      "C2": {
+        "prompt": "Você vem treinando duro para algo que importa para você. Um amigo próximo que você vê raramente está na cidade neste fim de semana e quer passar tempo com você. Manter o plano de treino significa vê-lo de relance, no máximo.",
+        "optionA": "Eu mantenho o plano. Aparecer por mim mesmo não é opcional.",
+        "optionB": "Eu libero o fim de semana. Quem importa não passa por aqui sempre."
+      },
+      "C3": {
+        "prompt": "Você recebe uma proposta que daria controle total sobre seu tempo e como passa seus dias. A pegadinha: renda menos previsível, sem rede de segurança clara.",
+        "optionA": "Eu fico com o que tenho. Tranquilidade vale mais que o upside.",
+        "optionB": "Eu aceito. Ser dono do meu tempo importa mais que o colchão agora."
+      },
+      "C4": {
+        "prompt": "Você está num relacionamento que funciona. Mas alguma coisa em você continua perguntando como você seria fora dele, se partes suas ainda estão aí dentro.",
+        "optionA": "Eu fico. O que temos é real. As perguntas podem ser respondidas juntos.",
+        "optionB": "Eu peço espaço. Preciso saber quem sou antes de poder estar com alguém de verdade.",
+        "transitionAfter": "As próximas ficam um pouco mais difíceis."
+      },
+      "C5": {
+        "prompt": "Você pode aceitar algo que aceleraria de forma real um objetivo pessoal que persegue há anos. Fazer isso bem significa se afastar de um grupo comunitário onde as pessoas contam com você.",
+        "optionA": "Eu aceito. Atingir isso importa para mim e já esperei o bastante.",
+        "optionB": "Eu fico com o grupo. As pessoas contam comigo agora, e isso não é intercambiável."
+      },
+      "C6": {
+        "prompt": "Você recebeu uma quantia de dinheiro inesperada. O bastante para uma viagem com a qual sempre sonhou, ou o bastante para financiar algo em que você realmente acredita.",
+        "optionA": "A viagem. Tempo que não volta, num corpo que nem sempre vai dar conta.",
+        "optionB": "A causa. Dinheiro faz mais ali do que numa praia."
+      },
+      "C7": {
+        "prompt": "Você está num momento em que tudo está se encaixando. Sono está curto, suas costas doem, mas você está entregando o melhor trabalho do ano. Parar agora quebra o feitiço.",
+        "optionA": "Eu paro. O corpo não é parceiro de negociação.",
+        "optionB": "Eu continuo. Esse tipo de fluxo é raro e o trabalho vale."
+      },
+      "C8": {
+        "prompt": "Sua parceira sugere morarem juntos. Você quer isso com ela. Você também sabe que suas rotinas, seu espaço, seu jeito de ficar sozinho vão mudar de formas que você não consegue prever.",
+        "optionA": "Eu peço para esperar. Preciso do meu espaço para continuar sendo eu.",
+        "optionB": "Eu digo sim. Construir uma vida com alguém significa abrir mão de parte do espaço que você tinha."
+      },
+      "C14": {
+        "prompt": "Um vizinho que você mal conhece está passando por uma fase difícil e começou a se apoiar em você, pesado. Tarefas, ligações tarde da noite, pequenos favores que já não são pequenos. Recuar significa deixá-lo mais sozinho. Não recuar significa perder partes reais da sua semana.",
+        "optionA": "Eu continuo aparecendo. Virar as costas para quem precisa não é o tipo de pessoa que quero ser.",
+        "optionB": "Eu recuo. Não consigo ser a rede de segurança de alguém se eu me perder no processo."
+      },
+      "C15": {
+        "prompt": "Você vem economizando com método há muito tempo. Algo que sempre quis fazer fica possível agora, nesta estação, e custaria boa parte do que você guardou.",
+        "optionA": "Eu faço. A reserva existe para ser gasta em uma vida, não só guardada para dias ruins.",
+        "optionB": "Eu deixo passar. A tranquilidade de ter esse dinheiro vale mais que qualquer experiência única.",
+        "transitionAfter": "Quase nas escolhas mais difíceis."
+      },
+      "C9": {
+        "prompt": "Você presencia algo errado acontecendo num lugar do qual depende. Falar vai criar atrito real e pode custar seu lugar ali.",
+        "optionA": "Eu falo. Ficar calado sobre isso não é uma versão de mim com a qual eu consiga viver.",
+        "optionB": "Eu fico calado por enquanto. Não consigo ajudar ninguém de uma posição pior do que essa."
+      },
+      "C10": {
+        "prompt": "Você encontrou algo que importa para você de um jeito que nada importou em anos. Entrar fundo nisso exige tempo e dinheiro que você não tem.",
+        "optionA": "Eu entro mesmo assim. Sentido não espera as condições certas.",
+        "optionB": "Eu espero ter margem. Não consigo dar do que não tenho."
+      },
+      "C11": {
+        "prompt": "Alguém próximo da família está passando por algo sério e precisa de você presente. Ao mesmo tempo, você está num momento decisivo de um objetivo de longo prazo, sumir agora tem custo real.",
+        "optionA": "Eu apareço por essa pessoa. Objetivos podem ser reconstruídos. Confiança, muitas vezes, não.",
+        "optionB": "Eu mantenho o foco. Ficar ausente por uma temporada agora me deixa mais presente depois."
+      },
+      "C12": {
+        "prompt": "Você recebe três meses livres. Sem agenda, sem obrigações. Viajar, ler, descansar, seguir o que te chama. O custo: largar algo que vinha construindo e que poderia ser um ponto de virada.",
+        "optionA": "Eu pego os três meses. Uma vida boa não é adiada para sempre.",
+        "optionB": "Eu fico com o que estou construindo. Aquilo que me dá motivo para levantar é o que vale terminar."
+      },
+      "C13": {
+        "prompt": "Você está dentro de algo que importa de verdade para você. Seu corpo vem dando sinais vermelhos há semanas: sono ruim, energia baixa, dor que não passa. Desacelerar para cuidar disso pausa algo que você esperou anos para viver.",
+        "optionA": "Eu desacelero e cuido. Não existe versão disso que funcione sem um corpo que funcione.",
+        "optionB": "Eu sigo. Essa janela é rara e meu corpo já aguentou em condição pior."
+      }
+    }
+  },
+  "values": {
+    "achievement": {
+      "label": "Realização",
+      "labelLower": "realização",
+      "description": "Construir, concluir, deixar marca.",
+      "longDescription": "Você se sente mais vivo quando está avançando, se desafiando e entregando. Reconhecimento pelo que você constrói importa para você.",
+      "definition": "Realização é o valor de quem mede o tempo pelo que foi construído, não pelo que sentiu. Decisões grandes passam por um filtro só: isso moveu a coisa para a frente, ou só preencheu o dia? Fiz o que disse que faria?",
+      "pattern": "Nos seus cenários, esse valor apareceu quando havia tensão entre avanço e descanso, entre terminar e se conectar. Quando a escolha era entre o ritmo e parar, você ficou com o trabalho.",
+      "cost": "Quando esse valor domina sem contrapeso, vira produção pela dor, tratar o corpo e as relações como variáveis a otimizar, e uma incapacidade silenciosa de aproveitar o que já construiu antes de já estar correndo atrás da próxima coisa. O preço para a saúde física e mental é real se não houver um valor contrabalançando.",
+      "themes": ["avanço", "ritmo", "entrega"]
+    },
+    "connection": {
+      "label": "Conexão",
+      "labelLower": "conexão",
+      "description": "Proximidade com quem importa.",
+      "longDescription": "Relações são o fio que sustenta sua vida. Tempo com família, parceiro ou amigos próximos é inegociável para você.",
+      "definition": "Conexão é o valor de quem mede o tempo pela qualidade das relações que cabem dentro dele. A pergunta por trás de cada decisão é: isso me aproxima das pessoas que importam, ou me afasta? Escolhas grandes passam por esse filtro antes de qualquer outro.",
+      "pattern": "Nos seus cenários, esse valor apareceu quando havia tensão entre eficiência e presença, entre uma coisa que precisava ser feita e uma pessoa que precisava de você. Quando a escolha era entre dar conta e estar presente, você esteve presente.",
+      "cost": "Quando esse valor domina sem contrapeso, pode virar dificuldade de dizer não, carga emocional que silenciosamente passa do que você consegue carregar, e o hábito de adiar seu próprio trabalho porque a necessidade do outro parece mais urgente. As pessoas da sua vida prosperam. Você pode não prosperar.",
+      "themes": ["presença", "relações", "estar ali"]
+    },
+    "aliveness": {
+      "label": "Vitalidade",
+      "labelLower": "vitalidade",
+      "description": "Energia, saúde, presença no próprio corpo.",
+      "longDescription": "Você se importa com como se sente (sono, movimento, energia, descanso). Sem vitalidade, nada mais se sustenta.",
+      "definition": "Vitalidade é o valor de quem trata o corpo como o primeiro instrumento, não o último. A pergunta por trás de cada decisão é: vou sentir isso no meu corpo amanhã, na semana que vem, daqui a dez anos, e vai ser uma sensação que quero?",
+      "pattern": "Nos seus cenários, esse valor apareceu quando outra coisa (trabalho, ritmo, sentido, obrigação) pedia para você passar por cima do que o corpo dizia. Quando o corpo disse chega, você parou. Quando outros teriam seguido pela recompensa no fim, você se cuidou.",
+      "cost": "Quando esse valor domina sem contrapeso, pode virar uma atenção excessiva ao conforto corporal atual que bloqueia desconforto produtivo. Treino, projetos difíceis, compromissos ambiciosos exigem períodos de esgotamento. Se o \"não\" do corpo vence sempre, as coisas maiores que você quer para sua saúde futura também nunca são construídas.",
+      "themes": ["corpo", "descanso", "recuperação"]
+    },
+    "enjoyment": {
+      "label": "Prazer",
+      "labelLower": "prazer",
+      "description": "Prazer, diversão, a textura de um bom dia.",
+      "longDescription": "A vida é para ser vivida no presente. Você abre espaço para brincar, para a beleza, para pequenos prazeres, não só produtividade.",
+      "definition": "Prazer é o valor de quem escolhe o presente sobre o futuro. A pergunta por trás de cada decisão é: estou vivendo isso agora, ou estou guardando para uma versão de mim que talvez nunca chegue?",
+      "pattern": "Nos seus cenários, esse valor apareceu quando algo bom estava disponível agora e havia um motivo sensato para esperar. Quando a escolha era entre um momento que não se repete e um retorno que talvez viesse depois, você ficou com o momento.",
+      "cost": "Quando esse valor domina, vira o hábito da gratificação imediata. A pequena sensação boa de agora ganha da mudança maior depois. Economizar parece privação, treinar parece punição, e as mudanças que se acumulariam ao longo do tempo nunca recebem a pista que precisam.",
+      "themes": ["o momento", "prazer", "presença"]
+    },
+    "meaning": {
+      "label": "Sentido",
+      "labelLower": "sentido",
+      "description": "Uma vida que aponta para algo maior.",
+      "longDescription": "Você quer que o que faz importe para além de hoje. Propósito, profundidade e relevância te puxam mais do que o conforto.",
+      "definition": "Sentido é o valor de quem precisa que sua vida aponte para algum lugar. A pergunta por trás de cada decisão é: isso importa, ou só estou gastando horas? Sem resposta, até o conforto começa a parecer vazio.",
+      "pattern": "Nos seus cenários, esse valor apareceu quando havia um puxão para algo que importava para você e um motivo sensato para adiar (sem tempo, sem dinheiro, não é o momento certo). Quando a escolha era entre esperar as condições certas e entrar mesmo assim, você entrou.",
+      "cost": "Quando esse valor domina sem contrapeso, dias comuns podem começar a parecer uma traição. Descanso, diversão e presença são descartados como \"não é a coisa de verdade.\" Você também pode passar por cima de sinais de alerta (no corpo, nas relações, nas finanças) porque o sentido do que está fazendo parece importante demais para interromper.",
+      "themes": ["propósito", "profundidade", "o que importa"]
+    },
+    "contribution": {
+      "label": "Contribuição",
+      "labelLower": "contribuição",
+      "description": "Tornar a vida melhor para os outros.",
+      "longDescription": "Você mede uma vida boa em parte pelo que ela devolve, para pessoas, causas, comunidade. Ajudar não é atividade lateral.",
+      "definition": "Contribuição é o valor de quem mede uma vida em parte pelo que ela devolve. A pergunta por trás de cada decisão é: sou útil aqui? Ajudar não é atividade lateral, é algo para o qual o dia precisa abrir espaço.",
+      "pattern": "Nos seus cenários, esse valor apareceu quando havia tensão entre seu próprio avanço e uma necessidade real de outra pessoa. Quando a escolha era entre proteger sua trajetória e aparecer por quem contava com você, você apareceu.",
+      "cost": "Quando esse valor domina sem contrapeso, seu tempo vai sendo silenciosamente absorvido pelas emergências dos outros. Você vira a pessoa com quem dá para contar, o que é bom, até \"dá para contar\" virar o único papel que você sabe ocupar. O trabalho que você faria por si nunca tem a mesma prioridade.",
+      "themes": ["ajudar", "aparecer", "ser útil"]
+    },
+    "stability": {
+      "label": "Estabilidade",
+      "labelLower": "estabilidade",
+      "description": "Segurança, previsibilidade, chão firme.",
+      "longDescription": "Você constrói a partir da segurança. Saber o que esperar (financeira, emocional, estruturalmente) é o que te libera para agir.",
+      "definition": "Estabilidade é o valor de quem constrói a partir de uma base, não da urgência. A pergunta por trás de cada decisão é: isso me deixa com margem para absorver o que não posso prever, ou consome o colchão que trabalhei para construir?",
+      "pattern": "Nos seus cenários, esse valor apareceu quando algo empolgante exigia gastar margem que você ainda não tinha recuperado. Quando a escolha era entre avançar e proteger o chão sob seus pés, você escolheu o chão. Você protege o que te dá previsões melhores do futuro.",
+      "cost": "Quando esse valor domina sem contrapeso, oportunidades passam por você porque o momento nunca pareceu seguro o bastante. Cautela vira o padrão, depois vira identidade. A reserva que você protegeu vira uma reserva que você nunca gasta, e a vida que esperou para começar segue na espera.",
+      "themes": ["margem", "base", "previsibilidade"]
+    },
+    "autonomy": {
+      "label": "Autonomia",
+      "labelLower": "autonomia",
+      "description": "Ser dono do seu tempo e das suas escolhas.",
+      "longDescription": "Independência é oxigênio. Você precisa de controle sobre suas horas, suas decisões e o desenho dos seus dias.",
+      "definition": "Autonomia é o valor de quem trata seu tempo como a primeira coisa a defender. A pergunta por trás de cada decisão é: quem controla minhas horas, meu ritmo, meu próximo passo? Se a resposta se afasta de você, algo se reequilibra sozinho.",
+      "pattern": "Nos seus cenários, esse valor apareceu quando estruturas externas (relações, obrigações, arranjos confortáveis) pediam para você abrir mão do controle do seu tempo em troca de algo bom. Quando a troca era real, você ficou com o tempo.",
+      "cost": "Quando esse valor domina sem contrapeso, vira resistência a qualquer tipo de estrutura, inclusive as que te ajudariam de verdade. Compromissos parecem jaulas antes de terem a chance de parecer contêineres. Você pode acabar isolado de oportunidades reais que pedem pequenos compromissos no início, porque o início parece rendição.",
+      "themes": ["controle do tempo", "independência", "ritmo"]
+    }
+  },
+  "postPaywall": {
+    "layout": {
+      "eyebrow": "Antes do seu relatório · {{step}} de 3"
+    },
+    "q2": {
+      "title": "Qual é o capítulo atual da sua vida agora?",
+      "body1": "Vemos com frequência pessoas reavaliando seus valores em transições de carreira, separações, mudanças de país, ao virar pais e por aí vai.",
+      "body2": "Em poucas palavras, descreva onde você está na vida agora. Quanto mais específico, mais afiado o relatório.",
+      "seeExamples": "Ver exemplos",
+      "examples": [
+        "\"Acabei de sair do emprego, descobrindo o que vem.\"",
+        "\"Pai recente, perdi minhas bordas.\"",
+        "\"Travado. Os últimos anos parecem piloto automático.\"",
+        "\"Mudei de país há seis meses, ainda reconstruindo.\"",
+        "\"Terminei uma relação longa, reavaliando tudo.\""
+      ]
+    },
+    "q3": {
+      "headingFallback": "O que tem dificultado tornar o seu primeiro valor escolhido — {{label}}, parte da sua rotina?",
+      "headingReal": "O que tem dificultado tornar o seu primeiro valor escolhido — {{label}}, parte da sua rotina?",
+      "subtitle": "Escolha o que parecer mais verdadeiro.",
+      "fallbackValue": "esse valor",
+      "customPlaceholder": "Conte com suas próprias palavras…",
+      "options": {
+        "not_tried": "Eu ainda não tentei de verdade. Ficou na lista de tarefas",
+        "other_priorities_win": "Eu tentei, mas outras prioridades vêm ganhando",
+        "dont_know_what_it_looks_like": "Não tenho certeza de como \"viver por esse valor\" seria na prática",
+        "hard_right_now": "Algo na minha vida torna isso genuinamente difícil agora",
+        "not_sure_want_it": "Não tenho certeza se realmente quero isso",
+        "other": "Outro"
+      }
+    },
+    "q4": {
+      "title": "Se fechar a distância entre como você vive hoje e como quer viver significasse abrir mão de algo, do que você NÃO abriria mão?",
+      "body1": "Priorizar valores muitas vezes envolve fazer escolhas, deixar hábitos para trás e às vezes mudanças grandes na vida.",
+      "body2": "Em poucas palavras, descreva algo inegociável nesse processo. Isso vai moldar as ações que você pode fazer esta semana.",
+      "seeExamples": "Ver exemplos",
+      "examples": [
+        "\"Tempo com meus filhos.\"",
+        "\"A renda que ganho hoje.\"",
+        "\"Minha rotina da manhã.\"",
+        "\"Sentir segurança financeira.\""
+      ],
+      "generate": "Gerar meu relatório →"
+    },
+    "loading": {
+      "statusLines": [
+        "Lendo suas trocas…",
+        "Conectando o padrão com o que você contou sobre sua vida…",
+        "Escrevendo seu relatório. Isso normalmente leva uns 30 segundos."
+      ],
+      "finalError": "Estamos com problemas para gerar seu relatório agora.",
+      "supportPrefix": "Por favor, escreva para ",
+      "supportSuffix": ". Seu pagamento está seguro e vamos te entregar isso.",
+      "errorTitle": "Algo interrompeu a geração.",
+      "errorBody": "Salvamos suas respostas. Tentar de novo?"
+    }
+  },
+  "report": {
+    "meta": {
+      "description": "Uma leitura pessoal de valores do Norte ({{id}}). Os valores revelados e aspiracionais de alguém, e a distância entre eles.",
+      "ogTitle": "Uma leitura do Norte · {{id}}",
+      "ogDescription": "Os valores de alguém, o comportamento, e a distância entre eles.",
+      "title": "Leitura do Norte · {{id}}"
+    },
+    "shareHeader": {
+      "intro": "Alguém compartilhou a leitura do Norte com você.",
+      "cta": "Curioso sobre a sua? →",
+      "dismiss": "Fechar"
+    },
+    "hero": {
+      "eyebrow": "Seus 3 valores escolhidos"
+    },
+    "gap": {
+      "eyebrow": "De como você vive para como você quer viver",
+      "leftHeading": "Como você vive",
+      "leftSub": "ranqueados de 1 a 8",
+      "rightHeading": "Como você quer viver",
+      "rightSub": "seus 3 escolhidos"
+    },
+    "readingEyebrow": "Sua leitura",
+    "readingTitle": "O que suas trocas revelaram, e o que fazer com isso.",
+    "actions": {
+      "downloadPdf": "Baixar em PDF",
+      "copy": "Copiar link",
+      "share": "Compartilhar o Norte com seus amigos",
+      "shareText": "Acabei de fazer o Norte e descobri meus valores. Faça também:"
+    },
+    "notFound": {
+      "title": "Esse relatório não existe",
+      "body": "O link que você seguiu pode estar errado, ou o relatório pode ter sido removido.",
+      "cta": "Fazer o Norte →"
+    },
+    "privacy": {
+      "title": "Seu relatório tem um link único.",
+      "body": "Qualquer pessoa com esse link pode ler. Compartilhe onde fizer sentido, ou guarde para você."
+    },
+    "review": {
+      "open": "Conte o que achou do Norte →",
+      "title": "O quanto o exercício e o relatório completo foram esclarecedores para você?",
+      "subtitle": "Sua reação honesta molda o que construímos a seguir.",
+      "ratings": ["Pouco esclarecedor", "Um pouco", "Razoável", "Muito", "Profundo"],
+      "feedbackLabel": "O que se destacou, ou o que faltou?",
+      "optional": "(opcional)",
+      "feedbackPlaceholder": "Uma frase ou duas já são o bastante.",
+      "thankYou": "Obrigado.",
+      "thankYouBody": "Seu feedback ajuda o Norte a ficar mais afiado.",
+      "submitting": "Enviando…",
+      "pickStar": "Escolha uma quantidade de estrelas primeiro.",
+      "submitError": "Não foi possível enviar. Tente de novo."
+    },
+    "footer": "Norte - 2026© - findmyvalues.app"
+  },
+  "ordinals": {
+    "1": "1º",
+    "2": "2º",
+    "3": "3º",
+    "4": "4º",
+    "5": "5º",
+    "6": "6º",
+    "7": "7º",
+    "8": "8º"
+  }
+}
