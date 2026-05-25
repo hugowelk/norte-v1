@@ -70,6 +70,7 @@ export type Database = {
           created_at: string
           id: string
           input_data: Json
+          language: string
           paid: boolean
           payment_session_id: string
           report_markdown: string
@@ -79,6 +80,7 @@ export type Database = {
           created_at?: string
           id: string
           input_data: Json
+          language?: string
           paid?: boolean
           payment_session_id: string
           report_markdown: string
@@ -88,6 +90,7 @@ export type Database = {
           created_at?: string
           id?: string
           input_data?: Json
+          language?: string
           paid?: boolean
           payment_session_id?: string
           report_markdown?: string
