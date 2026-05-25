@@ -98,6 +98,53 @@ const AdminTranslationsPage = () => {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "missing" | "modified">("all");
   const [groupFilter, setGroupFilter] = useState<string>("all");
+  const [findText, setFindText] = useState("");
+  const [replaceText, setReplaceText] = useState("");
+  const [caseSensitive, setCaseSensitive] = useState(false);
+
+  const replaceMatches = (() => {
+    if (!findText) return { count: 0, keys: 0 };
+    const flags = caseSensitive ? "g" : "gi";
+    let re: RegExp;
+    try {
+      re = new RegExp(findText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags);
+    } catch {
+      return { count: 0, keys: 0 };
+    }
+    let count = 0;
+    let keys = 0;
+    for (const k of Object.keys(pt)) {
+      const v = pt[k] ?? "";
+      const m = v.match(re);
+      if (m && m.length > 0) {
+        count += m.length;
+        keys += 1;
+      }
+    }
+    return { count, keys };
+  })();
+
+  const applyReplace = () => {
+    if (!findText) return;
+    const flags = caseSensitive ? "g" : "gi";
+    const re = new RegExp(findText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags);
+    let changed = 0;
+    setPt((prev) => {
+      const next: Flat = { ...prev };
+      for (const k of Object.keys(next)) {
+        const v = next[k] ?? "";
+        if (re.test(v)) {
+          next[k] = v.replace(re, replaceText);
+          changed += 1;
+        }
+      }
+      return next;
+    });
+    toast.success(`Replaced in ${changed} key${changed === 1 ? "" : "s"}`);
+    setFindText("");
+    setReplaceText("");
+  };
+
 
   useEffect(() => {
     // Save only diffs vs original
@@ -245,6 +292,41 @@ const AdminTranslationsPage = () => {
               </Button>
             );
           })}
+        </div>
+        <div className="max-w-6xl mx-auto px-4 pb-4 flex flex-wrap gap-2 items-center">
+          <span className="text-xs uppercase tracking-wide text-muted-foreground mr-1">Replace in pt-BR:</span>
+          <Input
+            placeholder="Find…"
+            value={findText}
+            onChange={(e) => setFindText(e.target.value)}
+            className="max-w-[200px]"
+          />
+          <Input
+            placeholder="Replace with…"
+            value={replaceText}
+            onChange={(e) => setReplaceText(e.target.value)}
+            className="max-w-[200px]"
+          />
+          <label className="text-xs text-muted-foreground flex items-center gap-1 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={caseSensitive}
+              onChange={(e) => setCaseSensitive(e.target.checked)}
+            />
+            Case sensitive
+          </label>
+          <Button
+            size="sm"
+            onClick={applyReplace}
+            disabled={!findText || replaceMatches.count === 0}
+          >
+            Replace all
+          </Button>
+          {findText && (
+            <span className="text-xs text-muted-foreground">
+              {replaceMatches.count} match{replaceMatches.count === 1 ? "" : "es"} in {replaceMatches.keys} key{replaceMatches.keys === 1 ? "" : "s"}
+            </span>
+          )}
         </div>
       </div>
 
