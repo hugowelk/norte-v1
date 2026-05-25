@@ -221,47 +221,82 @@ const AdminTranslationsPage = () => {
             Showing {visibleKeys.length}. Edits autosave locally; download to ship.
           </span>
         </div>
+        <div className="max-w-6xl mx-auto px-4 pb-4 flex flex-wrap gap-2 items-center">
+          <span className="text-xs uppercase tracking-wide text-muted-foreground mr-1">Page:</span>
+          <Button
+            variant={groupFilter === "all" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setGroupFilter("all")}
+          >
+            All ({visibleKeys.length})
+          </Button>
+          {GROUPS.map((g) => {
+            const count = groupCounts.get(g.id) ?? 0;
+            if (count === 0 && groupFilter !== g.id) return null;
+            return (
+              <Button
+                key={g.id}
+                variant={groupFilter === g.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setGroupFilter(g.id)}
+                title={g.url}
+              >
+                {g.label} ({count})
+              </Button>
+            );
+          })}
+        </div>
       </div>
 
-      <main className="max-w-6xl mx-auto p-4 space-y-3">
-        {visibleKeys.map((k) => {
-          const en = enFlat[k] ?? "";
-          const ptv = pt[k] ?? "";
-          const modified = ptv !== (ptFlatOriginal[k] ?? "");
-          const missing = ptv.trim() === "";
-          const isMultiline = en.length > 80 || en.includes("\n");
-          return (
-            <Card key={k} className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <code className="text-xs text-muted-foreground break-all">{k}</code>
-                {missing && <span className="text-[10px] uppercase tracking-wide text-destructive">missing</span>}
-                {modified && !missing && <span className="text-[10px] uppercase tracking-wide text-accent">modified</span>}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="text-sm whitespace-pre-wrap text-muted-foreground bg-muted/40 rounded p-3">
-                  {en || <em className="opacity-60">(empty)</em>}
-                </div>
-                {isMultiline ? (
-                  <textarea
-                    value={ptv}
-                    onChange={(e) => setPt((p) => ({ ...p, [k]: e.target.value }))}
-                    rows={Math.max(3, Math.min(12, ptv.split("\n").length + 1))}
-                    className="text-sm rounded border border-input bg-background p-3 font-sans"
-                  />
-                ) : (
-                  <Input
-                    value={ptv}
-                    onChange={(e) => setPt((p) => ({ ...p, [k]: e.target.value }))}
-                  />
-                )}
-              </div>
-            </Card>
-          );
-        })}
+      <main className="max-w-6xl mx-auto p-4 space-y-8">
+        {grouped.map(({ group, keys: gKeys }) => (
+          <section key={group.id} className="space-y-3">
+            <div className="flex items-baseline gap-3 border-b border-border pb-2">
+              <h2 className="font-display text-lg text-primary">{group.label}</h2>
+              <code className="text-xs text-muted-foreground">{group.url}</code>
+              <span className="text-xs text-muted-foreground ml-auto">{gKeys.length} keys</span>
+            </div>
+            {gKeys.map((k) => {
+              const en = enFlat[k] ?? "";
+              const ptv = pt[k] ?? "";
+              const modified = ptv !== (ptFlatOriginal[k] ?? "");
+              const missing = ptv.trim() === "";
+              const isMultiline = en.length > 80 || en.includes("\n");
+              return (
+                <Card key={k} className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <code className="text-xs text-muted-foreground break-all">{k}</code>
+                    {missing && <span className="text-[10px] uppercase tracking-wide text-destructive">missing</span>}
+                    {modified && !missing && <span className="text-[10px] uppercase tracking-wide text-accent">modified</span>}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="text-sm whitespace-pre-wrap text-muted-foreground bg-muted/40 rounded p-3">
+                      {en || <em className="opacity-60">(empty)</em>}
+                    </div>
+                    {isMultiline ? (
+                      <textarea
+                        value={ptv}
+                        onChange={(e) => setPt((p) => ({ ...p, [k]: e.target.value }))}
+                        rows={Math.max(3, Math.min(12, ptv.split("\n").length + 1))}
+                        className="text-sm rounded border border-input bg-background p-3 font-sans"
+                      />
+                    ) : (
+                      <Input
+                        value={ptv}
+                        onChange={(e) => setPt((p) => ({ ...p, [k]: e.target.value }))}
+                      />
+                    )}
+                  </div>
+                </Card>
+              );
+            })}
+          </section>
+        ))}
         {visibleKeys.length === 0 && (
           <div className="text-center text-muted-foreground py-12">No keys match.</div>
         )}
       </main>
+
     </div>
   );
 };
