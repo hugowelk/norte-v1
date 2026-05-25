@@ -1,0 +1,518 @@
+{
+  "common": {
+    "actions": {
+      "begin": "Begin",
+      "beginArrow": "Begin →",
+      "continue": "Continue",
+      "continueArrow": "Continue →",
+      "back": "← Back",
+      "next": "Next",
+      "start": "Start",
+      "retry": "Retry →",
+      "submit": "Submit feedback",
+      "cancel": "Cancel",
+      "gotIt": "Got it",
+      "downloadPdf": "Download as PDF",
+      "copyLink": "Copy share link",
+      "shareWithFriends": "Share Norte with your friends",
+      "maybeLater": "Maybe later",
+      "shareWithFriend": "Share Norte with a friend",
+      "linkCopied": "Link copied"
+    },
+    "footer": {
+      "methodology": "Methodology",
+      "copyright": "Norte · 2026 ©",
+      "basedOn": "Based on ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey. 2026©"
+    },
+    "toasts": {
+      "shareLinkCopied": "Link copied. Anyone with it can read your report.",
+      "couldNotCopy": "Could not copy link.",
+      "shareNorteCopied": "Norte link copied. Share it with your friends."
+    }
+  },
+  "pages": {
+    "index": {
+      "meta": {
+        "title": "Norte — Take the values exercise",
+        "description": "Answer 15 trade-off scenarios and uncover the life values your behaviour actually reveals. A 5-minute guided exercise from Norte.",
+        "ogTitle": "Take the Norte values exercise",
+        "ogDescription": "Answer 15 trade-off scenarios and uncover the life values your behaviour actually reveals."
+      },
+      "heroTitle": "Your real values aren't what you say. They're what you choose when something's at stake.",
+      "heroBody": "Norte uses 15 trade-off scenarios to reveal the values that guide your decisions. Methodology grounded in ACT (Acceptance and Commitment Therapy).",
+      "problemEyebrow": "WHAT HAVE YOU BEEN PRIORITISING IN YOUR LIFE?",
+      "problemBody": "When someone asks you what matters, you answer with aspirations. But what actually matters shows up in your choices. Especially the small ones. Especially the hard ones.",
+      "howEyebrow": "How it works",
+      "howTitle": "Three ideas Norte is built on.",
+      "howSteps": [
+        {
+          "title": "Choices reveal values",
+          "body": "Research in behavioural psychology shows that aspirational values (what we say matters) often diverge from revealed values (what our choices show matters). Norte works with both."
+        },
+        {
+          "title": "Trade-offs, not preferences",
+          "body": "Each scenario puts two values in real tension. There's no right answer. Your choice reveals which value weighs more when you have to decide."
+        },
+        {
+          "title": "An action plan, not a report",
+          "body": "At the end, you get a personalized plan to close the gap between what you live and what you want to live."
+        }
+      ],
+      "whoEyebrow": "Who it's for",
+      "whoBody": "Norte is for people who sense a gap between the life they're building and the one they actually want. People who are doing fine on paper and quietly restless in practice. People who are done with vague self-awareness and want something concrete."
+    },
+    "methodology": {
+      "meta": {
+        "title": "Norte — Methodology",
+        "description": "The research behind Norte: ACT, the Valued Living Questionnaire, and the Bull's Eye Values Survey, and how they shape the 8-value scoring algorithm.",
+        "ogTitle": "How Norte reads your values — Methodology"
+      },
+      "eyebrow": "Methodology",
+      "title": "How Norte reads your values.",
+      "methodologyHeading": "The methodology",
+      "methodologyBody": "Norte is built on three research foundations: ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey. Each contributes a different piece to how we understand and measure values.",
+      "valuesHeading": "The 8 values",
+      "disclaimerHeading": "Disclaimer",
+      "disclaimerBody": "Norte is a wellness product, not a clinical tool. It's designed to give you a useful frame for self-reflection, not a diagnostic assessment. If you're working with a therapist or coach, your results may be a productive conversation starter.",
+      "backToNorte": "← Back to Norte"
+    },
+    "notFound": {
+      "title": "404",
+      "body": "Oops! Page not found",
+      "home": "Return to Home"
+    }
+  },
+  "quiz": {
+    "intro": {
+      "eyebrow": "Part 1",
+      "title": "Answering the next questions will give you a clear picture of what values you've been living by in the last couple of months",
+      "body1": "You'll see 15 everyday situations. In each one, pick the option closest to how you'd <em>actually</em> act, not how you WISH you would. Think about your behaviour in the past 3 months.",
+      "body2": "The first answer is usually the truest one."
+    },
+    "howItWorks": {
+      "eyebrow": "Before you start",
+      "title": "How this works",
+      "points": [
+        "You'll answer 15 scenarios. Each presents two situations in conflict. Choose what you'd actually do.",
+        "Don't overthink. There's no right or wrong. What counts is what you'd do, not what you'd like to do.",
+        "At the end, we show you the 3 values that weigh most in your decisions, and where the gaps are between behaviour and aspiration."
+      ],
+      "methodology": "Methodology grounded in ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey."
+    },
+    "scenario": {
+      "counter": "{{n}} of 15",
+      "biggerOne": "This one's bigger"
+    },
+    "processing": {
+      "eyebrow": "Processing",
+      "stages": [
+        "Reading your trade-offs.",
+        "Weighing what came up against what stayed quiet.",
+        "Ranking the eight values.",
+        "Bringing your top three forward."
+      ]
+    },
+    "nameEmail": {
+      "title": "Before we read your trade-offs, what should we call you?",
+      "subtitle": "Your first name and email so we can send your report.",
+      "namePlaceholder": "First name",
+      "emailPlaceholder": "Email",
+      "errors": {
+        "name": "Please share your name.",
+        "email": "Please enter a valid email."
+      }
+    },
+    "results": {
+      "eyebrow": "Your Results",
+      "title": "Here's what came up.",
+      "body": "Across the 15 trade-offs you just made, these are the three values that showed up most often.",
+      "topThreeLabel": "Your revealed top 3",
+      "otherValuesLabel": "Other values that came up",
+      "costLabel": "The cost when this dominates",
+      "whyToggle": "Why this value?",
+      "receiptsTextOne": "From the 15 trade-offs, you picked <strong>{{count}}</strong> choice that indicate you value {{themes}} — signaling a clear tendency for prioritising {{label}}.",
+      "receiptsTextOther": "From the 15 trade-offs, you picked <strong>{{count}}</strong> choices that indicate you value {{themes}} — signaling a clear tendency for prioritising {{label}}.",
+      "themesSeparator": ", ",
+      "themesLast": ", and ",
+      "disclaimer": "These results come from a deterministic algorithm grounded in ACT, the Valued Living Questionnaire, and the Bull's Eye Values Survey. No AI guessing.",
+      "readMethodology": "Read the methodology →",
+      "continue": "Next: choose the values you want at the centre →"
+    },
+    "core": {
+      "eyebrow": "Your Aspiration",
+      "title": "Now. Pick the 3 values you want at the centre of your life.",
+      "body": "Not what came up. What you'd choose if you were choosing on purpose. The order you tap them is the order you're prioritising them.",
+      "revealedNote": "Your revealed top 3 were <strong>{{a}}</strong>, <strong>{{b}}</strong>, and <strong>{{c}}</strong>. The interesting question is which of these you want to keep at the centre, and what else you want to bring in.",
+      "deselectHint": "Tap a selected card to deselect it.",
+      "pickThree": "Pick 3 to continue",
+      "pickMore": "Pick {{count}} more",
+      "continue": "Continue →"
+    },
+    "alignment": {
+      "eyebrow": "A quick check",
+      "title": "How present these values feel in your life right now?",
+      "body": "Move each slider to where it actually feels.\nThe dotted mark shows where your trade-offs placed you.",
+      "barely": "Barely here",
+      "lived": "Lived every day",
+      "tradeoffs": "Your trade-offs: {{n}}",
+      "continue": "See your compass →"
+    },
+    "compass": {
+      "eyebrow": "The Gap",
+      "title": "Here's where revealed and aspirational meet.",
+      "body": "For each value, the top bar is how often it showed up in your trade-offs. The bottom bar is how present it actually feels in your life.",
+      "legendRevealed": "Revealed",
+      "legendFelt": "Felt",
+      "chosenLabel": "Your chosen 3",
+      "restLabel": "The rest",
+      "missingNote": "of the values you want at the centre are <strong>not</strong> showing up in your revealed top 3.",
+      "topNote": "<strong>{{label}}</strong> is your top chosen value, but your trade-offs place it <strong>{{ordinal}}</strong>.",
+      "fullOverlap1": "The values you want at the centre and the ones you've been living are the same.",
+      "fullOverlap2": "That's not nothing. It means the story you tell yourself about your life matches what your week actually does. The work, if there is any, is in how present each one feels.",
+      "noteEyebrow": "A note",
+      "gapNote1": "That's not a verdict. It's the gap between the life you've been living and the one you've been reaching for.",
+      "gapNote2": "The question isn't whether the gap is wrong. It's whether you want to close it.",
+      "continue": "Show me how →"
+    },
+    "paywall": {
+      "eyebrow": "What's next",
+      "title": "Turn the gap into something you can actually move.",
+      "body": "You've seen what's been driving your week, and where you want it to be heading. The next step is understanding your gaps and making the small shifts that close the distance.",
+      "cardTitle": "Your Full Values Report",
+      "free": "Free",
+      "bullets": {
+        "nextSteps": {
+          "title": "The next steps",
+          "body": "Norte can guide you through your compass. Get 3 actionable steps you can start this week to help you designing the life you actually want."
+        },
+        "conversation": {
+          "title": "A real conversation, not a checklist",
+          "body": "Norte's AI guide works through your compass with you, asking the questions a thoughtful friend would, and helping you design shifts that fit the life you actually have."
+        },
+        "yours": {
+          "title": "Yours to keep",
+          "body": "Export your plan, revisit it, share it with someone who knows you."
+        }
+      },
+      "cta": "Get my FREE Full Values Report →",
+      "sample": {
+        "aliveness": {
+          "title": "A small shift this week · toward Aliveness",
+          "body": "Move your daily decision about exercise from the morning to the night before. Decide tonight what tomorrow looks like, not in the morning, when your tired brain will negotiate it away."
+        },
+        "achievement": {
+          "title": "A small shift this week · toward Achievement",
+          "body": "Pick the one project that, if it moved, would make the rest of the week feel different. Block 90 minutes for it tomorrow morning, before email, before anything else."
+        },
+        "connection": {
+          "title": "A small shift this week · toward Connection",
+          "body": "Text one person you keep meaning to call. Not to schedule something. Just to say the thing you would have said if they were in the room."
+        },
+        "enjoyment": {
+          "title": "A small shift this week · toward Enjoyment",
+          "body": "Put one thing on the calendar this week that has no purpose other than being good. Treat it as non-negotiable as a meeting."
+        },
+        "meaning": {
+          "title": "A small shift this week · toward Meaning",
+          "body": "At the end of each day this week, write one sentence: what did I do today that I would do again if I had the choice?"
+        },
+        "contribution": {
+          "title": "A small shift this week · toward Contribution",
+          "body": "Find one small way to help someone where you cannot be paid back. Fifteen minutes. The size of the act is irrelevant. The unilateralness is the point."
+        },
+        "stability": {
+          "title": "A small shift this week · toward Stability",
+          "body": "Pick the one financial or logistical thing you keep avoiding because it feels heavier than it is. Spend 20 minutes on it tomorrow. The relief is usually disproportionate."
+        },
+        "autonomy": {
+          "title": "A small shift this week · toward Autonomy",
+          "body": "Find one recurring obligation you said yes to out of habit. This week, renegotiate it or drop it, even a small one. The muscle is in the choosing."
+        }
+      }
+    },
+    "scenarios": {
+      "C1": {
+        "prompt": "It's Friday night. You're worn out from the week. A friend texts asking if you want to come over for dinner and drinks.",
+        "optionA": "I stay in. Sleep tonight, energy tomorrow.",
+        "optionB": "I go. Rest can wait, this evening can't."
+      },
+      "C2": {
+        "prompt": "You've been training hard for something that matters to you. A close friend you rarely see is in town this weekend and wants to spend time together. Sticking to your training plan means seeing them briefly, if at all.",
+        "optionA": "I stick to the plan. Showing up for myself isn't optional.",
+        "optionB": "I clear the weekend. People I care about don't pass through often."
+      },
+      "C3": {
+        "prompt": "You're offered an arrangement that would give you full control over your time and how you spend your days. The catch: less reliable income, no clear safety net.",
+        "optionA": "I stay with what I have. Peace of mind is worth more than the upside.",
+        "optionB": "I take it. Owning my time matters more than the cushion right now."
+      },
+      "C4": {
+        "prompt": "You're in a relationship that works. But something in you keeps asking what you'd be like outside of it, whether parts of you are still in there.",
+        "optionA": "I stay. What we have is real. The questions can be answered together.",
+        "optionB": "I ask for space. I need to know who I am before I can fully be with someone.",
+        "transitionAfter": "The next ones get a little harder."
+      },
+      "C5": {
+        "prompt": "You can take on something that would meaningfully accelerate a personal goal you've been chasing for years. Doing it well means stepping back from a community group where people count on you.",
+        "optionA": "I take it. Hitting this matters to me and I've waited long enough.",
+        "optionB": "I stay with the group. People are counting on me now and that's not interchangeable."
+      },
+      "C6": {
+        "prompt": "You have a chunk of money you didn't expect. Enough for a trip you've been dreaming about, or enough to fund something you actually believe in.",
+        "optionA": "The trip. Time I won't get back, in a body that won't always do this.",
+        "optionB": "The cause. Money does more there than it does on a beach."
+      },
+      "C7": {
+        "prompt": "You're deep in a stretch where everything is clicking. Sleep has been thin, your back hurts, but you're producing the best work of your year. Stopping now breaks the spell.",
+        "optionA": "I stop. The body isn't a negotiating partner.",
+        "optionB": "I keep going. This kind of flow is rare and the work is worth it."
+      },
+      "C8": {
+        "prompt": "Your partner suggests moving in together. You want this with them. You also know your routines, your space, your way of being alone will change in ways you can't preview.",
+        "optionA": "I ask to wait. I need my own space to keep being myself.",
+        "optionB": "I say yes. Building a life with someone means giving up some of the room you had."
+      },
+      "C14": {
+        "prompt": "A neighbour you barely know is going through a rough stretch and has started leaning on you, hard. Errands, late-night calls, small favours that aren't small anymore. Pulling back means leaving them more alone. Not pulling back means losing real chunks of your week.",
+        "optionA": "I keep showing up. Walking away from someone who needs help isn't the person I want to be.",
+        "optionB": "I pull back. I can't be the safety net for someone if I lose myself doing it."
+      },
+      "C15": {
+        "prompt": "You've been saving methodically for a long time. Something you've always wanted to do becomes possible right now, this season, and it would cost most of what you've put aside.",
+        "optionA": "I do it. The cushion exists to be spent on a life, not just kept for a rainy day.",
+        "optionB": "I let it pass. The peace of having that money there is worth more than any one experience.",
+        "transitionAfter": "Almost at the hardest choices."
+      },
+      "C9": {
+        "prompt": "You witness something wrong happening in a place you depend on. Speaking up will create real friction and might cost you your standing there.",
+        "optionA": "I speak up. Staying quiet about this isn't a version of me I can live with.",
+        "optionB": "I stay quiet for now. I can't help anyone from a worse position than this."
+      },
+      "C10": {
+        "prompt": "You've found something that matters to you in a way nothing has for years. Going deep into it requires time and money you don't actually have.",
+        "optionA": "I go in anyway. Meaning doesn't wait for the right conditions.",
+        "optionB": "I wait until I have margin. I can't pour from an empty cup."
+      },
+      "C11": {
+        "prompt": "A close family member is going through something serious and they need you present. At the same time, you're in a defining stretch of a long-term goal, disappearing now has a real cost.",
+        "optionA": "I show up for them. Goals can be rebuilt. Trust often can't.",
+        "optionB": "I stay focused. Being absent for a season now lets me show up better later."
+      },
+      "C12": {
+        "prompt": "You're offered three open months. No schedule, no obligations. Travel, read, rest, follow what catches you. The cost: walking away from something you've been building that could mark a turning point.",
+        "optionA": "I take the three months. A good life isn't deferred forever.",
+        "optionB": "I stay with what I am building. The thing that gives me a reason to get up is the thing worth finishing."
+      },
+      "C13": {
+        "prompt": "You're inside something that genuinely matters to you. Your body has been waving red flags for weeks: bad sleep, low energy, pain that doesn't pass. Slowing down to handle it pauses something you've been waiting years to be inside of.",
+        "optionA": "I slow down and take care of it. There's no version of this that works without a body that works.",
+        "optionB": "I push through. This window is rare and my body has held up for less."
+      }
+    }
+  },
+  "values": {
+    "achievement": {
+      "label": "Achievement",
+      "labelLower": "achievement",
+      "description": "Building, accomplishing, leaving a mark.",
+      "longDescription": "You feel most alive when you are making progress, pushing yourself, and getting things done. Recognition for what you build matters to you.",
+      "definition": "Achievement is the value of someone who measures time by what got built, not by how it felt. Big decisions pass through a single filter: did this move the thing forward, or did it just fill the day? Did I do what I said I'd do?",
+      "pattern": "In your scenarios, this value showed up when there was tension between progress and rest, between finishing and connecting. When the choice was between momentum and stepping away, you stayed with the work.",
+      "cost": "When this value dominates without counterweight, it turns into producing through pain, treating bodies and relationships as variables to optimize around, and a quiet inability to enjoy what you've already built before you're already chasing the next thing. The toll on physical and mental health is real if there's no balancing value pulling the other way.",
+      "themes": ["progress", "momentum", "follow-through"]
+    },
+    "connection": {
+      "label": "Connection",
+      "labelLower": "connection",
+      "description": "Closeness with the people who matter.",
+      "longDescription": "Relationships are the thread your life runs on. Time with family, partner, or close friends is non-negotiable to you.",
+      "definition": "Connection is the value of someone who measures time by the quality of the relationships in it. The question underneath every decision is: does this bring me closer to the people who matter, or further away? Big choices pass through that filter before anything else does.",
+      "pattern": "In your scenarios, this value showed up when there was tension between efficiency and presence, between a thing that needed doing and a person who needed you. When the choice was between getting it done and being there, you were there.",
+      "cost": "When this value dominates without counterweight, it can turn into difficulty saying no, emotional load that quietly outpaces what you can carry, and a habit of postponing your own work because someone else's needs feel more urgent. The people in your life thrive. You might not.",
+      "themes": ["presence", "relationships", "being there"]
+    },
+    "aliveness": {
+      "label": "Aliveness",
+      "labelLower": "aliveness",
+      "description": "Energy, health, presence in your own body.",
+      "longDescription": "You care about how you feel (sleep, movement, energy, rest). Without aliveness, nothing else lands.",
+      "definition": "Aliveness is the value of someone who treats the body as the first instrument, not the last. The question underneath every decision is: am I going to feel this in my body tomorrow, next week, ten years from now, and will it be a feeling I want?",
+      "pattern": "In your scenarios, this value showed up when something else (work, momentum, meaning, obligation) was asking you to override what your body was telling you. When the body said enough, you stopped. When others would have kept going for the reward at the end, you took care of yourself instead.",
+      "cost": "When this value dominates without counterweight, it can become an over-attunement to current bodily comfort that blocks productive discomfort. Training, hard projects, ambitious commitments all require periods of feeling worn out. If the body's \"no\" wins every time, the bigger things you'd want for your future health never get built either.",
+      "themes": ["body", "rest", "recovery"]
+    },
+    "enjoyment": {
+      "label": "Enjoyment",
+      "labelLower": "enjoyment",
+      "description": "Pleasure, fun, the texture of a good day.",
+      "longDescription": "Life is meant to be enjoyed in the moment. You make room for play, beauty, and small pleasures, not just productivity.",
+      "definition": "Enjoyment is the value of someone who chooses the present over the future. The question underneath every decision is: am I living this now, or am I saving it for a version of me that may never arrive?",
+      "pattern": "In your scenarios, this value showed up when something good was available now and there was a sensible reason to wait. When the choice was between a moment that wouldn't repeat and a payoff that might come later, you took the moment.",
+      "cost": "When this value dominates, it becomes a habit of instant gratification. The small good feeling now wins over the bigger shift later. Saving feels like deprivation, training feels like punishment, and the life changes that would compound never get the runway they need.",
+      "themes": ["the moment", "pleasure", "presence"]
+    },
+    "meaning": {
+      "label": "Meaning",
+      "labelLower": "meaning",
+      "description": "A life that points at something bigger.",
+      "longDescription": "You want what you do to matter beyond today. Purpose, depth, and significance pull you forward more than comfort does.",
+      "definition": "Meaning is the value of someone who needs their life to point somewhere. The question underneath every decision is: does this matter, or am I just spending hours? Without an answer, even comfort starts to feel hollow.",
+      "pattern": "In your scenarios, this value showed up when there was a pull toward something that mattered to you and a sensible reason to defer it (no time, no money, not the right moment). When the choice was between waiting for the right conditions and going in anyway, you went in.",
+      "cost": "When this value dominates without counterweight, ordinary days can start feeling like a betrayal. Rest, fun, and presence get dismissed as \"not the real stuff.\" You can also push past warning signs (in your body, in relationships, in finances) because the meaning of what you're doing seems too important to interrupt.",
+      "themes": ["purpose", "depth", "what matters"]
+    },
+    "contribution": {
+      "label": "Contribution",
+      "labelLower": "contribution",
+      "description": "Making things better for others.",
+      "longDescription": "You measure a good life partly by what it gives back, to people, causes, or community. Helping is not a side activity.",
+      "definition": "Contribution is the value of someone who measures a life partly by what it gives back. The question underneath every decision is: am I useful here? Helping isn't a side activity, it's something the day has to make room for.",
+      "pattern": "In your scenarios, this value showed up when there was tension between your own forward motion and someone else's real need. When the choice was between protecting your trajectory and showing up for someone who was counting on you, you showed up.",
+      "cost": "When this value dominates without counterweight, your time gets quietly absorbed by other people's emergencies. You become the person who can be counted on, which is good, until \"can be counted on\" becomes the only role you know how to play. The work you'd do for yourself never quite gets the same priority.",
+      "themes": ["helping", "showing up", "usefulness"]
+    },
+    "stability": {
+      "label": "Stability",
+      "labelLower": "stability",
+      "description": "Safety, predictability, solid ground.",
+      "longDescription": "You build from a place of security. Knowing what to expect (financially, emotionally, structurally) is what frees you to act.",
+      "definition": "Stability is the value of someone who builds from a foundation, not from urgency. The question underneath every decision is: does this leave me with room to absorb what I can't predict, or does it spend down the buffer I worked to build?",
+      "pattern": "In your scenarios, this value showed up when something exciting required spending margin you hadn't yet recovered. When the choice was between forward motion and protecting the ground beneath you, you chose the ground. You protect what gives you better predictions of the future.",
+      "cost": "When this value dominates without counterweight, opportunities pass you by because the timing was never quite safe enough. Caution becomes the default, then the identity. The buffer you protected becomes a buffer you never spend, and the life you waited to start stays in waiting.",
+      "themes": ["margin", "foundation", "predictability"]
+    },
+    "autonomy": {
+      "label": "Autonomy",
+      "labelLower": "autonomy",
+      "description": "Owning your time and your choices.",
+      "longDescription": "Independence is oxygen. You need control over your hours, your decisions, and the shape of your days.",
+      "definition": "Autonomy is the value of someone who treats their time as the first thing worth defending. The question underneath every decision is: who controls my hours, my pace, my next move? If the answer drifts away from you, something rebalances itself.",
+      "pattern": "In your scenarios, this value showed up when external structures (relationships, obligations, comfortable arrangements) asked you to give up control of your time in exchange for something good. When the trade was real, you held onto the time.",
+      "cost": "When this value dominates without counterweight, it turns into resistance to any kind of structure, including the structures you'd actually benefit from. Commitments feel like cages before they've had a chance to feel like containers. You can end up isolated from real opportunities that ask for small commitments upfront, because the upfront feels like surrender.",
+      "themes": ["control of time", "independence", "pace"]
+    }
+  },
+  "postPaywall": {
+    "layout": {
+      "eyebrow": "Before your report · {{step}} of 3"
+    },
+    "q2": {
+      "title": "What's the current chapter of your life right now?",
+      "body1": "We often see people reevaluating their values during career transitions, breakups, moving to different countries, becoming parents, etc.",
+      "body2": "In a few words, describe where you are in life right now. The more specific you are, the sharper the report.",
+      "seeExamples": "See examples",
+      "examples": [
+        "\"Just left my job, figuring out what's next.\"",
+        "\"New parent, lost my edges.\"",
+        "\"Stuck. Last few years feel like autopilot.\"",
+        "\"Moved countries six months ago, still rebuilding.\"",
+        "\"Ended a long relationship, reassessing everything.\""
+      ]
+    },
+    "q3": {
+      "headingFallback": "What's been making it harder to make your top one chosen value — {{label}}, part of your routine?",
+      "headingReal": "What's been making it harder to make your top one chosen value — {{label}}, part of your routine?",
+      "subtitle": "Pick whichever feels truest.",
+      "fallbackValue": "this value",
+      "customPlaceholder": "Tell us in your own words…",
+      "options": {
+        "not_tried": "I haven't really tried. It's been on the to-do list",
+        "other_priorities_win": "I've tried, but other priorities keep winning",
+        "dont_know_what_it_looks_like": "I'm not sure what \"living by it\" would actually look like",
+        "hard_right_now": "Something in my life makes it genuinely hard right now",
+        "not_sure_want_it": "I'm not convinced I really want it",
+        "other": "Other"
+      }
+    },
+    "q4": {
+      "title": "If closing the gaps from how you are living your life today to how you want to live it, meant giving something up, what would you NOT be willing to give up?",
+      "body1": "Prioritising our values often includes making choices, leaving habits behind and sometimes, even making major changes in our lives.",
+      "body2": "In a few words, describe something that's non-negotiable in this process. This will shape the actions you can take this week.",
+      "seeExamples": "See examples",
+      "examples": [
+        "\"Time with my kids.\"",
+        "\"The income I make now.\"",
+        "\"My morning routine.\"",
+        "\"Feeling secure financially.\""
+      ],
+      "generate": "Generate my report →"
+    },
+    "loading": {
+      "statusLines": [
+        "Reading your trade-offs…",
+        "Connecting the pattern to what you said about your life…",
+        "Writing your report. This usually takes about 30 seconds."
+      ],
+      "finalError": "We're having trouble generating your report right now.",
+      "supportPrefix": "Please contact ",
+      "supportSuffix": ". Your payment is safe and we'll get this to you.",
+      "errorTitle": "Something interrupted the generation.",
+      "errorBody": "We've saved your answers. Try again?"
+    }
+  },
+  "report": {
+    "meta": {
+      "description": "A personal Norte values reading ({{id}}). Someone's revealed and aspirational values, and the gap between them.",
+      "ogTitle": "A Norte reading · {{id}}",
+      "ogDescription": "Someone's values, behaviour, and the gap between them.",
+      "title": "Norte reading · {{id}}"
+    },
+    "shareHeader": {
+      "intro": "Someone shared their Norte reading with you.",
+      "cta": "Curious about yours? →",
+      "dismiss": "Dismiss"
+    },
+    "hero": {
+      "eyebrow": "Your top 3 chosen values"
+    },
+    "gap": {
+      "eyebrow": "From how you're living to how you want to live",
+      "leftHeading": "How you're living",
+      "leftSub": "ranked 1–8",
+      "rightHeading": "How you want to live",
+      "rightSub": "your 3 chosen"
+    },
+    "readingEyebrow": "Your reading",
+    "readingTitle": "What your trade-offs revealed, and what to do about it.",
+    "actions": {
+      "downloadPdf": "Download as PDF",
+      "copy": "Copy share link",
+      "share": "Share Norte with your friends",
+      "shareText": "I just took Norte and discovered my values. Try it:"
+    },
+    "notFound": {
+      "title": "This report doesn't exist",
+      "body": "The link you followed may be wrong, or the report may have been removed.",
+      "cta": "Take Norte yourself →"
+    },
+    "privacy": {
+      "title": "Your report has a unique link.",
+      "body": "Anyone with this link can read it. Share where it makes sense, or keep it private."
+    },
+    "review": {
+      "open": "Tell us what you think about Norte →",
+      "title": "How insightful was the full values exercise and report for you?",
+      "subtitle": "Your honest reaction shapes what we build next.",
+      "ratings": ["Not insightful", "Slightly", "Somewhat", "Very", "Profound"],
+      "feedbackLabel": "What stood out, or what was missing?",
+      "optional": "(optional)",
+      "feedbackPlaceholder": "A sentence or two is plenty.",
+      "thankYou": "Thank you.",
+      "thankYouBody": "Your feedback helps Norte get sharper.",
+      "submitting": "Submitting…",
+      "pickStar": "Please pick a star rating first.",
+      "submitError": "Couldn't submit. Please try again."
+    },
+    "footer": "Norte - 2026© - findmyvalues.app"
+  },
+  "ordinals": {
+    "1": "1st",
+    "2": "2nd",
+    "3": "3rd",
+    "4": "4th",
+    "5": "5th",
+    "6": "6th",
+    "7": "7th",
+    "8": "8th"
+  }
+}

@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
-import { NORTE_REPORT_SYSTEM_PROMPT } from "./prompt.ts";
+import { getSystemPrompt } from "./prompt.ts";
 
 const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -16,15 +16,22 @@ function shortId(len = 12) {
   return out;
 }
 
-async function callLovableAI(inputData: unknown): Promise<string> {
+function normalizeLang(input: unknown): "en" | "pt-BR" {
+  if (typeof input === "string" && input.toLowerCase().startsWith("pt")) return "pt-BR";
+  return "en";
+}
+
+async function callLovableAI(inputData: unknown, language: "en" | "pt-BR"): Promise<string> {
   const body = {
     model: MODEL,
     messages: [
-      { role: "system", content: NORTE_REPORT_SYSTEM_PROMPT },
+      { role: "system", content: getSystemPrompt(language) },
       {
         role: "user",
         content:
-          "Generate the report for this user:\n\n" +
+          (language === "pt-BR"
+            ? "Gere o relatório para este usuário, em português brasileiro:\n\n"
+            : "Generate the report for this user:\n\n") +
           JSON.stringify(inputData, null, 2),
       },
     ],
@@ -70,7 +77,8 @@ Deno.serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { paymentSessionId, assessmentResults, postPaywallAnswers, reportBaseUrl } = body ?? {};
+    const { paymentSessionId, assessmentResults, postPaywallAnswers, reportBaseUrl, language } = body ?? {};
+    const lang = normalizeLang(language);
 
     if (!paymentSessionId || typeof paymentSessionId !== "string") {
       return new Response(
@@ -93,14 +101,11 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Strip email out of the report inputs (PII lives in report_contacts).
-    // Keep `name` in the payload — the prompt uses it to address the user;
-    // without it the model hallucinates a name.
     const { email, ...answersWithoutEmail } = postPaywallAnswers ?? {};
     const name = answersWithoutEmail.name;
     const inputData = { ...assessmentResults, ...answersWithoutEmail };
 
-    const report_markdown = await callLovableAI(inputData);
+    const report_markdown = await callLovableAI(inputData, lang);
     const id = shortId();
 
     const insert = await supabase.from("reports").insert({
@@ -108,10 +113,10 @@ Deno.serve(async (req) => {
       payment_session_id: paymentSessionId,
       input_data: inputData,
       report_markdown,
+      language: lang,
     }).select("id").single();
 
     if (insert.error) {
-      // Race: another concurrent call already inserted — fetch it
       const again = await supabase
         .from("reports")
         .select("id")
@@ -126,8 +131,6 @@ Deno.serve(async (req) => {
       throw new Error(`DB insert failed: ${insert.error.message}`);
     }
 
-    // Save the contact to the separate contacts table. Failures here must not
-    // block report delivery — log and continue.
     if (name && email) {
       const base = (typeof reportBaseUrl === "string" && reportBaseUrl) || SUPABASE_URL;
       const report_url = `${base.replace(/\/$/, "")}/r/${insert.data.id}`;

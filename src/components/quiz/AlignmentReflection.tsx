@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Slider } from '@/components/ui/slider';
 import { ValueIcon } from '../ValueIcon';
-import { VALUES, getValueByKey, type ValueKey } from '@/lib/values';
+import { VALUES, type ValueKey } from '@/lib/values';
+import { tValueLabel, tValueDescription } from '@/lib/i18nHelpers';
 import { type ScoreResult } from '@/lib/algorithm';
 import type { SelectableValue } from './CoreValuesSelection';
 
@@ -18,6 +20,7 @@ function suggestedFor(key: ValueKey, result: ScoreResult): number {
 }
 
 export function AlignmentReflection({ slots, result, onComplete }: Props) {
+  const { t } = useTranslation();
   const pickedKeys = slots.map(s => s.key);
 
   const [scores, setScores] = useState<AlignmentScores>(() => {
@@ -32,69 +35,49 @@ export function AlignmentReflection({ slots, result, onComplete }: Props) {
   return (
     <div className="space-y-8 pb-12">
       <div className="space-y-3 text-center">
-        <p className="text-xs font-display uppercase tracking-widest text-accent">A quick check</p>
+        <p className="text-xs font-display uppercase tracking-widest text-accent">{t('quiz.alignment.eyebrow')}</p>
         <h2 className="text-2xl md:text-3xl font-display font-semibold text-foreground leading-tight">
-          How present these values feel in your life right now?
+          {t('quiz.alignment.title')}
         </h2>
         <p className="text-sm text-muted-foreground max-w-md mx-auto whitespace-pre-line">
-          Move each slider to where it actually feels.{"\n"}The dotted mark shows where your trade-offs placed you.
+          {t('quiz.alignment.body')}
         </p>
       </div>
 
       <div className="space-y-4">
         {pickedKeys.map(k => (
-          <SliderRow
-            key={k}
-            valueKey={k}
-            score={scores[`core:${k}`]}
-            suggested={suggestedFor(k, result)}
-            onChange={v => updateScore(k, v)}
-          />
+          <SliderRow key={k} valueKey={k} score={scores[`core:${k}`]} suggested={suggestedFor(k, result)} onChange={v => updateScore(k, v)} />
         ))}
       </div>
 
-      <button
-        onClick={() => onComplete(scores)}
-        className="w-full py-4 rounded-lg bg-primary text-primary-foreground font-display font-medium hover:opacity-90 transition-opacity"
-      >
-        See your compass →
+      <button onClick={() => onComplete(scores)} className="w-full py-4 rounded-lg bg-primary text-primary-foreground font-display font-medium hover:opacity-90 transition-opacity">
+        {t('quiz.alignment.continue')}
       </button>
     </div>
   );
 }
 
-function SliderRow({
-  valueKey, score, suggested, onChange,
-}: { valueKey: ValueKey; score: number; suggested: number; onChange: (v: number) => void }) {
+function SliderRow({ valueKey, score, suggested, onChange }: { valueKey: ValueKey; score: number; suggested: number; onChange: (v: number) => void }) {
+  const { t } = useTranslation();
   const suggestedPct = (suggested / 10) * 100;
   return (
     <div className="space-y-3 p-5 rounded-xl bg-card border border-border">
       <div className="flex items-start gap-3">
         <ValueIcon value={valueKey} size={20} />
         <div className="flex-1 min-w-0">
-          <p className="font-display font-medium text-foreground">{getValueByKey(valueKey).label}</p>
-          <p className="text-xs text-muted-foreground mt-0.5">{getValueByKey(valueKey).description}</p>
+          <p className="font-display font-medium text-foreground">{tValueLabel(t, valueKey)}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{tValueDescription(t, valueKey)}</p>
         </div>
         <span className="font-display text-lg font-semibold text-accent tabular-nums">{score}/10</span>
       </div>
       <div className="relative py-2">
-        <Slider
-          value={[score]}
-          onValueChange={([v]) => onChange(v)}
-          min={0}
-          max={10}
-          step={1}
-        />
-        <div
-          className="pointer-events-none absolute top-0 bottom-0 border-l-2 border-dotted border-accent"
-          style={{ left: `${suggestedPct}%` }}
-          aria-hidden
-        />
+        <Slider value={[score]} onValueChange={([v]) => onChange(v)} min={0} max={10} step={1} />
+        <div className="pointer-events-none absolute top-0 bottom-0 border-l-2 border-dotted border-accent" style={{ left: `${suggestedPct}%` }} aria-hidden />
       </div>
       <div className="flex justify-between items-center text-xs text-muted-foreground">
-        <span className="font-medium">Barely here</span>
-        <span className="italic">Your trade-offs: {suggested}</span>
-        <span className="font-medium">Lived every day</span>
+        <span className="font-medium">{t('quiz.alignment.barely')}</span>
+        <span className="italic">{t('quiz.alignment.tradeoffs', { n: suggested })}</span>
+        <span className="font-medium">{t('quiz.alignment.lived')}</span>
       </div>
     </div>
   );

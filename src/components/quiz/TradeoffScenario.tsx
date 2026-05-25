@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { type Scenario, type Answer } from '@/lib/algorithm';
+import { tScenarioPrompt, tScenarioOption } from '@/lib/i18nHelpers';
 
 interface Props {
   scenario: Scenario;
@@ -7,17 +9,18 @@ interface Props {
 }
 
 export function TradeoffScenario({ scenario, onAnswer }: Props) {
+  const { t } = useTranslation();
   const isSplit = scenario.split === true;
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <p className="text-xs font-display uppercase tracking-widest text-accent">
-          {scenario.index + 1} of 15
+          {t('quiz.scenario.counter', { n: scenario.index + 1 })}
         </p>
         {isSplit && (
           <p className="text-xs font-display uppercase tracking-widest text-muted-foreground">
-            This one's bigger
+            {t('quiz.scenario.biggerOne')}
           </p>
         )}
       </div>
@@ -31,22 +34,12 @@ export function TradeoffScenario({ scenario, onAnswer }: Props) {
           isSplit ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'
         }`}
       >
-        {scenario.prompt}
+        {tScenarioPrompt(t, scenario)}
       </motion.h2>
 
       <div className={isSplit ? 'grid md:grid-cols-2 gap-3' : 'space-y-3'}>
-        <ChoiceButton
-          label={scenario.optionA.label}
-          showAB={!isSplit}
-          letter="A"
-          onClick={() => onAnswer('A')}
-        />
-        <ChoiceButton
-          label={scenario.optionB.label}
-          showAB={!isSplit}
-          letter="B"
-          onClick={() => onAnswer('B')}
-        />
+        <ChoiceButton label={tScenarioOption(t, scenario, 'A')} showAB={!isSplit} letter="A" onClick={() => onAnswer('A')} />
+        <ChoiceButton label={tScenarioOption(t, scenario, 'B')} showAB={!isSplit} letter="B" onClick={() => onAnswer('B')} />
       </div>
     </div>
   );

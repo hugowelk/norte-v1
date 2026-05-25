@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
+import { useTranslation, Trans } from 'react-i18next';
 
 interface Props {
   onBegin: () => void;
 }
 
 export function TradeoffIntro({ onBegin }: Props) {
+  const { t } = useTranslation();
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -12,23 +14,23 @@ export function TradeoffIntro({ onBegin }: Props) {
       transition={{ duration: 0.5 }}
       className="text-center space-y-8 max-w-lg mx-auto"
     >
-      <p className="text-xs font-display uppercase tracking-widest text-accent">Part 1</p>
+      <p className="text-xs font-display uppercase tracking-widest text-accent">{t('quiz.intro.eyebrow')}</p>
       <h2 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight text-balance">
-        Answering the next questions will give you a clear picture of what values you've been living by in the last couple of months
+        {t('quiz.intro.title')}
       </h2>
       <div className="space-y-4 text-base md:text-lg text-foreground/80 leading-relaxed">
         <p>
-          You'll see 15 everyday situations. In each one, pick the option closest to how you'd <em>actually</em> act, not how you WISH you would. Think about your behaviour in the past 3 months.
+          <Trans i18nKey="quiz.intro.body1" components={{ em: <em /> }} />
         </p>
         <p className="text-muted-foreground">
-          The first answer is usually the truest one.
+          {t('quiz.intro.body2')}
         </p>
       </div>
       <button
         onClick={onBegin}
         className="px-10 py-4 rounded-xl bg-primary text-primary-foreground font-display font-semibold text-lg hover:opacity-90 transition-opacity shadow-md"
       >
-        Begin →
+        {t('common.actions.beginArrow')}
       </button>
     </motion.div>
   );

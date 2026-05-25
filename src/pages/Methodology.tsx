@@ -1,40 +1,41 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { VALUES } from '@/lib/values';
-import { VALUE_EXPLANATIONS } from '@/lib/valueExplanations';
+import { tValueLabel, tValueExplanation } from '@/lib/i18nHelpers';
 import { useDocumentMeta } from '@/lib/useDocumentMeta';
 
-const ARTICLE_JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "Article",
-  "headline": "How Norte reads your values",
-  "description": "The research foundations behind Norte: ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey, and how they shape the 8-value scoring algorithm.",
-  "author": { "@type": "Organization", "name": "Norte" },
-  "publisher": { "@type": "Organization", "name": "Norte" },
-  "mainEntityOfPage": "https://findmyvalues.app/methodology"
-};
-
 export default function Methodology() {
+  const { t } = useTranslation();
+
   useDocumentMeta(
     [
-      { name: 'description', content: 'The research behind Norte: ACT, the Valued Living Questionnaire, and the Bull\u2019s Eye Values Survey, and how they shape the 8-value scoring algorithm.' },
-      { property: 'og:title', content: 'How Norte reads your values — Methodology' },
-      { property: 'og:description', content: 'The research behind Norte: ACT, the Valued Living Questionnaire, and the Bull\u2019s Eye Values Survey, and how they shape the 8-value scoring algorithm.' },
+      { name: 'description', content: t('pages.methodology.meta.description') },
+      { property: 'og:title', content: t('pages.methodology.meta.ogTitle') },
+      { property: 'og:description', content: t('pages.methodology.meta.description') },
       { property: 'og:url', content: 'https://findmyvalues.app/methodology' },
-      { name: 'twitter:title', content: 'How Norte reads your values — Methodology' },
-      { name: 'twitter:description', content: 'The research behind Norte: ACT, the Valued Living Questionnaire, and the Bull\u2019s Eye Values Survey, and how they shape the 8-value scoring algorithm.' },
+      { name: 'twitter:title', content: t('pages.methodology.meta.ogTitle') },
+      { name: 'twitter:description', content: t('pages.methodology.meta.description') },
     ],
-    { title: 'Norte — Methodology', canonical: 'https://findmyvalues.app/methodology' }
+    { title: t('pages.methodology.meta.title'), canonical: 'https://findmyvalues.app/methodology' }
   );
 
   useEffect(() => {
     const script = document.createElement('script');
     script.type = 'application/ld+json';
-    script.text = JSON.stringify(ARTICLE_JSON_LD);
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": t('pages.methodology.meta.ogTitle'),
+      "description": t('pages.methodology.meta.description'),
+      "author": { "@type": "Organization", "name": "Norte" },
+      "publisher": { "@type": "Organization", "name": "Norte" },
+      "mainEntityOfPage": "https://findmyvalues.app/methodology"
+    });
     script.dataset.jsonldArticle = 'methodology';
     document.head.appendChild(script);
     return () => { script.remove(); };
-  }, []);
+  }, [t]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -44,7 +45,7 @@ export default function Methodology() {
             Norte
           </Link>
           <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            ← Back
+            {t('common.actions.back')}
           </Link>
         </div>
       </header>
@@ -52,21 +53,21 @@ export default function Methodology() {
       <main className="flex-1 px-4 py-16 md:py-24">
         <article className="max-w-2xl mx-auto space-y-16">
           <header className="space-y-4">
-            <p className="text-xs font-display uppercase tracking-widest text-accent">Methodology</p>
+            <p className="text-xs font-display uppercase tracking-widest text-accent">{t('pages.methodology.eyebrow')}</p>
             <h1 className="text-4xl md:text-5xl font-display font-semibold text-foreground leading-[1.1]">
-              How Norte reads your values.
+              {t('pages.methodology.title')}
             </h1>
           </header>
 
           <section className="space-y-5">
-            <h2 className="text-2xl font-display font-semibold text-foreground">The methodology</h2>
+            <h2 className="text-2xl font-display font-semibold text-foreground">{t('pages.methodology.methodologyHeading')}</h2>
             <p className="text-foreground/85 leading-relaxed text-lg">
-              Norte is built on three research foundations: ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey. Each contributes a different piece to how we understand and measure values.
+              {t('pages.methodology.methodologyBody')}
             </p>
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-2xl font-display font-semibold text-foreground">The 8 values</h2>
+            <h2 className="text-2xl font-display font-semibold text-foreground">{t('pages.methodology.valuesHeading')}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {VALUES.map((v) => {
                 const Icon = v.icon;
@@ -79,10 +80,10 @@ export default function Methodology() {
                       <span className="flex items-center justify-center w-11 h-11 rounded-xl bg-accent/15 text-accent shrink-0">
                         <Icon size={22} strokeWidth={1.5} />
                       </span>
-                      <h3 className="font-display font-semibold text-foreground text-lg">{v.label}</h3>
+                      <h3 className="font-display font-semibold text-foreground text-lg">{tValueLabel(t, v.key)}</h3>
                     </div>
                     <p className="text-foreground/80 leading-relaxed text-sm">
-                      {VALUE_EXPLANATIONS[v.key].definition}
+                      {tValueExplanation(t, v.key).definition}
                     </p>
                   </div>
                 );
@@ -91,9 +92,9 @@ export default function Methodology() {
           </section>
 
           <section className="space-y-5">
-            <h2 className="text-2xl font-display font-semibold text-foreground">Disclaimer</h2>
+            <h2 className="text-2xl font-display font-semibold text-foreground">{t('pages.methodology.disclaimerHeading')}</h2>
             <p className="text-foreground/85 leading-relaxed">
-              Norte is a wellness product, not a clinical tool. It's designed to give you a useful frame for self-reflection, not a diagnostic assessment. If you're working with a therapist or coach, your results may be a productive conversation starter.
+              {t('pages.methodology.disclaimerBody')}
             </p>
           </section>
         </article>
@@ -101,7 +102,7 @@ export default function Methodology() {
 
       <footer className="px-6 py-10 border-t border-border/60">
         <div className="max-w-3xl mx-auto text-center text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-foreground transition-colors">← Back to Norte</Link>
+          <Link to="/" className="hover:text-foreground transition-colors">{t('pages.methodology.backToNorte')}</Link>
         </div>
       </footer>
     </div>
