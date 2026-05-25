@@ -98,6 +98,53 @@ const AdminTranslationsPage = () => {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "missing" | "modified">("all");
   const [groupFilter, setGroupFilter] = useState<string>("all");
+  const [findText, setFindText] = useState("");
+  const [replaceText, setReplaceText] = useState("");
+  const [caseSensitive, setCaseSensitive] = useState(false);
+
+  const replaceMatches = (() => {
+    if (!findText) return { count: 0, keys: 0 };
+    const flags = caseSensitive ? "g" : "gi";
+    let re: RegExp;
+    try {
+      re = new RegExp(findText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags);
+    } catch {
+      return { count: 0, keys: 0 };
+    }
+    let count = 0;
+    let keys = 0;
+    for (const k of Object.keys(pt)) {
+      const v = pt[k] ?? "";
+      const m = v.match(re);
+      if (m && m.length > 0) {
+        count += m.length;
+        keys += 1;
+      }
+    }
+    return { count, keys };
+  })();
+
+  const applyReplace = () => {
+    if (!findText) return;
+    const flags = caseSensitive ? "g" : "gi";
+    const re = new RegExp(findText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), flags);
+    let changed = 0;
+    setPt((prev) => {
+      const next: Flat = { ...prev };
+      for (const k of Object.keys(next)) {
+        const v = next[k] ?? "";
+        if (re.test(v)) {
+          next[k] = v.replace(re, replaceText);
+          changed += 1;
+        }
+      }
+      return next;
+    });
+    toast.success(`Replaced in ${changed} key${changed === 1 ? "" : "s"}`);
+    setFindText("");
+    setReplaceText("");
+  };
+
 
   useEffect(() => {
     // Save only diffs vs original
