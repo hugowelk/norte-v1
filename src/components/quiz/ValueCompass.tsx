@@ -1,100 +1,280 @@
-import { motion } from 'framer-motion';
+import { useMemo, useState } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { VALUES, type ValueKey } from '@/lib/values';
-import { findAspirationalGaps, type ScoreResult } from '@/lib/algorithm';
+import type { ScoreResult } from '@/lib/algorithm';
 import { tValueLabel, tOrdinal } from '@/lib/i18nHelpers';
 import { ValueIcon } from '../ValueIcon';
 import type { SelectableValue } from './CoreValuesSelection';
-import type { AlignmentScores } from './AlignmentReflection';
 
 interface Props {
   result: ScoreResult;
   slots: SelectableValue[];
-  alignmentScores: AlignmentScores;
+  // Kept for backwards-compat with QuizFlow; no longer used.
+  alignmentScores?: Record<string, number>;
   onContinue: () => void;
 }
 
-export function ValueCompass({ result, slots, alignmentScores, onContinue }: Props) {
+const ROW_H = 52;
+const SVG_W = 140;
+
+export function ValueCompass({ result, slots, onContinue }: Props) {
   const { t } = useTranslation();
-  const aspirationalKeys = slots.map(s => s.key);
-  const gaps = findAspirationalGaps(aspirationalKeys, result);
-  const fullOverlap = gaps.length === 0 && aspirationalKeys.length > 0;
+  const [hovered, setHovered] = useState<ValueKey | null>(null);
 
-  const felt: Record<ValueKey, number> = {
-    achievement: 0, connection: 0, aliveness: 0, enjoyment: 0,
-    meaning: 0, contribution: 0, stability: 0, autonomy: 0,
+  // LEFT: aspirational ranking (1..8). Top 3 = user's picks (in chosen order).
+  // Remaining 5 keep their declared order in VALUES.
+  const leftKeys: ValueKey[] = useMemo(() => {
+    const picked = slots.map(s => s.key);
+    const rest = VALUES.map(v => v.key).filter(k => !picked.includes(k));
+    return [...picked, ...rest];
+  }, [slots]);
+
+  // RIGHT: revealed ranking from the algorithm.
+  const rightKeys: ValueKey[] = result.ranking;
+
+  const leftRank = (k: ValueKey) => leftKeys.indexOf(k) + 1;
+  const rightRank = (k: ValueKey) => rightKeys.indexOf(k) + 1;
+
+  // Stat card: how many of top-3 aspirational fall in the bottom half (5-8)
+  // of the revealed ranking.
+  const top3Aspirational = slots.slice(0, 3).map(s => s.key);
+  const bottomHalfCount = top3Aspirational.filter(k => rightRank(k) >= 5).length;
+
+  // Insight card: value with the single largest rank gap (in either direction).
+  const largestGap = useMemo(() => {
+    let best: { key: ValueKey; diff: number } | null = null;
+    for (const v of VALUES) {
+      const diff = rightRank(v.key) - leftRank(v.key);
+      if (!best || Math.abs(diff) > Math.abs(best.diff)) {
+        best = { key: v.key, diff };
+      }
+    }
+    return best!;
+  }, [leftKeys, rightKeys]);
+
+  const fullOverlap = top3Aspirational.every(k => rightRank(k) <= 3);
+
+  const svgHeight = leftKeys.length * ROW_H;
+
+  const lineColor = (k: ValueKey) => {
+    const diff = rightRank(k) - leftRank(k); // positive = revealed worse than aspirational
+    if (diff >= 2) return 'hsl(var(--accent))';        // terracotta: the gap
+    if (diff <= -2) return 'hsl(var(--primary))';      // green: lived more than claimed
+    return 'hsl(var(--muted-foreground) / 0.35)';      // neutral
   };
-  for (const v of VALUES) felt[v.key] = (alignmentScores[`core:${v.key}`] ?? 0) * 10;
-
-  const aspirationalSet = new Set(aspirationalKeys);
-  const rest = VALUES.map(v => v.key).filter(k => !aspirationalSet.has(k))
-    .sort((a, b) => result.normalized[b] - result.normalized[a]);
-
-  const topAspirational = aspirationalKeys[0];
-  const topAspirationalRank = topAspirational ? result.ranking.indexOf(topAspirational) + 1 : 0;
-  const missingCount = gaps.length;
 
   return (
     <div className="space-y-10 pb-16">
       <div className="space-y-3 text-center">
-        <p className="text-xs font-display uppercase tracking-widest text-accent">{t('quiz.compass.eyebrow')}</p>
+        <p className="text-xs font-display uppercase tracking-widest text-accent">
+          {t('quiz.compass.eyebrow')}
+        </p>
         <h2 className="text-2xl md:text-3xl font-display font-semibold text-foreground leading-tight">
           {t('quiz.compass.title')}
         </h2>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto font-body">{t('quiz.compass.body')}</p>
+        <p className="text-sm text-muted-foreground max-w-md mx-auto font-body">
+          {t('quiz.compass.slopeBody', {
+            defaultValue: 'On the left, the order you said matters. On the right, the order your trade-offs revealed. The lines show the distance between them.',
+          })}
+        </p>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl p-5 md:p-6 space-y-5">
-        <div className="flex items-center gap-5 text-xs font-display text-muted-foreground pb-3 border-b border-border/60">
-          <span className="inline-flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm bg-accent" /> {t('quiz.compass.legendRevealed')}</span>
-          <span className="inline-flex items-center gap-2"><span className="w-3 h-1.5 rounded-sm bg-primary" /> {t('quiz.compass.legendFelt')}</span>
+      {/* Slope / bump chart */}
+      <div className="bg-card border border-border rounded-2xl p-4 md:p-6">
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div className="flex-1 min-w-0">
+            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              {t('quiz.compass.leftCol', { defaultValue: 'What you said mattered' })}
+            </p>
+          </div>
+          <div className="flex-1 min-w-0 text-right">
+            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-accent">
+              {t('quiz.compass.rightCol', { defaultValue: 'What your choices revealed' })}
+            </p>
+          </div>
         </div>
 
-        <div className="space-y-1.5">
-          <p className="text-[10px] font-display uppercase tracking-widest text-accent/80">{t('quiz.compass.chosenLabel')}</p>
-        </div>
-        <div className="space-y-5">
-          {aspirationalKeys.map((key, i) => (
-            <StackedRow key={key} valueKey={key} current={result.normalized[key]} felt={felt[key]} emphasised delayIdx={i} />
-          ))}
+        {/* Desktop: 3-column slope chart */}
+        <div className="hidden md:grid items-start" style={{ gridTemplateColumns: `1fr ${SVG_W}px 1fr` }}>
+          <ul className="space-y-0">
+            {leftKeys.map((k, i) => (
+              <SlopeRow
+                key={`L-${k}`}
+                valueKey={k}
+                rank={i + 1}
+                align="left"
+                active={hovered === k}
+                onHover={setHovered}
+              />
+            ))}
+          </ul>
+
+          <svg
+            width={SVG_W}
+            height={svgHeight}
+            viewBox={`0 0 ${SVG_W} ${svgHeight}`}
+            className="overflow-visible"
+            aria-hidden="true"
+          >
+            {VALUES.map(v => {
+              const lIdx = leftRank(v.key) - 1;
+              const rIdx = rightRank(v.key) - 1;
+              const y1 = lIdx * ROW_H + ROW_H / 2;
+              const y2 = rIdx * ROW_H + ROW_H / 2;
+              const x1 = 0;
+              const x2 = SVG_W;
+              const cx1 = SVG_W * 0.45;
+              const cx2 = SVG_W * 0.55;
+              const isActive = hovered === v.key;
+              const isDim = hovered !== null && !isActive;
+              return (
+                <g key={v.key} opacity={isDim ? 0.18 : 1}>
+                  <path
+                    d={`M ${x1} ${y1} C ${cx1} ${y1}, ${cx2} ${y2}, ${x2} ${y2}`}
+                    fill="none"
+                    stroke={lineColor(v.key)}
+                    strokeWidth={isActive ? 2.5 : 1.5}
+                    strokeLinecap="round"
+                  />
+                  <circle cx={x1} cy={y1} r={isActive ? 4 : 3} fill={lineColor(v.key)} />
+                  <circle cx={x2} cy={y2} r={isActive ? 4 : 3} fill={lineColor(v.key)} />
+                </g>
+              );
+            })}
+          </svg>
+
+          <ul className="space-y-0">
+            {rightKeys.map((k, i) => (
+              <SlopeRow
+                key={`R-${k}`}
+                valueKey={k}
+                rank={i + 1}
+                align="right"
+                active={hovered === k}
+                onHover={setHovered}
+              />
+            ))}
+          </ul>
         </div>
 
-        <div className="pt-2 border-t border-dashed border-border/60 space-y-1.5">
-          <p className="text-[10px] font-display uppercase tracking-widest text-muted-foreground">{t('quiz.compass.restLabel')}</p>
-        </div>
-        <div className="space-y-4">
-          {rest.map((key, i) => (
-            <StackedRow key={key} valueKey={key} current={result.normalized[key]} felt={felt[key]} emphasised={false} delayIdx={aspirationalKeys.length + i} compact />
-          ))}
+        {/* Mobile: stacked list with rank shift */}
+        <ul className="md:hidden divide-y divide-border/60">
+          {[...VALUES]
+            .sort((a, b) => leftRank(a.key) - leftRank(b.key))
+            .map(v => {
+              const lr = leftRank(v.key);
+              const rr = rightRank(v.key);
+              const diff = rr - lr;
+              const color = lineColor(v.key);
+              const arrow = diff === 0 ? '·' : diff > 0 ? '↓' : '↑';
+              return (
+                <li key={v.key} className="py-3 flex items-center gap-3">
+                  <ValueIcon value={v.key} size={16} />
+                  <span className="font-display text-[15px] text-foreground flex-1 truncate">
+                    {tValueLabel(t, v.key)}
+                  </span>
+                  <span className="font-body text-xs text-muted-foreground tabular-nums">
+                    #{lr} → #{rr}
+                  </span>
+                  <span
+                    className="font-display text-base tabular-nums w-5 text-center"
+                    style={{ color }}
+                    aria-label={diff > 0 ? 'dropped' : diff < 0 ? 'rose' : 'same'}
+                  >
+                    {arrow}
+                  </span>
+                </li>
+              );
+            })}
+        </ul>
+
+        {/* Hover/tap detail (desktop) */}
+        {hovered && (
+          <div className="hidden md:flex mt-5 pt-4 border-t border-border/60 items-center gap-3 text-sm font-body text-foreground">
+            <ValueIcon value={hovered} size={16} />
+            <span className="font-display">{tValueLabel(t, hovered)}:</span>
+            <span className="text-muted-foreground tabular-nums">
+              #{leftRank(hovered)} → #{rightRank(hovered)}
+            </span>
+          </div>
+        )}
+
+        {/* Legend */}
+        <div className="mt-5 pt-4 border-t border-border/60 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-display uppercase tracking-[0.14em] text-muted-foreground">
+          <span className="inline-flex items-center gap-2">
+            <span className="w-4 h-[2px] rounded-full bg-accent" />
+            {t('quiz.compass.legendGap', { defaultValue: 'The gap' })}
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="w-4 h-[2px] rounded-full bg-primary" />
+            {t('quiz.compass.legendLived', { defaultValue: 'Lived more than claimed' })}
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <span className="w-4 h-[2px] rounded-full bg-muted-foreground/40" />
+            {t('quiz.compass.legendAligned', { defaultValue: 'Roughly aligned' })}
+          </span>
         </div>
       </div>
 
+      {/* Callout cards */}
       {!fullOverlap && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="rounded-2xl border border-border bg-card p-5 flex items-center gap-4">
             <div className="font-display text-5xl font-semibold text-accent leading-none tabular-nums">
-              {missingCount}
+              {bottomHalfCount}
               <span className="text-xl text-muted-foreground">/3</span>
             </div>
             <p className="text-sm text-foreground/85 font-body leading-snug">
-              <Trans i18nKey="quiz.compass.missingNote" components={{ strong: <strong className="text-foreground" /> }} />
+              <Trans
+                i18nKey="quiz.compass.bottomHalfNote"
+                values={{ count: bottomHalfCount }}
+                components={{ strong: <strong className="text-foreground" /> }}
+                defaults="of the values you want at the centre sit in the <strong>bottom half</strong> of what your choices revealed."
+              />
             </p>
           </div>
 
-          {topAspirational && (
-            <div className="rounded-2xl border border-border bg-card p-5 flex items-center gap-4">
-              <div className="shrink-0 w-14 h-14 rounded-full bg-secondary flex items-center justify-center">
-                <ValueIcon value={topAspirational} size={26} className="text-primary" />
-              </div>
-              <p className="text-sm text-foreground/85 font-body leading-snug">
-                <Trans
-                  i18nKey="quiz.compass.topNote"
-                  values={{ label: tValueLabel(t, topAspirational), ordinal: tOrdinal(t, topAspirationalRank) }}
-                  components={{ strong: <strong className="text-foreground" /> }}
-                />
-              </p>
+          <div className="rounded-2xl border border-border bg-card p-5 flex items-center gap-4">
+            <div className="shrink-0 w-14 h-14 rounded-full bg-secondary flex items-center justify-center">
+              <ValueIcon
+                value={largestGap.key}
+                size={26}
+                className={largestGap.diff >= 0 ? 'text-accent' : 'text-primary'}
+              />
             </div>
-          )}
+            <p className="text-sm text-foreground/85 font-body leading-snug">
+              {largestGap.diff > 0 ? (
+                <Trans
+                  i18nKey="quiz.compass.largestGapDown"
+                  values={{
+                    label: tValueLabel(t, largestGap.key),
+                    aspOrdinal: tOrdinal(t, leftRank(largestGap.key)),
+                    revOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                  }}
+                  components={{ strong: <strong className="text-foreground" /> }}
+                  defaults="<strong>{{label}}</strong> is your {{aspOrdinal}} chosen value, but your trade-offs place it {{revOrdinal}}."
+                />
+              ) : largestGap.diff < 0 ? (
+                <Trans
+                  i18nKey="quiz.compass.largestGapUp"
+                  values={{
+                    label: tValueLabel(t, largestGap.key),
+                    aspOrdinal: tOrdinal(t, leftRank(largestGap.key)),
+                    revOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                  }}
+                  components={{ strong: <strong className="text-foreground" /> }}
+                  defaults="<strong>{{label}}</strong> sits {{aspOrdinal}} in what you claim, but your choices put it {{revOrdinal}}. You live it more than you say."
+                />
+              ) : (
+                <Trans
+                  i18nKey="quiz.compass.noGap"
+                  values={{ label: tValueLabel(t, largestGap.key) }}
+                  components={{ strong: <strong className="text-foreground" /> }}
+                  defaults="<strong>{{label}}</strong> lines up exactly. What you claim and what you choose are the same."
+                />
+              )}
+            </p>
+          </div>
         </div>
       )}
 
@@ -106,38 +286,76 @@ export function ValueCompass({ result, slots, alignmentScores, onContinue }: Pro
           </>
         ) : (
           <>
-            <p className="text-xs font-display uppercase tracking-widest text-accent">{t('quiz.compass.noteEyebrow')}</p>
+            <p className="text-xs font-display uppercase tracking-widest text-accent">
+              {t('quiz.compass.noteEyebrow')}
+            </p>
             <p className="text-foreground/90 leading-relaxed">{t('quiz.compass.gapNote1')}</p>
             <p className="text-foreground leading-relaxed">{t('quiz.compass.gapNote2')}</p>
           </>
         )}
       </div>
 
-      <button onClick={onContinue} className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-medium text-base hover:opacity-90 transition-opacity shadow-md">
+      <button
+        onClick={onContinue}
+        className="w-full py-4 rounded-xl bg-primary text-primary-foreground font-display font-medium text-base hover:opacity-90 transition-opacity shadow-md"
+      >
         {t('quiz.compass.continue')}
       </button>
     </div>
   );
 }
 
-function StackedRow({ valueKey, current, felt, emphasised, delayIdx, compact = false }: { valueKey: ValueKey; current: number; felt: number; emphasised: boolean; delayIdx: number; compact?: boolean }) {
+function SlopeRow({
+  valueKey,
+  rank,
+  align,
+  active,
+  onHover,
+}: {
+  valueKey: ValueKey;
+  rank: number;
+  align: 'left' | 'right';
+  active: boolean;
+  onHover: (k: ValueKey | null) => void;
+}) {
   const { t } = useTranslation();
   return (
-    <div className={`space-y-1.5 ${emphasised ? '' : 'opacity-60'}`}>
-      <div className="flex items-center gap-2">
-        <ValueIcon value={valueKey} size={compact ? 12 : 14} className={emphasised ? 'text-primary' : undefined} />
-        <span className={`font-display ${compact ? 'text-xs' : 'text-sm'} ${emphasised ? 'text-foreground font-medium' : 'text-foreground/80'}`}>
-          {tValueLabel(t, valueKey)}
-        </span>
-      </div>
-      <div className="space-y-1">
-        <div className={`${compact ? 'h-1.5' : 'h-2'} rounded-full bg-secondary overflow-hidden`}>
-          <motion.div className="h-full bg-accent rounded-full" initial={{ width: 0 }} animate={{ width: `${Math.max(0, Math.min(100, current))}%` }} transition={{ duration: 0.7, delay: 0.05 * delayIdx, ease: 'easeOut' }} />
-        </div>
-        <div className={`${compact ? 'h-1.5' : 'h-2'} rounded-full bg-secondary overflow-hidden`}>
-          <motion.div className="h-full bg-primary rounded-full" initial={{ width: 0 }} animate={{ width: `${Math.max(0, Math.min(100, felt))}%` }} transition={{ duration: 0.7, delay: 0.05 * delayIdx + 0.15, ease: 'easeOut' }} />
-        </div>
-      </div>
-    </div>
+    <li
+      onMouseEnter={() => onHover(valueKey)}
+      onMouseLeave={() => onHover(null)}
+      onFocus={() => onHover(valueKey)}
+      onBlur={() => onHover(null)}
+      tabIndex={0}
+      className={`flex items-center gap-3 cursor-default outline-none transition-opacity ${
+        align === 'right' ? 'flex-row-reverse text-right' : ''
+      } ${active ? 'opacity-100' : 'opacity-95'}`}
+      style={{ height: ROW_H }}
+    >
+      <span
+        className={`font-display text-xs tabular-nums w-4 ${
+          align === 'right' ? 'text-left text-accent' : 'text-right text-muted-foreground'
+        }`}
+      >
+        {rank}
+      </span>
+      <span
+        className={`flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 ${
+          active
+            ? align === 'right'
+              ? 'bg-accent/20 text-accent ring-1 ring-accent/40'
+              : 'bg-primary/15 text-primary ring-1 ring-primary/30'
+            : 'bg-muted text-muted-foreground/80'
+        }`}
+      >
+        <ValueIcon value={valueKey} size={14} className="text-current" />
+      </span>
+      <span
+        className={`font-display text-[15px] md:text-[16px] leading-none truncate ${
+          active ? 'text-foreground' : 'text-foreground/85'
+        }`}
+      >
+        {tValueLabel(t, valueKey)}
+      </span>
+    </li>
   );
 }
