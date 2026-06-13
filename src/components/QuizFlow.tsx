@@ -25,7 +25,6 @@ import { TradeoffTransition } from './quiz/TradeoffTransition';
 import { ProcessingTransition } from './quiz/ProcessingTransition';
 import { ValueResults } from './quiz/ValueResults';
 import { CoreValuesSelection, type CoreValuesResult } from './quiz/CoreValuesSelection';
-import { AlignmentReflection, type AlignmentScores } from './quiz/AlignmentReflection';
 import { ValueCompass } from './quiz/ValueCompass';
 import { Paywall } from './quiz/Paywall';
 import { NameEmailCapture } from './quiz/NameEmailCapture';
