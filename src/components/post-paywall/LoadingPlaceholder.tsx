@@ -10,7 +10,7 @@ import { setPendingSession, clearPendingSession } from '@/lib/pendingSession';
 import { track } from '@/lib/analytics';
 import i18n from '@/i18n';
 
-const LINE_DURATION_MS = 8000;
+const LINE_DURATION_MS = 3500;
 const MAX_RETRIES = 3;
 
 function buildRequestBody() {

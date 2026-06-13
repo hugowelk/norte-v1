@@ -17,7 +17,7 @@ export function ProcessingTransition({ onComplete }: Props) {
       const tt = setTimeout(onComplete, 600);
       return () => clearTimeout(tt);
     }
-    const perStage = 2400;
+    const perStage = 1000;
     const timers: ReturnType<typeof setTimeout>[] = [];
     for (let i = 1; i < stages.length; i++) {
       timers.push(setTimeout(() => setStage(i), perStage * i));
