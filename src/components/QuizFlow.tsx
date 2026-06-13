@@ -19,6 +19,7 @@ function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<
   return out;
 }
 import { TradeoffIntro } from './quiz/TradeoffIntro';
+import { ChapterSelection } from './quiz/ChapterSelection';
 
 import { TradeoffScenario } from './quiz/TradeoffScenario';
 import { TradeoffTransition } from './quiz/TradeoffTransition';
@@ -30,8 +31,8 @@ import { Paywall } from './quiz/Paywall';
 import { NameEmailCapture } from './quiz/NameEmailCapture';
 
 type Phase =
+  | 'chapter'
   | 'tradeoffIntro'
-  
   | 'tradeoffs'
   | 'tradeoffTransition'
   | 'nameEmail'
@@ -50,13 +51,14 @@ const pageVariants = {
 
 export function QuizFlow() {
   const navigate = useNavigate();
-  const [phase, setPhase] = useState<Phase>('tradeoffIntro');
+  const [phase, setPhase] = useState<Phase>('chapter');
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [pendingTransition, setPendingTransition] = useState<string | null>(null);
 
   const [tradeoffAnswers, setTradeoffAnswers] = useState<Answer[]>([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [chapter, setChapter] = useState('');
   const [result, setResult] = useState<ScoreResult>();
   const [core, setCore] = useState<CoreValuesResult>();
 
@@ -67,15 +69,16 @@ export function QuizFlow() {
   }, [phase, scenarioIdx]);
 
   // Progress: rough estimate across the whole flow
-  const totalSteps = 1 /*intro*/ + SCENARIOS.length + 1 /*nameEmail*/ + 4 /*results,core,align,compass*/;
+  const totalSteps = 1 /*chapter*/ + 1 /*intro*/ + SCENARIOS.length + 1 /*nameEmail*/ + 4 /*results,core,align,compass*/;
   let completed = 0;
-  if (phase === 'tradeoffIntro') completed = 0;
-  else if (phase === 'tradeoffs' || phase === 'tradeoffTransition') completed = 1 + scenarioIdx;
-  else if (phase === 'nameEmail') completed = 1 + SCENARIOS.length;
-  else if (phase === 'results') completed = 2 + SCENARIOS.length;
-  else if (phase === 'coreValues') completed = 3 + SCENARIOS.length;
-  else if (phase === 'alignment') completed = 4 + SCENARIOS.length;
-  else if (phase === 'compass') completed = 5 + SCENARIOS.length;
+  if (phase === 'chapter') completed = 0;
+  else if (phase === 'tradeoffIntro') completed = 1;
+  else if (phase === 'tradeoffs' || phase === 'tradeoffTransition') completed = 2 + scenarioIdx;
+  else if (phase === 'nameEmail') completed = 2 + SCENARIOS.length;
+  else if (phase === 'results') completed = 3 + SCENARIOS.length;
+  else if (phase === 'coreValues') completed = 4 + SCENARIOS.length;
+  else if (phase === 'alignment') completed = 5 + SCENARIOS.length;
+  else if (phase === 'compass') completed = 6 + SCENARIOS.length;
   else if (phase === 'paywall') completed = totalSteps;
   const progress = Math.min(100, (completed / totalSteps) * 100);
 
@@ -162,6 +165,12 @@ export function QuizFlow() {
             transition={{ duration: 0.35, ease: 'easeOut' }}
             className="w-full max-w-2xl"
           >
+            {phase === 'chapter' && (
+              <ChapterSelection
+                initialValue={chapter}
+                onContinue={value => { setChapter(value); setPhase('tradeoffIntro'); }}
+              />
+            )}
             {phase === 'tradeoffIntro' && (
               <TradeoffIntro onBegin={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
             )}
@@ -242,14 +251,14 @@ export function QuizFlow() {
                     paymentSessionId: genPaymentSessionId(),
                     name,
                     email,
-                    current_chapter: '',
+                    current_chapter: chapter,
                     blocker_answer: null,
                     blocker_custom_text: '',
                     wont_give_up: '',
                     loudest_gap: loudest,
                     assessment: snapshot,
                   });
-                  navigate('/post-paywall/q2');
+                  navigate('/post-paywall/q3');
                 }}
               />
             )}

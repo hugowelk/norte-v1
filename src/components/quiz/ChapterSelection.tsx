@@ -1,29 +1,28 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { PostPaywallLayout } from './PostPaywallLayout';
-import { usePostPaywallStore } from '@/lib/postPaywallStore';
 
 const MAX = 280;
 const MIN = 3;
 
-export function Q2Chapter() {
+interface Props {
+  initialValue: string;
+  onContinue: (value: string) => void;
+}
+
+export function ChapterSelection({ initialValue, onContinue }: Props) {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const { state, update } = usePostPaywallStore();
   const options = t('postPaywall.q2.options', { returnObjects: true }) as string[];
 
-  // Initial selection: match stored value against preset options; otherwise treat as "other".
-  const initialIsPreset = options.includes(state.current_chapter);
+  const initialIsPreset = options.includes(initialValue);
   const [selected, setSelected] = useState<number | 'other' | null>(
-    state.current_chapter
+    initialValue
       ? initialIsPreset
-        ? options.indexOf(state.current_chapter)
+        ? options.indexOf(initialValue)
         : 'other'
       : null,
   );
-  const [custom, setCustom] = useState(initialIsPreset ? '' : state.current_chapter);
+  const [custom, setCustom] = useState(initialIsPreset ? '' : initialValue);
 
   const canContinue =
     selected !== null && (selected !== 'other' || custom.trim().length >= MIN);
@@ -31,15 +30,19 @@ export function Q2Chapter() {
   const submit = () => {
     if (!canContinue) return;
     const value = selected === 'other' ? custom.trim() : options[selected as number];
-    update({ current_chapter: value });
-    navigate('/post-paywall/q3');
+    onContinue(value);
   };
 
   return (
-    <PostPaywallLayout step={1}>
+    <div className="space-y-8">
+      <p className="text-xs font-display uppercase tracking-widest text-accent">
+        {t('quiz.chapter.eyebrow', { defaultValue: 'Before we begin' })}
+      </p>
+
       <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
         {t('postPaywall.q2.title')}
       </h1>
+
       <div className="space-y-4">
         <p className="text-base text-foreground/80">{t('postPaywall.q2.body1')}</p>
         <p className="text-base text-foreground/80">{t('postPaywall.q2.body2')}</p>
@@ -116,6 +119,6 @@ export function Q2Chapter() {
       >
         {t('common.actions.continueArrow')}
       </button>
-    </PostPaywallLayout>
+    </div>
   );
 }
