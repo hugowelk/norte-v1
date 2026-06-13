@@ -51,13 +51,14 @@ const pageVariants = {
 
 export function QuizFlow() {
   const navigate = useNavigate();
-  const [phase, setPhase] = useState<Phase>('tradeoffIntro');
+  const [phase, setPhase] = useState<Phase>('chapter');
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const [pendingTransition, setPendingTransition] = useState<string | null>(null);
 
   const [tradeoffAnswers, setTradeoffAnswers] = useState<Answer[]>([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [chapter, setChapter] = useState('');
   const [result, setResult] = useState<ScoreResult>();
   const [core, setCore] = useState<CoreValuesResult>();
 
