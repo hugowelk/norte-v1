@@ -29,7 +29,7 @@ export function TradeoffIntro({ onBegin }: Props) {
       </div>
       <div className="rounded-2xl border border-border/50 bg-secondary/40 p-6 md:p-8 space-y-4">
         <p className="text-xs font-display uppercase tracking-widest text-accent text-center">{t('quiz.intro.stepsTitle')}</p>
-        <ol className="space-y-3 text-sm text-foreground/80">
+        <ol className="space-y-3 text-sm text-foreground/80 text-left">
           {steps.map((step, i) => (
             <li key={i} className="flex gap-3 items-start">
               <span className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 text-accent text-xs font-display font-semibold flex items-center justify-center mt-0.5">
