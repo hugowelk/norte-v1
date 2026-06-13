@@ -340,7 +340,7 @@ function SlopeRow({
     >
       <span
         className={`font-display text-xs tabular-nums w-4 ${
-          align === 'right' ? 'text-left text-accent' : 'text-right text-muted-foreground'
+          align === 'left' ? 'text-right text-accent' : 'text-left text-muted-foreground'
         }`}
       >
         {rank}
@@ -348,7 +348,7 @@ function SlopeRow({
       <span
         className={`flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 ${
           active
-            ? align === 'right'
+            ? align === 'left'
               ? 'bg-accent/20 text-accent ring-1 ring-accent/40'
               : 'bg-primary/15 text-primary ring-1 ring-primary/30'
             : 'bg-muted text-muted-foreground/80'
