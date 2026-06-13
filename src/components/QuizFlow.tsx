@@ -258,7 +258,7 @@ export function QuizFlow() {
                     loudest_gap: loudest,
                     assessment: snapshot,
                   });
-                  navigate('/post-paywall/q2');
+                  navigate('/post-paywall/q3');
                 }}
               />
             )}
