@@ -25,7 +25,6 @@ import { TradeoffTransition } from './quiz/TradeoffTransition';
 import { ProcessingTransition } from './quiz/ProcessingTransition';
 import { ValueResults } from './quiz/ValueResults';
 import { CoreValuesSelection, type CoreValuesResult } from './quiz/CoreValuesSelection';
-import { AlignmentReflection, type AlignmentScores } from './quiz/AlignmentReflection';
 import { ValueCompass } from './quiz/ValueCompass';
 import { Paywall } from './quiz/Paywall';
 import { NameEmailCapture } from './quiz/NameEmailCapture';
@@ -60,7 +59,6 @@ export function QuizFlow() {
   const [email, setEmail] = useState('');
   const [result, setResult] = useState<ScoreResult>();
   const [core, setCore] = useState<CoreValuesResult>();
-  const [alignmentScores, setAlignmentScores] = useState<AlignmentScores>({});
 
   // Reset scroll whenever the visible step changes — without this each new
   // screen inherits the previous scroll position and feels glitchy.
@@ -203,7 +201,6 @@ export function QuizFlow() {
               <ValueCompass
                 result={result}
                 slots={core.slots}
-                alignmentScores={alignmentScores}
                 onContinue={() => setPhase('paywall')}
               />
             )}
