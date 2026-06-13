@@ -255,8 +255,8 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
                   i18nKey="quiz.compass.largestGapDown"
                   values={{
                     label: tValueLabel(t, largestGap.key),
-                    aspOrdinal: tOrdinal(t, leftRank(largestGap.key)),
-                    revOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                    aspOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                    revOrdinal: tOrdinal(t, leftRank(largestGap.key)),
                   }}
                   components={{ strong: <strong className="text-foreground" /> }}
                   defaults="<strong>{{label}}</strong> is your {{aspOrdinal}} chosen value, but your trade-offs place it {{revOrdinal}}."
@@ -266,8 +266,8 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
                   i18nKey="quiz.compass.largestGapUp"
                   values={{
                     label: tValueLabel(t, largestGap.key),
-                    aspOrdinal: tOrdinal(t, leftRank(largestGap.key)),
-                    revOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                    aspOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                    revOrdinal: tOrdinal(t, leftRank(largestGap.key)),
                   }}
                   components={{ strong: <strong className="text-foreground" /> }}
                   defaults="<strong>{{label}}</strong> sits {{aspOrdinal}} in what you claim, but your choices put it {{revOrdinal}}. You live it more than you say."
