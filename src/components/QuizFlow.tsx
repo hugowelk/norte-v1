@@ -170,10 +170,7 @@ export function QuizFlow() {
             className="w-full max-w-2xl"
           >
             {phase === 'tradeoffIntro' && (
-              <TradeoffIntro onBegin={() => setPhase('howItWorks')} />
-            )}
-            {phase === 'howItWorks' && (
-              <HowItWorksSlide onContinue={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
+              <TradeoffIntro onBegin={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
             )}
             {phase === 'tradeoffs' && (
               <TradeoffScenario
