@@ -138,7 +138,7 @@
     },
     "core": {
       "eyebrow": "Sua Aspiração",
-      "title": "Agora. Escolha os 3 valores que você quer no centro da sua vida.",
+      "title": "Agora, escolha os 3 valores que você quer no centro da sua vida daqui para frente.",
       "body": "Não o que apareceu. O que você escolheria se estivesse escolhendo de propósito. A ordem que você tocar é a ordem em que está priorizando.",
       "revealedNote": "Seu top 3 revelado foi <strong>{{a}}</strong>, <strong>{{b}}</strong> e <strong>{{c}}</strong>. A pergunta interessante é qual desses você quer manter no centro e o que mais quer trazer para perto.",
       "deselectHint": "Toque num cartão selecionado para tirá-lo.",

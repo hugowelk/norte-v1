@@ -138,7 +138,7 @@
     },
     "core": {
       "eyebrow": "Your Aspiration",
-      "title": "Now. Pick the 3 values you want at the centre of your life.",
+      "title": "Now, pick the 3 values you want at the centre of your life moving forward.",
       "body": "Not what came up. What you'd choose if you were choosing on purpose. The order you tap them is the order you're prioritising them.",
       "revealedNote": "Your revealed top 3 were <strong>{{a}}</strong>, <strong>{{b}}</strong>, and <strong>{{c}}</strong>. The interesting question is which of these you want to keep at the centre, and what else you want to bring in.",
       "deselectHint": "Tap a selected card to deselect it.",
