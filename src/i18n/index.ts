@@ -23,6 +23,13 @@ const LANG_ALIASES: Record<string, string> = {
   pt: 'pt-BR',
 };
 
+const FORCE_ENGLISH_HOSTS = ['findmyvalues.app', 'www.findmyvalues.app'];
+
+function isEnglishForced(): boolean {
+  if (typeof window === 'undefined') return false;
+  return FORCE_ENGLISH_HOSTS.includes(window.location.hostname);
+}
+
 type LocaleEntry = {
   code: string;
   label: string;
@@ -69,8 +76,14 @@ for (const entry of Object.values(allLocales)) {
   }
 }
 
+// On findmyvalues.app domains, lock everything to English regardless of detection.
+const forceEnglish = isEnglishForced();
+
 // Public registry: only complete locales are user-visible.
-export const AVAILABLE_LOCALES: LocaleEntry[] = Object.values(allLocales).filter((l) => l.complete);
+const _availableLocales: LocaleEntry[] = Object.values(allLocales).filter((l) => l.complete);
+export const AVAILABLE_LOCALES: LocaleEntry[] = forceEnglish
+  ? _availableLocales.filter((l) => l.code === SOURCE_LANG)
+  : _availableLocales;
 export const AVAILABLE_LANGS: string[] = AVAILABLE_LOCALES.map((l) => l.code);
 export const LANG_LABELS: Record<string, string> = Object.fromEntries(
   AVAILABLE_LOCALES.map((l) => [l.code, l.nativeLabel]),
@@ -82,6 +95,7 @@ export const SUPPORTED_LANGS = AVAILABLE_LANGS;
 // Resolve any detected locale (e.g. "pt-PT", "en-GB") to a shipped & complete locale.
 function normalize(lang: string | undefined): string {
   if (!lang) return SOURCE_LANG;
+  if (forceEnglish) return SOURCE_LANG;
   const lower = lang.toLowerCase();
   // Exact match (case-insensitive)
   const exact = AVAILABLE_LANGS.find((l) => l.toLowerCase() === lower);
@@ -113,7 +127,7 @@ i18n
       order: ['querystring', 'localStorage', 'navigator'],
       lookupQuerystring: 'lang',
       lookupLocalStorage: STORAGE_KEY,
-      caches: ['localStorage'],
+      caches: forceEnglish ? [] : ['localStorage'],
       convertDetectedLanguage: (lng) => normalize(lng),
     },
   });
@@ -125,6 +139,7 @@ if (i18n.language) {
 }
 
 export function setLang(lang: SupportedLang) {
+  if (forceEnglish && lang !== SOURCE_LANG) return;
   i18n.changeLanguage(lang);
   try {
     localStorage.setItem(STORAGE_KEY, lang);
@@ -153,3 +168,4 @@ if (typeof window !== 'undefined') {
     });
   }, 500);
 }
+
