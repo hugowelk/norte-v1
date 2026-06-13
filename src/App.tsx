@@ -9,7 +9,7 @@ import Index from "./pages/Index";
 import Methodology from "./pages/Methodology";
 import NotFound from "./pages/NotFound";
 import { RequirePayment } from "./components/post-paywall/RequirePayment";
-import { Q2Chapter } from "./components/post-paywall/Q2Chapter";
+
 import { Q3Blocker } from "./components/post-paywall/Q3Blocker";
 import { Q4WontGiveUp } from "./components/post-paywall/Q4WontGiveUp";
 import { LoadingPlaceholder } from "./components/post-paywall/LoadingPlaceholder";
