@@ -392,7 +392,7 @@
   },
   "postPaywall": {
     "layout": {
-      "eyebrow": "Antes do seu relatório · {{step}} de 3"
+      "eyebrow": "Antes do seu relatório · {{step}} de 2"
     },
     "q2": {
       "title": "Qual é o capítulo atual da sua vida agora?",
