@@ -397,15 +397,16 @@
     "q2": {
       "title": "What's the current chapter of your life right now?",
       "body1": "We often see people reevaluating their values during career transitions, breakups, moving to different countries, becoming parents, etc.",
-      "body2": "In a few words, describe where you are in life right now. The more specific you are, the sharper the report.",
-      "seeExamples": "See examples",
-      "examples": [
-        "\"Just left my job, figuring out what's next.\"",
-        "\"New parent, lost my edges.\"",
-        "\"Stuck. Last few years feel like autopilot.\"",
-        "\"Moved countries six months ago, still rebuilding.\"",
-        "\"Ended a long relationship, reassessing everything.\""
-      ]
+      "body2": "Pick what fits closest, or write your own. The more specific you are, the sharper the report.",
+      "options": [
+        "Just left my job, figuring out what's next.",
+        "New parent, lost my edges.",
+        "Stuck. Last few years feel like autopilot.",
+        "Moved countries six months ago, still rebuilding.",
+        "Ended a long relationship, reassessing everything."
+      ],
+      "otherLabel": "Something else (write your own)",
+      "customPlaceholder": "Describe your current chapter in a few words…"
     },
     "q3": {
       "headingFallback": "What's been making it harder to make your top one chosen value — {{label}}, part of your routine?",
