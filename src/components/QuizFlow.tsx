@@ -201,7 +201,6 @@ export function QuizFlow() {
               <ValueCompass
                 result={result}
                 slots={core.slots}
-                alignmentScores={alignmentScores}
                 onContinue={() => setPhase('paywall')}
               />
             )}
