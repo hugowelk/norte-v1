@@ -85,13 +85,8 @@ export function QuizFlow() {
     const next = [...tradeoffAnswers];
     next[scenarioIdx] = a;
     setTradeoffAnswers(next);
-    const current = SCENARIOS[scenarioIdx];
-    if (current.transitionAfter) {
-      setPendingTransition(current.transitionAfter);
-      setPhase('tradeoffTransition');
-      return;
-    }
     advanceTradeoff(next);
+
   };
 
   const advanceTradeoff = (answers: Answer[]) => {
