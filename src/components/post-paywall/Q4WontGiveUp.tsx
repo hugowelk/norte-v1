@@ -25,7 +25,7 @@ export function Q4WontGiveUp() {
   };
 
   return (
-    <PostPaywallLayout step={3} backTo="/post-paywall/q3">
+    <PostPaywallLayout step={2} backTo="/post-paywall/q3">
       <h1 className="text-3xl md:text-4xl font-display font-semibold text-foreground leading-tight">
         {t('postPaywall.q4.title')}
       </h1>
