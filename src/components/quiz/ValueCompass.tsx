@@ -23,27 +23,30 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
 
   // LEFT: aspirational ranking (1..8). Top 3 = user's picks (in chosen order).
   // Remaining 5 keep their declared order in VALUES.
-  const leftKeys: ValueKey[] = useMemo(() => {
+  // LEFT: revealed ranking from the algorithm (1..8).
+  const leftKeys: ValueKey[] = result.ranking;
+
+  // RIGHT: aspirational ranking (1..8). Top 3 = user's picks (in chosen order).
+  // Remaining 5 keep their declared order in VALUES.
+  const rightKeys: ValueKey[] = useMemo(() => {
     const picked = slots.map(s => s.key);
     const rest = VALUES.map(v => v.key).filter(k => !picked.includes(k));
     return [...picked, ...rest];
   }, [slots]);
 
-  // RIGHT: revealed ranking from the algorithm.
-  const rightKeys: ValueKey[] = result.ranking;
-
-  const leftRank = (k: ValueKey) => leftKeys.indexOf(k) + 1;
-  const rightRank = (k: ValueKey) => rightKeys.indexOf(k) + 1;
+  const leftRank = (k: ValueKey) => leftKeys.indexOf(k) + 1;     // revealed
+  const rightRank = (k: ValueKey) => rightKeys.indexOf(k) + 1;   // aspirational
 
   // Stat card: how many of top-3 aspirational fall in the bottom half (5-8)
   // of the revealed ranking.
   const top3Aspirational = slots.slice(0, 3).map(s => s.key);
-  const bottomHalfCount = top3Aspirational.filter(k => rightRank(k) >= 5).length;
+  const bottomHalfCount = top3Aspirational.filter(k => leftRank(k) >= 5).length;
 
   // Insight card: value with the single largest rank gap (in either direction).
   const largestGap = useMemo(() => {
     let best: { key: ValueKey; diff: number } | null = null;
     for (const v of VALUES) {
+      // diff = aspirational - revealed. Positive => claimed higher than lived (the gap).
       const diff = rightRank(v.key) - leftRank(v.key);
       if (!best || Math.abs(diff) > Math.abs(best.diff)) {
         best = { key: v.key, diff };
@@ -52,16 +55,19 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
     return best!;
   }, [leftKeys, rightKeys]);
 
-  const fullOverlap = top3Aspirational.every(k => rightRank(k) <= 3);
+  const fullOverlap = top3Aspirational.every(k => leftRank(k) <= 3);
 
   const svgHeight = leftKeys.length * ROW_H;
 
   const lineColor = (k: ValueKey) => {
-    const diff = rightRank(k) - leftRank(k); // positive = revealed worse than aspirational
-    if (diff >= 2) return 'hsl(var(--accent))';        // terracotta: the gap
+    // diff > 0: aspirational rank is higher (better) than revealed -> the gap (terracotta).
+    // diff < 0: revealed rank is higher than aspirational -> lived more than claimed (green).
+    const diff = rightRank(k) - leftRank(k);
     if (diff <= -2) return 'hsl(var(--primary))';      // green: lived more than claimed
+    if (diff >= 2) return 'hsl(var(--accent))';        // terracotta: the gap
     return 'hsl(var(--muted-foreground) / 0.35)';      // neutral
   };
+
 
   return (
     <div className="space-y-10 pb-16">
