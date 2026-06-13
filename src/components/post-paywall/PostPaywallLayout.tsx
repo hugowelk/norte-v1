@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
-  step: 1 | 2 | 3;
+  step: 1 | 2;
   backTo?: string;
   children: React.ReactNode;
 }
