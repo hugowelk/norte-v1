@@ -23,27 +23,30 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
 
   // LEFT: aspirational ranking (1..8). Top 3 = user's picks (in chosen order).
   // Remaining 5 keep their declared order in VALUES.
-  const leftKeys: ValueKey[] = useMemo(() => {
+  // LEFT: revealed ranking from the algorithm (1..8).
+  const leftKeys: ValueKey[] = result.ranking;
+
+  // RIGHT: aspirational ranking (1..8). Top 3 = user's picks (in chosen order).
+  // Remaining 5 keep their declared order in VALUES.
+  const rightKeys: ValueKey[] = useMemo(() => {
     const picked = slots.map(s => s.key);
     const rest = VALUES.map(v => v.key).filter(k => !picked.includes(k));
     return [...picked, ...rest];
   }, [slots]);
 
-  // RIGHT: revealed ranking from the algorithm.
-  const rightKeys: ValueKey[] = result.ranking;
-
-  const leftRank = (k: ValueKey) => leftKeys.indexOf(k) + 1;
-  const rightRank = (k: ValueKey) => rightKeys.indexOf(k) + 1;
+  const leftRank = (k: ValueKey) => leftKeys.indexOf(k) + 1;     // revealed
+  const rightRank = (k: ValueKey) => rightKeys.indexOf(k) + 1;   // aspirational
 
   // Stat card: how many of top-3 aspirational fall in the bottom half (5-8)
   // of the revealed ranking.
   const top3Aspirational = slots.slice(0, 3).map(s => s.key);
-  const bottomHalfCount = top3Aspirational.filter(k => rightRank(k) >= 5).length;
+  const bottomHalfCount = top3Aspirational.filter(k => leftRank(k) >= 5).length;
 
   // Insight card: value with the single largest rank gap (in either direction).
   const largestGap = useMemo(() => {
     let best: { key: ValueKey; diff: number } | null = null;
     for (const v of VALUES) {
+      // diff = aspirational - revealed. Positive => claimed higher than lived (the gap).
       const diff = rightRank(v.key) - leftRank(v.key);
       if (!best || Math.abs(diff) > Math.abs(best.diff)) {
         best = { key: v.key, diff };
@@ -52,16 +55,19 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
     return best!;
   }, [leftKeys, rightKeys]);
 
-  const fullOverlap = top3Aspirational.every(k => rightRank(k) <= 3);
+  const fullOverlap = top3Aspirational.every(k => leftRank(k) <= 3);
 
   const svgHeight = leftKeys.length * ROW_H;
 
   const lineColor = (k: ValueKey) => {
-    const diff = rightRank(k) - leftRank(k); // positive = revealed worse than aspirational
-    if (diff >= 2) return 'hsl(var(--accent))';        // terracotta: the gap
+    // diff > 0: aspirational rank is higher (better) than revealed -> the gap (terracotta).
+    // diff < 0: revealed rank is higher than aspirational -> lived more than claimed (green).
+    const diff = rightRank(k) - leftRank(k);
     if (diff <= -2) return 'hsl(var(--primary))';      // green: lived more than claimed
+    if (diff >= 2) return 'hsl(var(--accent))';        // terracotta: the gap
     return 'hsl(var(--muted-foreground) / 0.35)';      // neutral
   };
+
 
   return (
     <div className="space-y-10 pb-16">
@@ -74,7 +80,7 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
         </h2>
         <p className="text-sm text-muted-foreground max-w-md mx-auto font-body">
           {t('quiz.compass.slopeBody', {
-            defaultValue: 'On the left, the order you said matters. On the right, the order your trade-offs revealed. The lines show the distance between them.',
+            defaultValue: 'On the left, the order your trade-offs revealed. On the right, the order you said matters. The lines show the distance between them.',
           })}
         </p>
       </div>
@@ -83,16 +89,17 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
       <div className="bg-card border border-border rounded-2xl p-4 md:p-6">
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex-1 min-w-0">
-            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              {t('quiz.compass.leftCol', { defaultValue: 'What you said mattered' })}
+            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-accent">
+              {t('quiz.compass.leftCol', { defaultValue: 'What your choices revealed' })}
             </p>
           </div>
           <div className="flex-1 min-w-0 text-right">
-            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-accent">
-              {t('quiz.compass.rightCol', { defaultValue: 'What your choices revealed' })}
+            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              {t('quiz.compass.rightCol', { defaultValue: 'What you said mattered' })}
             </p>
           </div>
         </div>
+
 
         {/* Desktop: 3-column slope chart */}
         <div className="hidden md:grid items-start" style={{ gridTemplateColumns: `1fr ${SVG_W}px 1fr` }}>
@@ -248,8 +255,8 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
                   i18nKey="quiz.compass.largestGapDown"
                   values={{
                     label: tValueLabel(t, largestGap.key),
-                    aspOrdinal: tOrdinal(t, leftRank(largestGap.key)),
-                    revOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                    aspOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                    revOrdinal: tOrdinal(t, leftRank(largestGap.key)),
                   }}
                   components={{ strong: <strong className="text-foreground" /> }}
                   defaults="<strong>{{label}}</strong> is your {{aspOrdinal}} chosen value, but your trade-offs place it {{revOrdinal}}."
@@ -259,8 +266,8 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
                   i18nKey="quiz.compass.largestGapUp"
                   values={{
                     label: tValueLabel(t, largestGap.key),
-                    aspOrdinal: tOrdinal(t, leftRank(largestGap.key)),
-                    revOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                    aspOrdinal: tOrdinal(t, rightRank(largestGap.key)),
+                    revOrdinal: tOrdinal(t, leftRank(largestGap.key)),
                   }}
                   components={{ strong: <strong className="text-foreground" /> }}
                   defaults="<strong>{{label}}</strong> sits {{aspOrdinal}} in what you claim, but your choices put it {{revOrdinal}}. You live it more than you say."
@@ -333,7 +340,7 @@ function SlopeRow({
     >
       <span
         className={`font-display text-xs tabular-nums w-4 ${
-          align === 'right' ? 'text-left text-accent' : 'text-right text-muted-foreground'
+          align === 'left' ? 'text-right text-accent' : 'text-left text-muted-foreground'
         }`}
       >
         {rank}
@@ -341,7 +348,7 @@ function SlopeRow({
       <span
         className={`flex items-center justify-center w-8 h-8 rounded-full flex-shrink-0 ${
           active
-            ? align === 'right'
+            ? align === 'left'
               ? 'bg-accent/20 text-accent ring-1 ring-accent/40'
               : 'bg-primary/15 text-primary ring-1 ring-primary/30'
             : 'bg-muted text-muted-foreground/80'
