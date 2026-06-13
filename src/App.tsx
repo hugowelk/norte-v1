@@ -74,8 +74,8 @@ const App = () => (
               <Route path="/app" element={<Navigate to="/" replace />} />
               <Route path="/waitlist" element={<Navigate to="/" replace />} />
               <Route path="/methodology" element={<Methodology />} />
-              <Route path="/post-paywall/q1" element={<Navigate to="/post-paywall/q2" replace />} />
-              <Route path="/post-paywall/q2" element={<RequirePayment><Q2Chapter /></RequirePayment>} />
+              <Route path="/post-paywall/q1" element={<Navigate to="/post-paywall/q3" replace />} />
+              <Route path="/post-paywall/q2" element={<Navigate to="/post-paywall/q3" replace />} />
               <Route path="/post-paywall/q3" element={<RequirePayment><Q3Blocker /></RequirePayment>} />
               <Route path="/post-paywall/q4" element={<RequirePayment><Q4WontGiveUp /></RequirePayment>} />
               <Route path="/post-paywall/loading" element={<RequirePayment><LoadingPlaceholder /></RequirePayment>} />
