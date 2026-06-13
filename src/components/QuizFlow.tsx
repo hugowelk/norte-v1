@@ -251,7 +251,7 @@ export function QuizFlow() {
                     paymentSessionId: genPaymentSessionId(),
                     name,
                     email,
-                    current_chapter: '',
+                    current_chapter: chapter,
                     blocker_answer: null,
                     blocker_custom_text: '',
                     wont_give_up: '',
