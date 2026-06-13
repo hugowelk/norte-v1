@@ -165,6 +165,12 @@ export function QuizFlow() {
             transition={{ duration: 0.35, ease: 'easeOut' }}
             className="w-full max-w-2xl"
           >
+            {phase === 'chapter' && (
+              <ChapterSelection
+                initialValue={chapter}
+                onContinue={value => { setChapter(value); setPhase('tradeoffIntro'); }}
+              />
+            )}
             {phase === 'tradeoffIntro' && (
               <TradeoffIntro onBegin={() => { setScenarioIdx(0); setPhase('tradeoffs'); }} />
             )}
