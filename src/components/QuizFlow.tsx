@@ -59,7 +59,6 @@ export function QuizFlow() {
   const [email, setEmail] = useState('');
   const [result, setResult] = useState<ScoreResult>();
   const [core, setCore] = useState<CoreValuesResult>();
-  const [alignmentScores, setAlignmentScores] = useState<AlignmentScores>({});
 
   // Reset scroll whenever the visible step changes — without this each new
   // screen inherits the previous scroll position and feels glitchy.
