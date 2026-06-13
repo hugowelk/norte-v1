@@ -80,7 +80,7 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
         </h2>
         <p className="text-sm text-muted-foreground max-w-md mx-auto font-body">
           {t('quiz.compass.slopeBody', {
-            defaultValue: 'On the left, the order you said matters. On the right, the order your trade-offs revealed. The lines show the distance between them.',
+            defaultValue: 'On the left, the order your trade-offs revealed. On the right, the order you said matters. The lines show the distance between them.',
           })}
         </p>
       </div>
@@ -89,16 +89,17 @@ export function ValueCompass({ result, slots, onContinue }: Props) {
       <div className="bg-card border border-border rounded-2xl p-4 md:p-6">
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex-1 min-w-0">
-            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              {t('quiz.compass.leftCol', { defaultValue: 'What you said mattered' })}
+            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-accent">
+              {t('quiz.compass.leftCol', { defaultValue: 'What your choices revealed' })}
             </p>
           </div>
           <div className="flex-1 min-w-0 text-right">
-            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-accent">
-              {t('quiz.compass.rightCol', { defaultValue: 'What your choices revealed' })}
+            <p className="font-display text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+              {t('quiz.compass.rightCol', { defaultValue: 'What you said mattered' })}
             </p>
           </div>
         </div>
+
 
         {/* Desktop: 3-column slope chart */}
         <div className="hidden md:grid items-start" style={{ gridTemplateColumns: `1fr ${SVG_W}px 1fr` }}>
