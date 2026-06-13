@@ -85,19 +85,10 @@
   "quiz": {
     "intro": {
       "eyebrow": "Parte 1",
-      "title": "As próximas perguntas vão te dar uma imagem clara dos valores que você tem vivido nos últimos meses",
-      "body1": "Você verá 15 situações do dia a dia. Em cada uma, escolha a opção mais próxima do que você <em>realmente</em> faria, não do que GOSTARIA de fazer. Pense no seu comportamento dos últimos 3 meses.",
-      "body2": "A primeira resposta costuma ser a mais verdadeira."
-    },
-    "howItWorks": {
-      "eyebrow": "Antes de começar",
-      "title": "Como isso funciona",
-      "points": [
-        "Você vai responder 15 cenários. Cada um apresenta duas situações em conflito. Escolha o que você realmente faria.",
-        "Não pense demais. Não há certo ou errado. O que conta é o que você faria, não o que gostaria de fazer.",
-        "No final, mostramos os 3 valores que mais pesam nas suas decisões e onde estão as distâncias entre comportamento e aspiração."
-      ],
-      "methodology": "Metodologia baseada em ACT (Terapia de Aceitação e Compromisso), no Valued Living Questionnaire e no Bull's Eye Values Survey."
+      "title": "Quais valores você está realmente vivendo?",
+      "body1": "Responda 15 cenários rápidos. Escolha o que você <em>realmente</em> faria, não o que gostaria de fazer.",
+      "body2": "Não pense demais. A primeira resposta costuma ser a mais verdadeira.",
+      "methodology": "Metodologia baseada em ACT, no Valued Living Questionnaire e no Bull's Eye Values Survey."
     },
     "scenario": {
       "counter": "{{n}} de 15",

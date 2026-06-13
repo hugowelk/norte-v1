@@ -32,6 +32,9 @@ export function TradeoffIntro({ onBegin }: Props) {
       >
         {t('common.actions.beginArrow')}
       </button>
+      <p className="text-xs text-muted-foreground italic leading-relaxed pt-2">
+        {t('quiz.intro.methodology')}
+      </p>
     </motion.div>
   );
 }

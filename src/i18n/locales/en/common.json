@@ -85,19 +85,10 @@
   "quiz": {
     "intro": {
       "eyebrow": "Part 1",
-      "title": "Answering the next questions will give you a clear picture of what values you've been living by in the last couple of months",
-      "body1": "You'll see 15 everyday situations. In each one, pick the option closest to how you'd <em>actually</em> act, not how you WISH you would. Think about your behaviour in the past 3 months.",
-      "body2": "The first answer is usually the truest one."
-    },
-    "howItWorks": {
-      "eyebrow": "Before you start",
-      "title": "How this works",
-      "points": [
-        "You'll answer 15 scenarios. Each presents two situations in conflict. Choose what you'd actually do.",
-        "Don't overthink. There's no right or wrong. What counts is what you'd do, not what you'd like to do.",
-        "At the end, we show you the 3 values that weigh most in your decisions, and where the gaps are between behaviour and aspiration."
-      ],
-      "methodology": "Methodology grounded in ACT (Acceptance and Commitment Therapy), the Valued Living Questionnaire, and the Bull's Eye Values Survey."
+      "title": "What values are you actually living by?",
+      "body1": "Answer 15 quick scenarios. Pick what you'd <em>actually</em> do, not what you wish you would.",
+      "body2": "Don't overthink. The first answer is usually the truest.",
+      "methodology": "Methodology grounded in ACT, the Valued Living Questionnaire, and the Bull's Eye Values Survey."
     },
     "scenario": {
       "counter": "{{n}} of 15",
