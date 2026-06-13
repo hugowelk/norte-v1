@@ -397,15 +397,16 @@
     "q2": {
       "title": "Qual é o capítulo atual da sua vida agora?",
       "body1": "Vemos com frequência pessoas reavaliando seus valores em transições de carreira, separações, mudanças de país, ao virar pais e por aí vai.",
-      "body2": "Em poucas palavras, descreva onde você está na vida agora. Quanto mais específico, mais afiado o relatório.",
-      "seeExamples": "Ver exemplos",
-      "examples": [
-        "\"Acabei de sair do emprego, descobrindo o que vem.\"",
-        "\"Pai recente, perdi minhas bordas.\"",
-        "\"Travado. Os últimos anos parecem piloto automático.\"",
-        "\"Mudei de país há seis meses, ainda reconstruindo.\"",
-        "\"Terminei uma relação longa, reavaliando tudo.\""
-      ]
+      "body2": "Escolha o que mais se aproxima, ou escreva o seu. Quanto mais específico, mais afiado o relatório.",
+      "options": [
+        "Acabei de sair do emprego, descobrindo o que vem.",
+        "Pai/mãe recente, perdi minhas bordas.",
+        "Travado. Os últimos anos parecem piloto automático.",
+        "Mudei de país há seis meses, ainda reconstruindo.",
+        "Terminei uma relação longa, reavaliando tudo."
+      ],
+      "otherLabel": "Outro (escreva o seu)",
+      "customPlaceholder": "Descreva seu capítulo atual em poucas palavras…"
     },
     "q3": {
       "headingFallback": "O que tem dificultado tornar o seu primeiro valor escolhido — {{label}}, parte da sua rotina?",
