@@ -19,6 +19,7 @@ function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<
   return out;
 }
 import { TradeoffIntro } from './quiz/TradeoffIntro';
+import { ChapterSelection } from './quiz/ChapterSelection';
 
 import { TradeoffScenario } from './quiz/TradeoffScenario';
 import { TradeoffTransition } from './quiz/TradeoffTransition';
@@ -30,8 +31,8 @@ import { Paywall } from './quiz/Paywall';
 import { NameEmailCapture } from './quiz/NameEmailCapture';
 
 type Phase =
+  | 'chapter'
   | 'tradeoffIntro'
-  
   | 'tradeoffs'
   | 'tradeoffTransition'
   | 'nameEmail'
