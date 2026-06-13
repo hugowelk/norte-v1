@@ -19,7 +19,7 @@ function mockAlignment(slots: { key: ValueKey }[], result: ScoreResult): Record<
   return out;
 }
 import { TradeoffIntro } from './quiz/TradeoffIntro';
-import { HowItWorksSlide } from './quiz/HowItWorksSlide';
+
 import { TradeoffScenario } from './quiz/TradeoffScenario';
 import { TradeoffTransition } from './quiz/TradeoffTransition';
 import { ProcessingTransition } from './quiz/ProcessingTransition';
@@ -32,7 +32,7 @@ import { NameEmailCapture } from './quiz/NameEmailCapture';
 
 type Phase =
   | 'tradeoffIntro'
-  | 'howItWorks'
+  
   | 'tradeoffs'
   | 'tradeoffTransition'
   | 'nameEmail'
