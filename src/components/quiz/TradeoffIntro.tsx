@@ -7,6 +7,7 @@ interface Props {
 
 export function TradeoffIntro({ onBegin }: Props) {
   const { t } = useTranslation();
+  const steps = t('quiz.intro.steps', { returnObjects: true }) as string[];
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -25,6 +26,19 @@ export function TradeoffIntro({ onBegin }: Props) {
         <p className="text-muted-foreground">
           {t('quiz.intro.body2')}
         </p>
+      </div>
+      <div className="text-left space-y-3">
+        <p className="text-xs font-display uppercase tracking-widest text-accent text-center">{t('quiz.intro.stepsTitle')}</p>
+        <ol className="space-y-2 text-sm text-foreground/80">
+          {steps.map((step, i) => (
+            <li key={i} className="flex gap-3 items-start">
+              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 text-accent text-xs font-display font-semibold flex items-center justify-center mt-0.5">
+                {i + 1}
+              </span>
+              <span className="leading-relaxed">{step}</span>
+            </li>
+          ))}
+        </ol>
       </div>
       <button
         onClick={onBegin}
