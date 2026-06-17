@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Index from "./pages/Index";
+import HomeV2 from "./pages/HomeV2";
 import Methodology from "./pages/Methodology";
 import NotFound from "./pages/NotFound";
 import { RequirePayment } from "./components/post-paywall/RequirePayment";
@@ -71,6 +72,7 @@ const App = () => (
           <div className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/home-v2" element={<HomeV2 />} />
               <Route path="/app" element={<Navigate to="/" replace />} />
               <Route path="/waitlist" element={<Navigate to="/" replace />} />
               <Route path="/methodology" element={<Methodology />} />
