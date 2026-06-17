@@ -72,6 +72,7 @@ const App = () => (
           <div className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/home-v2" element={<HomeV2 />} />
               <Route path="/app" element={<Navigate to="/" replace />} />
               <Route path="/waitlist" element={<Navigate to="/" replace />} />
               <Route path="/methodology" element={<Methodology />} />
